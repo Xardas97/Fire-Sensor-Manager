@@ -1,51 +1,23 @@
 #include "server.h"
+#include "tcpserver.h"
 
 #include <QDebug>
-#include <QTcpServer>
 #include <QTcpSocket>
 
 Server::Server(QObject *parent)
-    : QObject{parent}, tcpServer(new QTcpServer())
+    : QObject{parent}, tcpServer(new TcpServer())
 {
-
+    QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &Server::onReceivedCommand);
 }
 
 void Server::startServer(int startingNumber)
 {
-    auto port = 56000;
-
-    qDebug() << "Starting TCP server, starting number: " << startingNumber;
+    tcpServer->startServer(QHostAddress::Any, 56000);
     nextNumber = startingNumber;
-
-    QObject::connect(tcpServer.get(), &QTcpServer::newConnection, this, &Server::serverNewConnection);
-
-    bool success = tcpServer->listen(QHostAddress::Any, port);
-    if (!success)
-    {
-        qWarning() << "TCP Server failed to start listening!";
-        return;
-    }
-
-    port = tcpServer->serverPort();
-    qDebug() << "Listening on port: " << port;
 }
 
-void Server::serverNewConnection()
+void Server::onReceivedCommand(QTcpSocket* socket, QByteArray data)
 {
-    qDebug() << "New connection arrived";
-
-    auto socket = tcpServer->nextPendingConnection();
-
-    qDebug() << "Waiting to read data";
-    if (!socket->waitForReadyRead(3000))
-    {
-        qWarning() << "No data arrived!";
-        return;
-    }
-
-    auto data = socket->readAll();
-    qDebug() << "Data arrived: " << data;
-
     if (data == "GET_NUMBER")
     {
         socket->write("1");

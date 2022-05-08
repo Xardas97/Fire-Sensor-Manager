@@ -4,7 +4,8 @@
 #include <QObject>
 #include <memory>
 
-class QTcpServer;
+class TcpServer;
+class QTcpSocket;
 
 class Server : public QObject
 {
@@ -15,11 +16,11 @@ public:
     void startServer(int startingNumber = 1);
 
 private slots:
-    void serverNewConnection();
+    void onReceivedCommand(QTcpSocket*, QByteArray);
 
 private:
     int nextNumber = 0;
-    std::unique_ptr<QTcpServer> tcpServer;
+    std::unique_ptr<TcpServer> tcpServer;
 };
 
 #endif // SERVER_H
