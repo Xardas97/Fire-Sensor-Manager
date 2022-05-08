@@ -12,6 +12,7 @@ public:
 
 public slots:
     int getNextNumber();
+    void discoverSensors();
 };
 
 #endif // SERVICE_H

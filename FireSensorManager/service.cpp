@@ -2,12 +2,9 @@
 
 #include <QDebug>
 #include <QTcpSocket>
+#include "Communication/firesensordetector.h"
 
-Service::Service(QObject *parent)
-    : QObject{parent}
-{
-
-}
+Service::Service(QObject *parent) : QObject{parent} {}
 
 int Service::getNextNumber()
 {
@@ -52,4 +49,10 @@ int Service::getNextNumber()
 
     qDebug() << "User asked for next number, returing: " << nextNumber;
     return nextNumber;
+}
+
+void Service::discoverSensors()
+{
+    FireSensorDetector fireSensorDetector;
+    fireSensorDetector.discoverSensors();
 }

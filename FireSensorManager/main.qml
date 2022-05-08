@@ -23,13 +23,23 @@ Window {
         }
 
         Button {
-            id: btn
+            id: btnSensorRequest
 
             Layout.alignment: Qt.AlignCenter
 
-            text: "Click me!"
+            text: "Send request to sensor"
 
             onClicked: txt.text = "You clicked this " + service.getNextNumber() + " times!"
+        }
+
+        Button {
+            id: btnDiscoverSensors
+
+            Layout.alignment: Qt.AlignCenter
+
+            text: "Discover sensors"
+
+            onClicked: service.discoverSensors()
         }
     }
 }
