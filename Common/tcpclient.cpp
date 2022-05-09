@@ -5,7 +5,7 @@
 
 TcpClient::TcpClient() { }
 
-QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, const char* requestData)
+QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, const std::string& requestData)
 {
     QTcpSocket socket;
 
@@ -18,7 +18,7 @@ QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, con
         return QByteArray();
     }
 
-    socket.write(requestData);
+    socket.write(requestData.data());
     socket.waitForBytesWritten();
 
     qDebug() << "Client - Waiting to read data";

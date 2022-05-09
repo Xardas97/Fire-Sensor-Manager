@@ -10,7 +10,7 @@ TcpServer::TcpServer(QObject *parent)
 
 }
 
-void TcpServer::startServer(const QHostAddress& address, quint16 port)
+bool TcpServer::startServer(const QHostAddress& address, quint16 port)
 {
     qDebug() << "Starting TCP server...";
 
@@ -20,10 +20,11 @@ void TcpServer::startServer(const QHostAddress& address, quint16 port)
     if (!success)
     {
         qWarning() << "TCP Server failed to start listening!";
-        return;
+        return false;
     }
 
     qDebug() << "TcpServer - Listening on port: " << port;
+    return true;
 }
 
 void TcpServer::serverNewConnection()
@@ -43,6 +44,21 @@ void TcpServer::serverNewConnection()
     qDebug() << "TcpServer - Data arrived: " << data;
 
     emit onReceivedCommand(socket, data);
+}
+
+bool TcpServer::isListening() const
+{
+    return tcpServer->isListening();
+}
+
+quint16 TcpServer::getServerPort() const
+{
+    return tcpServer->serverPort();
+}
+
+QHostAddress TcpServer::getServerAddress() const
+{
+    return tcpServer->serverAddress();
 }
 
 TcpServer::~TcpServer() = default;

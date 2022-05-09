@@ -5,13 +5,17 @@
 #include "tcpclient.h"
 #include "Communication/firesensordetector.h"
 
-Service::Service(QObject *parent) : QObject{parent} {}
+Service::Service(QObject *parent)
+    : QObject{parent}, fireSensorDetector(new FireSensorDetector())
+{
+    QObject::connect(fireSensorDetector.get(), &FireSensorDetector::onSensorDiscovered, this, &Service::onSensorDiscovered);
+}
 
 int Service::getNextNumber()
 {
     TcpClient tcpClient;
 
-    QHostAddress address = QHostAddress("127.0.0.1");
+    QHostAddress address = QHostAddress("192.168.1.67");
     quint16 port = 56000;
 
     auto data = tcpClient.sendRequest(address, port, "GET_NUMBER");
@@ -28,6 +32,12 @@ int Service::getNextNumber()
 
 void Service::discoverSensors()
 {
-    FireSensorDetector fireSensorDetector;
-    fireSensorDetector.discoverSensors();
+    fireSensorDetector->discoverSensors();
 }
+
+void Service::onSensorDiscovered(const QHostAddress& address, quint16 port)
+{
+    qDebug() << "Discovered sensor: " << address << "; " << port;
+}
+
+Service::~Service() = default;

@@ -15,7 +15,12 @@ class TcpServer : public QObject
 public:
     explicit TcpServer(QObject *parent = nullptr);
     ~TcpServer();
-    void startServer(const QHostAddress& address, quint16 port);
+
+    bool startServer(const QHostAddress& address, quint16 port);
+    bool isListening() const;
+
+    quint16 getServerPort() const;
+    QHostAddress getServerAddress() const;
 
 signals:
     void onReceivedCommand(QTcpSocket* socket, QByteArray data);

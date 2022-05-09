@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QTcpSocket>
+#include <QNetworkInterface>
 
 Server::Server(QObject *parent)
     : QObject{parent}, tcpServer(new TcpServer())
@@ -12,7 +13,8 @@ Server::Server(QObject *parent)
 
 void Server::startServer(int startingNumber)
 {
-    tcpServer->startServer(QHostAddress::Any, 56000);
+    auto localAddress = getLocalAddress();
+    tcpServer->startServer(localAddress, 56000);
     nextNumber = startingNumber;
 }
 
@@ -34,6 +36,33 @@ void Server::onReceivedCommand(QTcpSocket* socket, QByteArray data)
     socket->write("0");
     socket->write("COMMAND_NOT_RECOGNIZED");
     qDebug() << "Command unknown, error response returned!";
+}
+
+QHostAddress Server::getLocalAddress()
+{
+    auto addresses = QNetworkInterface::allAddresses();
+    for (const auto &address: addresses)
+    {
+        if (address.isLoopback())
+            continue;
+
+        if (address.protocol() != QAbstractSocket::NetworkLayerProtocol::IPv4Protocol)
+            continue;
+
+        return address;
+    }
+
+    return QHostAddress::Null;
+}
+
+quint16 Server::getServerPort() const
+{
+    return tcpServer->getServerPort();
+}
+
+QHostAddress Server::getServerAddress() const
+{
+    return tcpServer->getServerAddress();
 }
 
 Server::~Server() = default;
