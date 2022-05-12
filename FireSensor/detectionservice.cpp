@@ -10,10 +10,9 @@
 DetectionService::DetectionService(const QHostAddress& serverAddress, quint16 serverPort, QObject *parent)
     : QObject{parent}, serverAddress(serverAddress), serverPort(serverPort), udpSocket(new QUdpSocket())
 {
-    auto port = Ports::baseSensorPort;
-    udpSocket->bind(port, QUdpSocket::ShareAddress);
+    udpSocket->bind(serverPort, QUdpSocket::ShareAddress);
     QObject::connect(udpSocket.get(), &QUdpSocket::readyRead, this, &DetectionService::processDetectionRequest);
-    qDebug() << "DetectionService listening on port " << port;
+    qDebug() << "DetectionService listening on port " << serverPort;
 }
 
 void DetectionService::processDetectionRequest()

@@ -8,13 +8,12 @@ TcpServer::TcpServer(QObject *parent)
     : QObject{parent}, tcpServer(new QTcpServer())
 {
 
+    QObject::connect(tcpServer.get(), &QTcpServer::newConnection, this, &TcpServer::serverNewConnection);
 }
 
 bool TcpServer::startServer(const QHostAddress& address, quint16 port)
 {
     qDebug() << "Starting TCP server...";
-
-    QObject::connect(tcpServer.get(), &QTcpServer::newConnection, this, &TcpServer::serverNewConnection);
 
     bool success = tcpServer->listen(address, port);
     if (!success)

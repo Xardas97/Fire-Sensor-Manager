@@ -15,7 +15,7 @@ public:
     explicit Server(QObject *parent = nullptr);
     ~Server();
 
-    void startServer(int startingNumber = 1);
+    bool startServer(int startingNumber = 1);
 
     quint16 getServerPort() const;
     QHostAddress getServerAddress() const;

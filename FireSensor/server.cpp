@@ -14,11 +14,24 @@ Server::Server(QObject *parent)
     QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &Server::onReceivedCommand);
 }
 
-void Server::startServer(int startingNumber)
+bool Server::startServer(int startingNumber)
 {
     auto localAddress = getLocalAddress();
-    tcpServer->startServer(localAddress, Ports::baseSensorPort);
+
+    for (int i = 0; i < Ports::maxSensorPorts; ++i)
+    {
+        auto started = tcpServer->startServer(localAddress, Ports::baseSensorPort + i);
+        if (started) break;
+    }
+
+    if (!tcpServer->isListening())
+    {
+        qWarning() << "Failed to start the server on any of the ports!";
+        return false;
+    }
+
     nextNumber = startingNumber;
+    return true;
 }
 
 void Server::onReceivedCommand(QTcpSocket* socket, QByteArray data)

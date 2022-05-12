@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>FailedToStart.qml</file>
     </qresource>
 </RCC>
