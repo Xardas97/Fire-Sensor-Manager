@@ -8,7 +8,7 @@ Window {
     width: 640
     height: 480
     visible: true
-    title: qsTr("TestApp")
+    title: qsTr("FireSensorManager")
 
     ColumnLayout {
         anchors.fill: parent
