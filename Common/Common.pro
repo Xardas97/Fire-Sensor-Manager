@@ -15,6 +15,7 @@ SOURCES += \
     tcpserver.cpp
 
 HEADERS += \
+    ports.h \
     tcpclient.h \
     tcpserver.h
 

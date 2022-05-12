@@ -1,8 +1,10 @@
 #include "firesensordetector.h"
 
+#include "ports.h"
+#include "tcpserver.h"
+
 #include <QUdpSocket>
 #include <QTcpSocket>
-#include "tcpserver.h"
 
 FireSensorDetector::FireSensorDetector(QObject *parent)
     : QObject{parent}, tcpServer(new TcpServer())
@@ -17,13 +19,18 @@ void FireSensorDetector::discoverSensors()
     if (!tcpServer->isListening())
     {
         qDebug() << "Starting discovering TcpServer...";
-        bool started = tcpServer->startServer(QHostAddress::Any, 56560);
+        bool started = tcpServer->startServer(QHostAddress::Any, Ports::sensorDetectorPort);
         if (!started) return;
     }
 
     QUdpSocket udpSocket;
     QByteArray datagram = "DiscoverFireSensors";
-    udpSocket.writeDatagram(datagram, QHostAddress::Broadcast, 56000);
+
+    for (int i = 0; i < Ports::maxSensorPorts; ++i)
+    {
+        // Sending broadcast to multiple ports to support simulating multiple sensors on same machine
+        udpSocket.writeDatagram(datagram, QHostAddress::Broadcast, Ports::baseSensorPort + i);
+    }
 
     qDebug() << "Broadcast message sent!";
 }

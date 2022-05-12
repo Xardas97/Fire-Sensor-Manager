@@ -1,9 +1,11 @@
 #include "service.h"
 
-#include <QDebug>
-#include <QTcpSocket>
+#include "ports.h"
 #include "tcpclient.h"
 #include "Communication/firesensordetector.h"
+
+#include <QDebug>
+#include <QTcpSocket>
 
 Service::Service(QObject *parent)
     : QObject{parent}, fireSensorDetector(new FireSensorDetector())
@@ -16,9 +18,8 @@ int Service::getNextNumber()
     TcpClient tcpClient;
 
     QHostAddress address = QHostAddress("192.168.1.67");
-    quint16 port = 56000;
 
-    auto data = tcpClient.sendRequest(address, port, "GET_NUMBER");
+    auto data = tcpClient.sendRequest(address, Ports::baseSensorPort, "GET_NUMBER");
     if (data.length() == 0)
     {
         qWarning() << "TCP Communication failed!";

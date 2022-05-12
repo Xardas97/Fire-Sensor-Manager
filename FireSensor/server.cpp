@@ -1,4 +1,6 @@
 #include "server.h"
+
+#include "ports.h"
 #include "tcpserver.h"
 
 #include <QDebug>
@@ -14,7 +16,7 @@ Server::Server(QObject *parent)
 void Server::startServer(int startingNumber)
 {
     auto localAddress = getLocalAddress();
-    tcpServer->startServer(localAddress, 56000);
+    tcpServer->startServer(localAddress, Ports::baseSensorPort);
     nextNumber = startingNumber;
 }
 
