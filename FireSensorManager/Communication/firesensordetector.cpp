@@ -2,6 +2,7 @@
 
 #include "ports.h"
 #include "tcpserver.h"
+#include "tcpmessages.h"
 
 #include <QUdpSocket>
 #include <QTcpSocket>
@@ -24,12 +25,11 @@ void FireSensorDetector::discoverSensors()
     }
 
     QUdpSocket udpSocket;
-    QByteArray datagram = "DiscoverFireSensors";
 
     for (int i = 0; i < Ports::maxSensorPorts; ++i)
     {
         // Sending broadcast to multiple ports to support simulating multiple sensors on same machine
-        udpSocket.writeDatagram(datagram, QHostAddress::Broadcast, Ports::baseSensorPort + i);
+        udpSocket.writeDatagram(TcpMessages::Command::DiscoverSensors, QHostAddress::Broadcast, Ports::baseSensorPort + i);
     }
 
     qDebug() << "Broadcast message sent!";
@@ -39,15 +39,14 @@ void FireSensorDetector::onReceivedCommand(QTcpSocket* socket, QByteArray data)
 {
     QString dataString = data;
 
-    if (data.startsWith("DiscoveryReply"))
+    if (data.startsWith(TcpMessages::Command::Identify))
     {
         auto info = dataString.remove(0, 16).split(';');
 
         if (info.length() != 2)
         {
             qWarning() << "Sensor replied to discovery with broken data!";
-            socket->write("0");
-            socket->write("BROKEN_DATA");
+            socket->write(TcpMessages::Reply::BrokenData);
             return;
         }
 
@@ -55,13 +54,11 @@ void FireSensorDetector::onReceivedCommand(QTcpSocket* socket, QByteArray data)
         quint16 sensorPort = info[1].toUShort();
         emit onSensorDiscovered(sensorAddress, sensorPort);
 
-        socket->write("1");
-        socket->write("ACK");
+        socket->write(TcpMessages::Reply::Ack);
         return;
     }
 
-    socket->write("0");
-    socket->write("COMMAND_NOT_RECOGNIZED");
+    socket->write(TcpMessages::Reply::CommandNotRecognized);
     qDebug() << "Command unknown, error response returned!";
 }
 

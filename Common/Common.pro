@@ -12,11 +12,13 @@ CONFIG += c++17
 
 SOURCES += \
     tcpclient.cpp \
+    tcpmessages.cpp \
     tcpserver.cpp
 
 HEADERS += \
     ports.h \
     tcpclient.h \
+    tcpmessages.h \
     tcpserver.h
 
 # Default rules for deployment.

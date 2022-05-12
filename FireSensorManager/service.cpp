@@ -2,6 +2,7 @@
 
 #include "ports.h"
 #include "tcpclient.h"
+#include "tcpmessages.h"
 #include "Communication/firesensordetector.h"
 
 #include <QDebug>
@@ -19,7 +20,7 @@ int Service::getNextNumber()
 
     QHostAddress address = QHostAddress("192.168.1.67");
 
-    auto data = tcpClient.sendRequest(address, Ports::baseSensorPort, "GET_NUMBER");
+    auto data = tcpClient.sendRequest(address, Ports::baseSensorPort, TcpMessages::Command::GetNumber);
     if (data.length() == 0)
     {
         qWarning() << "TCP Communication failed!";

@@ -2,6 +2,7 @@
 
 #include "ports.h"
 #include "tcpclient.h"
+#include "tcpmessages.h"
 
 #include <QDebug>
 #include <QUdpSocket>
@@ -32,7 +33,7 @@ void DetectionService::processDetectionRequest()
     udpSocket->readDatagram(data.data(), data.size(), &peerAddress);
 
     qDebug() << "Received command: " << data;
-    if (data == "DiscoverFireSensors")
+    if (data == TcpMessages::Command::DiscoverSensors)
     {
         sendServerAddressToRequester(peerAddress);
         return;
@@ -46,7 +47,7 @@ void DetectionService::sendServerAddressToRequester(const QHostAddress &requeste
     qDebug() << "Replying with my IP and port to requester: " << requesterAddress.toString();
 
     TcpClient tcpClient;
-    auto message = "DiscoveryReply - " + serverAddress.toString().toStdString() + ";" + std::to_string(serverPort);
+    auto message = std::string(TcpMessages::Command::Identify) + " - " + serverAddress.toString().toStdString() + ";" + std::to_string(serverPort);
     tcpClient.sendRequest(requesterAddress, Ports::sensorDetectorPort, message);
 }
 

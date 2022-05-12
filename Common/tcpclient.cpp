@@ -34,13 +34,5 @@ QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, con
 
     socket.close();
 
-    if (data[0] == '0')
-    {
-        qWarning() << "Client - Error response received!";
-        return QByteArray();
-    }
-
-    data.remove(0, 1);
-
     return data;
 }
