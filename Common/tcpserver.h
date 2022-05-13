@@ -25,10 +25,9 @@ public:
 signals:
     void onReceivedCommand(QTcpSocket* socket, QByteArray data);
 
-private slots:
+private:
     void serverNewConnection();
 
-private:
     std::unique_ptr<QTcpServer> tcpServer;
 };
 

@@ -14,16 +14,14 @@ public:
     explicit DetectionService(const QHostAddress& serverAddress, quint16 serverPort, QObject *parent = nullptr);
     ~DetectionService();
 
-private slots:
-    void processDetectionRequest();
-
 private:
+    void processDetectionRequest();
+    void sendServerAddressToRequester(const QHostAddress& requesterAddress);
+
     QHostAddress serverAddress;
     quint16 serverPort;
 
     std::unique_ptr<QUdpSocket> udpSocket;
-
-    void sendServerAddressToRequester(const QHostAddress& requesterAddress);
 };
 
 #endif // DETECTIONSERVICE_H

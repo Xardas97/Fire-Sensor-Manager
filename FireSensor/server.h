@@ -20,11 +20,9 @@ public:
     quint16 getServerPort() const;
     QHostAddress getServerAddress() const;
 
-private slots:
-    void onReceivedCommand(QTcpSocket*, QByteArray);
-
 private:
     QHostAddress getLocalAddress();
+    void onReceivedCommand(QTcpSocket*, QByteArray);
 
     int nextNumber = 0;
     std::unique_ptr<TcpServer> tcpServer;

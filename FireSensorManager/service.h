@@ -19,10 +19,9 @@ public slots:
     int getNextNumber();
     void discoverSensors();
 
-private slots:
+private:
     void onSensorDiscovered(const QHostAddress& address, quint16 port);
 
-private:
     std::unique_ptr<FireSensorDetector> fireSensorDetector;
 };
 
