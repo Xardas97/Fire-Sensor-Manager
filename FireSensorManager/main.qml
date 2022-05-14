@@ -29,7 +29,7 @@ Window {
 
             text: "Send request to sensor"
 
-            onClicked: txt.text = "You clicked this " + service.getNextNumber() + " times!"
+            onClicked: txt.text = "Server last returned: " + service.getNextNumber()
         }
 
         Button {

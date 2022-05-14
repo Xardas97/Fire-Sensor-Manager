@@ -11,14 +11,23 @@ class QHostAddress;
 class Server : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(int nextNumber READ getNextNumber WRITE setNextNumber NOTIFY nextNumberChanged)
 public:
     explicit Server(QObject *parent = nullptr);
     ~Server();
 
-    bool startServer(int startingNumber = 1);
+    bool startServer();
 
     quint16 getServerPort() const;
     QHostAddress getServerAddress() const;
+
+public slots:
+    void setNextNumber(int nextNumber);
+    int getNextNumber();
+
+signals:
+    void nextNumberChanged();
 
 private:
     QHostAddress getLocalAddress();

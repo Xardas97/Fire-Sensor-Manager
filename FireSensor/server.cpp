@@ -14,7 +14,7 @@ Server::Server(QObject *parent)
     QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &Server::onReceivedCommand);
 }
 
-bool Server::startServer(int startingNumber)
+bool Server::startServer()
 {
     auto localAddress = getLocalAddress();
 
@@ -30,7 +30,6 @@ bool Server::startServer(int startingNumber)
         return false;
     }
 
-    nextNumber = startingNumber;
     return true;
 }
 
@@ -39,6 +38,7 @@ void Server::onReceivedCommand(QTcpSocket* socket, QByteArray data)
     if (data == TcpMessages::Command::GetNumber)
     {
         auto currentNumber = nextNumber++;
+        emit nextNumberChanged();
         qDebug() << "Client asked for next number, returing: " << currentNumber;
 
         socket->write(std::to_string(currentNumber).c_str());
@@ -76,6 +76,18 @@ quint16 Server::getServerPort() const
 QHostAddress Server::getServerAddress() const
 {
     return tcpServer->getServerAddress();
+}
+
+void Server::setNextNumber(int nextNumber)
+{
+    qDebug() << "User set nextNumber to " << nextNumber;
+    this->nextNumber = nextNumber;
+    emit nextNumberChanged();
+}
+
+int Server::getNextNumber()
+{
+    return this->nextNumber;
 }
 
 Server::~Server() = default;

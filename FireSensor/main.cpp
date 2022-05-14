@@ -2,6 +2,7 @@
 #include "detectionservice.h"
 
 #include <memory>
+#include <QQmlContext>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
@@ -22,7 +23,7 @@ int main(int argc, char *argv[])
     auto mainPage = "main.qml";
 
     Server server;
-    bool serverStarted = server.startServer(4);
+    bool serverStarted = server.startServer();
 
     std::unique_ptr<DetectionService> detectionService;
     if (serverStarted)
@@ -35,6 +36,11 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
+
+    QQmlContext* rootContext = engine.rootContext();
+    rootContext->setContextProperty("server", &server);
+
     setupUi(app, engine, mainPage);
+
     return app.exec();
 }
