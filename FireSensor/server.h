@@ -5,7 +5,7 @@
 #include <memory>
 
 class TcpServer;
-class QTcpSocket;
+class TcpSocket;
 class QHostAddress;
 
 class Server : public QObject
@@ -31,7 +31,7 @@ signals:
 
 private:
     QHostAddress getLocalAddress();
-    void onReceivedCommand(QTcpSocket*, QByteArray);
+    void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 
     int nextNumber = 0;
     std::unique_ptr<TcpServer> tcpServer;

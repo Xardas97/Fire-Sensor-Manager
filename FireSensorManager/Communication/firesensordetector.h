@@ -5,7 +5,7 @@
 #include <QObject>
 
 class TcpServer;
-class QTcpSocket;
+class TcpSocket;
 class QHostAddress;
 
 class FireSensorDetector : public QObject
@@ -21,7 +21,7 @@ signals:
     void onSensorDiscovered(const QHostAddress& address, quint16 port);
 
 private:
-    void onReceivedCommand(QTcpSocket* socket, QByteArray data);
+    void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 
     std::unique_ptr<TcpServer> tcpServer;
 };

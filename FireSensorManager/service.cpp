@@ -19,15 +19,14 @@ int Service::getNextNumber()
     TcpClient tcpClient;
 
     QHostAddress address = QHostAddress("192.168.1.67");
-
     auto data = tcpClient.sendRequest(address, Ports::baseSensorPort, TcpMessages::Command::GetNumber);
-    if (data.length() == 0)
+    if (!data.contains("nextNumber"))
     {
         qWarning() << "TCP Communication failed!";
         return -1;
     }
 
-    int nextNumber = data.toInt();
+    int nextNumber = data["nextNumber"].toInt();
     qDebug() << "User asked for next number, returing: " << nextNumber;
     return nextNumber;
 }

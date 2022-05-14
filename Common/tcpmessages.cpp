@@ -2,11 +2,12 @@
 
 namespace TcpMessages
 {
-    const char* Command::GetNumber       = "GET_NUMBER";
-    const char* Command::DiscoverSensors = "DISCOVER_FIRE_SENSORS";
-    const char* Command::Identify        = "IDENTIFY";
+    const QJsonObject Command::GetNumber       = {{"command", "GET_NUMBER"}};
+    const QJsonObject Command::DiscoverSensors = {{"command", "DISCOVER_FIRE_SENSORS"}};
+    const QJsonObject Command::Identify        = {{"command", "IDENTIFY"}};
 
-    const char* Reply::Ack                  = "ACK";
-    const char* Reply::BrokenData           = "BROKEN_DATA";
-    const char* Reply::CommandNotRecognized = "COMMAND_NOT_RECOGNIZED";
+    const QJsonObject Response::Ack                  = {{"response", "ACK"}};
+    const QJsonObject Response::BrokenData           = {{"response", "BROKEN_DATA"}};
+    const QJsonObject Response::CommunicationFailed  = {{"response", "COMMUNICATION_FAILED"}};
+    const QJsonObject Response::CommandNotRecognized = {{"response", "COMMAND_NOT_RECOGNIZED"}};
 }

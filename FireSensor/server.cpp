@@ -33,7 +33,7 @@ bool Server::startServer()
     return true;
 }
 
-void Server::onReceivedCommand(QTcpSocket* socket, QByteArray data)
+void Server::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
     if (data == TcpMessages::Command::GetNumber)
     {
@@ -41,13 +41,15 @@ void Server::onReceivedCommand(QTcpSocket* socket, QByteArray data)
         emit nextNumberChanged();
         qDebug() << "Client asked for next number, returing: " << currentNumber;
 
-        socket->write(std::to_string(currentNumber).c_str());
+        auto response = TcpMessages::Response::Ack;
+        response["nextNumber"] = currentNumber;
+        socket.write(response);
         qDebug() << "Number data written";
 
         return;
     }
 
-    socket->write(TcpMessages::Reply::CommandNotRecognized);
+    socket.write(TcpMessages::Response::CommandNotRecognized);
     qDebug() << "Command unknown, error response returned!";
 }
 

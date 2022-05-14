@@ -6,6 +6,7 @@
 
 #include <QDebug>
 #include <QUdpSocket>
+#include <QJsonDocument>
 
 DetectionService::DetectionService(const QHostAddress& serverAddress, quint16 serverPort, QObject *parent)
     : QObject{parent}, serverAddress(serverAddress), serverPort(serverPort), udpSocket(new QUdpSocket())
@@ -32,7 +33,8 @@ void DetectionService::processDetectionRequest()
     udpSocket->readDatagram(data.data(), data.size(), &peerAddress);
 
     qDebug() << "Received command: " << data;
-    if (data == TcpMessages::Command::DiscoverSensors)
+    QJsonDocument dataDoc = QJsonDocument::fromJson(data);
+    if (dataDoc["command"] == TcpMessages::Command::DiscoverSensors["command"])
     {
         sendServerAddressToRequester(peerAddress);
         return;
@@ -45,8 +47,11 @@ void DetectionService::sendServerAddressToRequester(const QHostAddress &requeste
 {
     qDebug() << "Replying with my IP and port to requester: " << requesterAddress.toString();
 
+    QJsonObject message = TcpMessages::Command::Identify;
+    message["address"] =  serverAddress.toString();
+    message["port"] = serverPort;
+
     TcpClient tcpClient;
-    auto message = std::string(TcpMessages::Command::Identify) + " - " + serverAddress.toString().toStdString() + ";" + std::to_string(serverPort);
     tcpClient.sendRequest(requesterAddress, Ports::sensorDetectorPort, message);
 }
 

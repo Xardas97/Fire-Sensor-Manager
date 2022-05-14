@@ -2,12 +2,25 @@
 #define TCPSERVER_H
 
 #include <QObject>
+#include <QJsonObject>
 #include <QHostAddress>
 
 #include <memory>
 
 class QTcpSocket;
 class QTcpServer;
+
+class TcpSocket
+{
+    public:
+        TcpSocket(std::unique_ptr<QTcpSocket> tcpSocket);
+        ~TcpSocket();
+
+        void write(const QJsonObject& responseData) const;
+
+    private:
+        std::unique_ptr<QTcpSocket> tcpSocket;
+};
 
 class TcpServer : public QObject
 {
@@ -23,7 +36,7 @@ public:
     QHostAddress getServerAddress() const;
 
 signals:
-    void onReceivedCommand(QTcpSocket* socket, QByteArray data);
+    void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 
 private:
     void serverNewConnection();

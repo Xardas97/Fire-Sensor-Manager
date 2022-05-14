@@ -2,13 +2,14 @@
 #define TCPCLIENT_H
 
 #include <string>
+#include <QJsonObject>
 #include <QHostAddress>
 
 class TcpClient
 {
 public:
     TcpClient();
-    QByteArray sendRequest(const QHostAddress& address, quint16 port, const std::string& requestData);
+    QJsonObject sendRequest(const QHostAddress& address, quint16 port, const QJsonObject& requestData);
 };
 
 #endif // TCPCLIENT_H

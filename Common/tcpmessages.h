@@ -1,22 +1,32 @@
 #ifndef TCPMESSAGES_H
 #define TCPMESSAGES_H
 
+#include <QJsonObject>
+#include <QJsonDocument>
+
 namespace TcpMessages
 {
+    inline QByteArray getBytes(const QJsonObject& object, QJsonDocument::JsonFormat format = QJsonDocument::JsonFormat::Compact)
+    {
+        QJsonDocument doc(object);
+        return doc.toJson(format);
+    }
+
     class Command
     {
         public:
-            static const char* GetNumber;
-            static const char* DiscoverSensors;
-            static const char* Identify;
+            static const QJsonObject GetNumber;
+            static const QJsonObject DiscoverSensors;
+            static const QJsonObject Identify;
     };
 
-    class Reply
+    class Response
     {
         public:
-            static const char* Ack;
-            static const char* BrokenData;
-            static const char* CommandNotRecognized;
+            static const QJsonObject Ack;
+            static const QJsonObject BrokenData;
+            static const QJsonObject CommunicationFailed;
+            static const QJsonObject CommandNotRecognized;
     };
 }
 

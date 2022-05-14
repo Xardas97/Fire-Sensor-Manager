@@ -29,36 +29,33 @@ void FireSensorDetector::discoverSensors()
     for (int i = 0; i < Ports::maxSensorPorts; ++i)
     {
         // Sending broadcast to multiple ports to support simulating multiple sensors on same machine
-        udpSocket.writeDatagram(TcpMessages::Command::DiscoverSensors, QHostAddress::Broadcast, Ports::baseSensorPort + i);
+        auto command = TcpMessages::getBytes(TcpMessages::Command::DiscoverSensors);
+        udpSocket.writeDatagram(command, QHostAddress::Broadcast, Ports::baseSensorPort + i);
     }
 
     qDebug() << "Broadcast message sent!";
 }
 
-void FireSensorDetector::onReceivedCommand(QTcpSocket* socket, QByteArray data)
+void FireSensorDetector::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
-    QString dataString = data;
-
-    if (data.startsWith(TcpMessages::Command::Identify))
+    if (data["command"] == TcpMessages::Command::Identify["command"])
     {
-        auto info = dataString.remove(0, 16).split(';');
-
-        if (info.length() != 2)
+        if (!data.contains("address") || !data.contains("port"))
         {
-            qWarning() << "Sensor replied to discovery with broken data!";
-            socket->write(TcpMessages::Reply::BrokenData);
+            qWarning() << "Sensor did not reply with required data";
+            socket.write(TcpMessages::Response::BrokenData);
             return;
         }
 
-        QHostAddress sensorAddress {info[0]};
-        quint16 sensorPort = info[1].toUShort();
+        QHostAddress sensorAddress {data["address"].toString()};
+        quint16 sensorPort = data["port"].toInt();
         emit onSensorDiscovered(sensorAddress, sensorPort);
 
-        socket->write(TcpMessages::Reply::Ack);
+        socket.write(TcpMessages::Response::Ack);
         return;
     }
 
-    socket->write(TcpMessages::Reply::CommandNotRecognized);
+    socket.write(TcpMessages::Response::CommandNotRecognized);
     qDebug() << "Command unknown, error response returned!";
 }
 

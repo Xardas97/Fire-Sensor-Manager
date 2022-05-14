@@ -1,8 +1,11 @@
 #include "tcpserver.h"
 
+#include "tcpmessages.h"
+
 #include <QDebug>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QJsonDocument>
 
 TcpServer::TcpServer(QObject *parent)
     : QObject{parent}, tcpServer(new QTcpServer())
@@ -30,7 +33,7 @@ void TcpServer::serverNewConnection()
 {
     qDebug() << "TcpServer - New connection arrived";
 
-    auto socket = tcpServer->nextPendingConnection();
+    std::unique_ptr<QTcpSocket> socket(tcpServer->nextPendingConnection());
 
     qDebug() << "TcpServer - Waiting to read data";
     if (!socket->waitForReadyRead(3000))
@@ -42,7 +45,8 @@ void TcpServer::serverNewConnection()
     auto data = socket->readAll();
     qDebug() << "TcpServer - Data arrived: " << data;
 
-    emit onReceivedCommand(socket, data);
+    QJsonDocument dataDoc = QJsonDocument::fromJson(data);
+    emit onReceivedCommand(TcpSocket(std::move(socket)), dataDoc.object());
 }
 
 bool TcpServer::isListening() const
@@ -61,3 +65,15 @@ QHostAddress TcpServer::getServerAddress() const
 }
 
 TcpServer::~TcpServer() = default;
+
+TcpSocket::TcpSocket(std::unique_ptr<QTcpSocket> tcpSocket)
+    : tcpSocket(std::move(tcpSocket))
+{ }
+
+void TcpSocket::write(const QJsonObject &responseData) const
+{
+    tcpSocket->write(TcpMessages::getBytes(responseData));
+    tcpSocket->waitForBytesWritten();
+}
+
+TcpSocket::~TcpSocket() = default;

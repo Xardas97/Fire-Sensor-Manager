@@ -1,11 +1,14 @@
 #include "tcpclient.h"
 
+#include "tcpmessages.h"
+
 #include <QDebug>
 #include <QTcpSocket>
+#include <QJsonDocument>
 
 TcpClient::TcpClient() { }
 
-QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, const std::string& requestData)
+QJsonObject TcpClient::sendRequest(const QHostAddress& address, quint16 port, const QJsonObject& requestData)
 {
     QTcpSocket socket;
 
@@ -15,10 +18,10 @@ QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, con
     if (!socket.waitForConnected(3000))
     {
         qWarning("Client - Failed to connect to server!");
-        return QByteArray();
+        return TcpMessages::Response::CommunicationFailed;
     }
 
-    socket.write(requestData.data());
+    socket.write(TcpMessages::getBytes(requestData));
     socket.waitForBytesWritten();
 
     qDebug() << "Client - Waiting to read data";
@@ -26,7 +29,7 @@ QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, con
     {
         qWarning() << "Client - No data arrived!";
         socket.close();
-        return QByteArray();
+        return TcpMessages::Response::CommunicationFailed;
     }
 
     QByteArray data = socket.readAll();
@@ -34,5 +37,6 @@ QByteArray TcpClient::sendRequest(const QHostAddress& address, quint16 port, con
 
     socket.close();
 
-    return data;
+    QJsonDocument dataDoc = QJsonDocument::fromJson(data);
+    return dataDoc.object();
 }
