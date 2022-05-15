@@ -6,13 +6,14 @@
 
 class TcpServer;
 class TcpSocket;
+class SensorState;
 class QHostAddress;
 
 class Server : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(int nextNumber READ getNextNumber WRITE setNextNumber NOTIFY nextNumberChanged)
+    Q_PROPERTY(int temperature READ getTemperature WRITE setTemperature NOTIFY temperatureChanged)
 public:
     explicit Server(QObject *parent = nullptr);
     ~Server();
@@ -23,17 +24,17 @@ public:
     QHostAddress getServerAddress() const;
 
 public slots:
-    void setNextNumber(int nextNumber);
-    int getNextNumber();
+    void setTemperature(int temperature);
+    int getTemperature();
 
 signals:
-    void nextNumberChanged();
+    void temperatureChanged();
 
 private:
     QHostAddress getLocalAddress();
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 
-    int nextNumber = 0;
+    std::unique_ptr<SensorState> sensorState;
     std::unique_ptr<TcpServer> tcpServer;
 };
 

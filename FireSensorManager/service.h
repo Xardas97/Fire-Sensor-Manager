@@ -16,7 +16,7 @@ public:
     ~Service();
 
 public slots:
-    int getNextNumber();
+    int getTemperature();
     void discoverSensors();
 
 private:

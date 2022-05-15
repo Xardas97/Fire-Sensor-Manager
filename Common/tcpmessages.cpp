@@ -2,9 +2,9 @@
 
 namespace TcpMessages
 {
-    const QJsonObject Command::GetNumber       = {{"command", "GET_NUMBER"}};
-    const QJsonObject Command::DiscoverSensors = {{"command", "DISCOVER_FIRE_SENSORS"}};
     const QJsonObject Command::Identify        = {{"command", "IDENTIFY"}};
+    const QJsonObject Command::GetData         = {{"command", "GET_DATA"}};
+    const QJsonObject Command::DiscoverSensors = {{"command", "DISCOVER_FIRE_SENSORS"}};
 
     const QJsonObject Response::Ack                  = {{"response", "ACK"}};
     const QJsonObject Response::BrokenData           = {{"response", "BROKEN_DATA"}};

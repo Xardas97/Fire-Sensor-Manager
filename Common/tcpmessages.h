@@ -15,9 +15,9 @@ namespace TcpMessages
     class Command
     {
         public:
-            static const QJsonObject GetNumber;
-            static const QJsonObject DiscoverSensors;
             static const QJsonObject Identify;
+            static const QJsonObject GetData;
+            static const QJsonObject DiscoverSensors;
     };
 
     class Response

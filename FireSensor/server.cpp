@@ -3,6 +3,7 @@
 #include "ports.h"
 #include "tcpserver.h"
 #include "tcpmessages.h"
+#include "sensorstate.h"
 
 #include <QDebug>
 #include <QTcpSocket>
@@ -30,21 +31,22 @@ bool Server::startServer()
         return false;
     }
 
+    Capabilities capabilities = Capability::Temperature;
+    sensorState = std::make_unique<SensorState>(capabilities, getServerAddress(), getServerPort());
+
     return true;
 }
 
 void Server::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
-    if (data == TcpMessages::Command::GetNumber)
+    if (data == TcpMessages::Command::GetData)
     {
-        auto currentNumber = nextNumber++;
-        emit nextNumberChanged();
-        qDebug() << "Client asked for next number, returing: " << currentNumber;
+        qDebug() << "Client asked for sensor data, returing temperature: " << sensorState->getTemperature();
 
         auto response = TcpMessages::Response::Ack;
-        response["nextNumber"] = currentNumber;
+        response["data"] = sensorState->toDataJson();
         socket.write(response);
-        qDebug() << "Number data written";
+        qDebug() << "Sensor data written";
 
         return;
     }
@@ -80,16 +82,16 @@ QHostAddress Server::getServerAddress() const
     return tcpServer->getServerAddress();
 }
 
-void Server::setNextNumber(int nextNumber)
+void Server::setTemperature(int temperature)
 {
-    qDebug() << "User set nextNumber to " << nextNumber;
-    this->nextNumber = nextNumber;
-    emit nextNumberChanged();
+    qDebug() << "User set temperature to " << temperature;
+    sensorState->setTemperature(temperature);
+    emit temperatureChanged();
 }
 
-int Server::getNextNumber()
+int Server::getTemperature()
 {
-    return this->nextNumber;
+    return sensorState->getTemperature();
 }
 
 Server::~Server() = default;

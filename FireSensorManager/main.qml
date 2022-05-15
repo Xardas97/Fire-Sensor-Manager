@@ -18,7 +18,7 @@ Window {
 
             Layout.alignment: Qt.AlignCenter
 
-            text: "Just a random text"
+            text: "No temperature information"
             color: "purple"
         }
 
@@ -29,7 +29,7 @@ Window {
 
             text: "Send request to sensor"
 
-            onClicked: txt.text = "Server last returned: " + service.getNextNumber()
+            onClicked: txt.text = "Sensor temeprature: " + service.getTemperature()
         }
 
         Button {

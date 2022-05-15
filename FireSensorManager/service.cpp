@@ -3,6 +3,7 @@
 #include "ports.h"
 #include "tcpclient.h"
 #include "tcpmessages.h"
+#include "sensorstate.h"
 #include "Communication/firesensordetector.h"
 
 #include <QDebug>
@@ -14,21 +15,29 @@ Service::Service(QObject *parent)
     QObject::connect(fireSensorDetector.get(), &FireSensorDetector::onSensorDiscovered, this, &Service::onSensorDiscovered);
 }
 
-int Service::getNextNumber()
+int Service::getTemperature()
 {
     TcpClient tcpClient;
 
     QHostAddress address = QHostAddress("192.168.1.67");
-    auto data = tcpClient.sendRequest(address, Ports::baseSensorPort, TcpMessages::Command::GetNumber);
-    if (!data.contains("nextNumber"))
+
+    auto response = tcpClient.sendRequest(address, Ports::baseSensorPort, TcpMessages::Command::GetData);
+    if (!response.contains("data"))
     {
-        qWarning() << "TCP Communication failed!";
+        qWarning() << "Sensor returned no data!";
         return -1;
     }
 
-    int nextNumber = data["nextNumber"].toInt();
-    qDebug() << "User asked for next number, returing: " << nextNumber;
-    return nextNumber;
+    auto data = response["data"].toObject();
+    if (!data.contains("temperature"))
+    {
+        qWarning() << "Sensor did not return temperature!";
+        return -1;
+    }
+
+    int temperature = data["temperature"].toInt();
+    qDebug() << "User asked for temperature, returing: " << temperature;
+    return temperature;
 }
 
 void Service::discoverSensors()

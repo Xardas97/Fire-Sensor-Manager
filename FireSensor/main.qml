@@ -18,30 +18,30 @@ Window {
         anchors.centerIn: parent
 
         RowLayout {
-            id: nextNumberRow
+            id: temperatureRow
 
             Layout.alignment: Qt.AlignCenter
 
             Label {
-                id: lblNextNumber
+                id: lbltemperature
 
                 Layout.alignment: Qt.AlignCenter
 
-                text: "Next Number:"
+                text: "Temperature:"
                 color: "black"
             }
 
             SpinBox {
-                id: spinNextNumber
+                id: spintemperature
 
                 Layout.alignment: Qt.AlignCenter
 
-                value: server.nextNumber
-                from: -100
+                value: server.temperature
+                from: -20
                 to: 100
                 editable: true
 
-                onValueModified: server.nextNumber = value
+                onValueModified: server.temperature = value
             }
         }
 
