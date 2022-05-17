@@ -34,6 +34,8 @@ bool Server::startServer()
 
     Capabilities capabilities = Capability::Temperature;
     sensorState = std::make_shared<SensorState>(capabilities, tcpServer->getServerAddress(), tcpServer->getServerPort());
+    emit sensorStateChanged();
+
     detectionService = std::make_unique<DetectionService>(sensorState);
 
     return true;
@@ -74,16 +76,9 @@ QHostAddress Server::getLocalAddress()
     return QHostAddress::Null;
 }
 
-void Server::setTemperature(int temperature)
+SensorState* Server::getSensorState() const
 {
-    qDebug() << "User set temperature to " << temperature;
-    sensorState->setTemperature(temperature);
-    emit temperatureChanged();
-}
-
-int Server::getTemperature()
-{
-    return sensorState->getTemperature();
+    return sensorState.get();
 }
 
 Server::~Server() = default;

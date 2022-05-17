@@ -1,12 +1,13 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "sensorstate.h"
+
 #include <QObject>
 #include <memory>
 
 class TcpServer;
 class TcpSocket;
-class SensorState;
 class QHostAddress;
 class DetectionService;
 
@@ -14,19 +15,16 @@ class Server : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(int temperature READ getTemperature WRITE setTemperature NOTIFY temperatureChanged)
+    Q_PROPERTY(SensorState* sensorState READ getSensorState NOTIFY sensorStateChanged)
 public:
     explicit Server(QObject *parent = nullptr);
     ~Server();
 
     bool startServer();
-
-public slots:
-    void setTemperature(int temperature);
-    int getTemperature();
+    SensorState* getSensorState() const;
 
 signals:
-    void temperatureChanged();
+    void sensorStateChanged();
 
 private:
     QHostAddress getLocalAddress();

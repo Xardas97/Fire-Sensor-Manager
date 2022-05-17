@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <QFlags>
+#include <QObject>
 #include <QJsonObject>
 #include <QHostAddress>
 
@@ -30,8 +31,22 @@ enum Status
 Q_DECLARE_FLAGS(Statuses, Status)
 Q_DECLARE_OPERATORS_FOR_FLAGS(Statuses)
 
-class SensorState
+class SensorState : public QObject
 {
+    Q_OBJECT
+
+    Q_PROPERTY(QUuid        uuid             READ getUuid         CONSTANT)
+    Q_PROPERTY(Capabilities capabilities     READ getCapabilities CONSTANT)
+    Q_PROPERTY(QHostAddress address          READ getAddress      CONSTANT)
+    Q_PROPERTY(quint16      port             READ getPort         CONSTANT)
+
+    Q_PROPERTY(std::string  name             READ getName             WRITE setName             NOTIFY nameChanged)
+    Q_PROPERTY(Statuses     status           READ getStatus           WRITE setStatus           NOTIFY statusChanged)
+    Q_PROPERTY(short        temperature      READ getTemperature      WRITE setTemperature      NOTIFY temperatureChanged)
+    Q_PROPERTY(bool         smokeDetected    READ getSmokeDetected    WRITE setSmokeDetected    NOTIFY smokeDetectedChanged)
+    Q_PROPERTY(int          co2Concentration READ getCo2Concentration WRITE setCo2Concentration NOTIFY co2ConcentrationChanged)
+    Q_PROPERTY(short        pollution        READ getPollution        WRITE setPollution        NOTIFY pollutionChanged)
+
     public:
         SensorState(Capabilities capabilities, QHostAddress address, quint16 port);
 
@@ -56,6 +71,14 @@ class SensorState
         void setCo2Concentration(int newCo2Concentration);
         short getPollution() const;
         void setPollution(short newPollution);
+
+    signals:
+        void nameChanged();
+        void statusChanged();
+        void temperatureChanged();
+        void smokeDetectedChanged();
+        void co2ConcentrationChanged();
+        void pollutionChanged();
 
     private:
         SensorState(QUuid uuid, std::string name, Capabilities capabilities, QHostAddress address, quint16 port);

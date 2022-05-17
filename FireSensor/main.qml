@@ -36,12 +36,12 @@ Window {
 
                 Layout.alignment: Qt.AlignCenter
 
-                value: server.temperature
+                value: server.sensorState.temperature
                 from: -20
                 to: 100
                 editable: true
 
-                onValueModified: server.temperature = value
+                onValueModified: server.sensorState.temperature = value
             }
         }
 
