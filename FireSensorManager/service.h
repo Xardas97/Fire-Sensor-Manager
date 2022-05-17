@@ -1,6 +1,7 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+#include <vector>
 #include <memory>
 #include <QObject>
 
@@ -23,6 +24,7 @@ public slots:
 private:
     void onSensorDiscovered(std::shared_ptr<SensorState> sensor);
 
+    std::vector<std::shared_ptr<SensorState>> knownSensors;
     std::unique_ptr<FireSensorDetector> fireSensorDetector;
 };
 

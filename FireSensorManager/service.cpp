@@ -8,6 +8,7 @@
 
 #include <QDebug>
 #include <QTcpSocket>
+#include <QRandomGenerator>
 
 Service::Service(QObject *parent)
     : QObject{parent}, fireSensorDetector(new FireSensorDetector())
@@ -19,9 +20,19 @@ int Service::getTemperature()
 {
     TcpClient tcpClient;
 
-    QHostAddress address = QHostAddress("192.168.1.67");
+    if (knownSensors.size() == 0)
+    {
+        qDebug() << "No known sensors to send the request to, aborting";
+        return -1;
+    }
 
-    auto response = tcpClient.sendRequest(address, Ports::baseSensorPort, TcpMessages::Command::GetData);
+    auto rand = QRandomGenerator::global()->bounded(0, (int)knownSensors.size());
+    auto sensor = knownSensors[rand];
+
+    auto address = sensor->getAddress();
+    auto port = sensor->getPort();
+
+    auto response = tcpClient.sendRequest(address, port, TcpMessages::Command::GetData);
     if (!response.contains("data"))
     {
         qWarning() << "Sensor returned no data!";
@@ -48,6 +59,14 @@ void Service::discoverSensors()
 void Service::onSensorDiscovered(std::shared_ptr<SensorState> sensor)
 {
     qDebug() << "Discovered sensor: " << *sensor;
+
+    auto found = std::find_if(knownSensors.cbegin(),
+                              knownSensors.cend(),
+                              [&sensor](const std::shared_ptr<SensorState> knownSensor) {return knownSensor->getUuid() == sensor->getUuid(); });
+    if (found == knownSensors.cend()) {
+        qDebug() << "This is a new sensor!";
+        knownSensors.push_back(sensor);
+    }
 }
 
 Service::~Service() = default;
