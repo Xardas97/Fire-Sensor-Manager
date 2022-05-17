@@ -3,17 +3,18 @@
 #include "ports.h"
 #include "tcpclient.h"
 #include "tcpmessages.h"
+#include "sensorstate.h"
 
 #include <QDebug>
 #include <QUdpSocket>
 #include <QJsonDocument>
 
-DetectionService::DetectionService(const QHostAddress& serverAddress, quint16 serverPort, QObject *parent)
-    : QObject{parent}, serverAddress(serverAddress), serverPort(serverPort), udpSocket(new QUdpSocket())
+DetectionService::DetectionService(std::shared_ptr<SensorState> sensorState, QObject *parent)
+    : QObject{parent}, sensorState(sensorState), udpSocket(new QUdpSocket())
 {
-    udpSocket->bind(serverPort, QUdpSocket::ShareAddress);
+    udpSocket->bind(sensorState->getPort(), QUdpSocket::ShareAddress);
     QObject::connect(udpSocket.get(), &QUdpSocket::readyRead, this, &DetectionService::processDetectionRequest);
-    qDebug() << "DetectionService listening on port " << serverPort;
+    qDebug() << "DetectionService listening on port " << sensorState->getPort();
 }
 
 void DetectionService::processDetectionRequest()
@@ -45,11 +46,10 @@ void DetectionService::processDetectionRequest()
 
 void DetectionService::sendServerAddressToRequester(const QHostAddress &requesterAddress)
 {
-    qDebug() << "Replying with my IP and port to requester: " << requesterAddress.toString();
+    qDebug() << "Replying with my identify data: " << requesterAddress.toString();
 
     QJsonObject message = TcpMessages::Command::Identify;
-    message["address"] =  serverAddress.toString();
-    message["port"] = serverPort;
+    message["data"] = sensorState->toIdentityJson();
 
     TcpClient tcpClient;
     tcpClient.sendRequest(requesterAddress, Ports::sensorDetectorPort, message);

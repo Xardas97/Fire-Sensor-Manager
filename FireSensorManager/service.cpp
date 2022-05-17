@@ -45,9 +45,9 @@ void Service::discoverSensors()
     fireSensorDetector->discoverSensors();
 }
 
-void Service::onSensorDiscovered(const QHostAddress& address, quint16 port)
+void Service::onSensorDiscovered(std::shared_ptr<SensorState> sensor)
 {
-    qDebug() << "Discovered sensor: " << address << "; " << port;
+    qDebug() << "Discovered sensor: " << *sensor;
 }
 
 Service::~Service() = default;

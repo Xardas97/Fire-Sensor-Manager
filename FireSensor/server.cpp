@@ -4,6 +4,7 @@
 #include "tcpserver.h"
 #include "tcpmessages.h"
 #include "sensorstate.h"
+#include "detectionservice.h"
 
 #include <QDebug>
 #include <QTcpSocket>
@@ -32,7 +33,8 @@ bool Server::startServer()
     }
 
     Capabilities capabilities = Capability::Temperature;
-    sensorState = std::make_unique<SensorState>(capabilities, getServerAddress(), getServerPort());
+    sensorState = std::make_shared<SensorState>(capabilities, tcpServer->getServerAddress(), tcpServer->getServerPort());
+    detectionService = std::make_unique<DetectionService>(sensorState);
 
     return true;
 }
@@ -70,16 +72,6 @@ QHostAddress Server::getLocalAddress()
     }
 
     return QHostAddress::Null;
-}
-
-quint16 Server::getServerPort() const
-{
-    return tcpServer->getServerPort();
-}
-
-QHostAddress Server::getServerAddress() const
-{
-    return tcpServer->getServerAddress();
 }
 
 void Server::setTemperature(int temperature)

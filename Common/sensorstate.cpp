@@ -50,13 +50,13 @@ QJsonObject SensorState::toIdentityJson() const
     return json;
 }
 
-SensorState SensorState::fromJson(QJsonObject json)
+std::unique_ptr<SensorState> SensorState::fromJson(QJsonObject json)
 {
-    return SensorState(QUuid::fromString(json["uuid"].toString()),
-                       json["name"].toString().toStdString(),
-                       Capabilities::fromInt(json["capabilities"].toInt()),
-                       QHostAddress(json["address"].toString()),
-                       json["port"].toInt());
+    return std::unique_ptr<SensorState>(new SensorState(QUuid::fromString(json["uuid"].toString()),
+                                                        json["name"].toString().toStdString(),
+                                                        Capabilities::fromInt(json["capabilities"].toInt()),
+                                                        QHostAddress(json["address"].toString()),
+                                                        json["port"].toInt()));
 }
 
 QJsonObject SensorState::toDataJson() const

@@ -6,21 +6,20 @@
 #include <QHostAddress>
 
 class QUdpSocket;
+class SensorState;
 
 class DetectionService : public QObject
 {
     Q_OBJECT
 public:
-    explicit DetectionService(const QHostAddress& serverAddress, quint16 serverPort, QObject *parent = nullptr);
+    explicit DetectionService(std::shared_ptr<SensorState> sensorState, QObject *parent = nullptr);
     ~DetectionService();
 
 private:
     void processDetectionRequest();
     void sendServerAddressToRequester(const QHostAddress& requesterAddress);
 
-    QHostAddress serverAddress;
-    quint16 serverPort;
-
+    std::shared_ptr<SensorState> sensorState;
     std::unique_ptr<QUdpSocket> udpSocket;
 };
 

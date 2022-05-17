@@ -8,6 +8,7 @@ class TcpServer;
 class TcpSocket;
 class SensorState;
 class QHostAddress;
+class DetectionService;
 
 class Server : public QObject
 {
@@ -20,9 +21,6 @@ public:
 
     bool startServer();
 
-    quint16 getServerPort() const;
-    QHostAddress getServerAddress() const;
-
 public slots:
     void setTemperature(int temperature);
     int getTemperature();
@@ -34,8 +32,10 @@ private:
     QHostAddress getLocalAddress();
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 
-    std::unique_ptr<SensorState> sensorState;
+    std::shared_ptr<SensorState> sensorState;
+
     std::unique_ptr<TcpServer> tcpServer;
+    std::unique_ptr<DetectionService> detectionService;
 };
 
 #endif // SERVER_H

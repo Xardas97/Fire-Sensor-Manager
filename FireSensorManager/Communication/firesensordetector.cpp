@@ -3,6 +3,7 @@
 #include "ports.h"
 #include "tcpserver.h"
 #include "tcpmessages.h"
+#include "sensorstate.h"
 
 #include <QUdpSocket>
 #include <QTcpSocket>
@@ -36,20 +37,18 @@ void FireSensorDetector::discoverSensors()
     qDebug() << "Broadcast message sent!";
 }
 
-void FireSensorDetector::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
+void FireSensorDetector::onReceivedCommand(const TcpSocket& socket, const QJsonObject& command)
 {
-    if (data["command"] == TcpMessages::Command::Identify["command"])
+    if (command["command"] == TcpMessages::Command::Identify["command"])
     {
-        if (!data.contains("address") || !data.contains("port"))
+        if (!command.contains("data"))
         {
-            qWarning() << "Sensor did not reply with required data";
-            socket.write(TcpMessages::Response::BrokenData);
+            qWarning() << "Sensor returned no data!";
             return;
         }
 
-        QHostAddress sensorAddress {data["address"].toString()};
-        quint16 sensorPort = data["port"].toInt();
-        emit onSensorDiscovered(sensorAddress, sensorPort);
+        auto sensor = SensorState::fromJson(command["data"].toObject());
+        emit onSensorDiscovered(std::move(sensor));
 
         socket.write(TcpMessages::Response::Ack);
         return;

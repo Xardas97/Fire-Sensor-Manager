@@ -6,6 +6,7 @@
 
 class TcpServer;
 class TcpSocket;
+class SensorState;
 class QHostAddress;
 
 class FireSensorDetector : public QObject
@@ -18,7 +19,7 @@ public:
     void discoverSensors();
 
 signals:
-    void onSensorDiscovered(const QHostAddress& address, quint16 port);
+    void onSensorDiscovered(std::shared_ptr<SensorState> sensorState);
 
 private:
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);

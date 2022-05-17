@@ -4,6 +4,7 @@
 #include <memory>
 #include <QObject>
 
+class SensorState;
 class QHostAddress;
 class FireSensorDetector;
 
@@ -20,7 +21,7 @@ public slots:
     void discoverSensors();
 
 private:
-    void onSensorDiscovered(const QHostAddress& address, quint16 port);
+    void onSensorDiscovered(std::shared_ptr<SensorState> sensor);
 
     std::unique_ptr<FireSensorDetector> fireSensorDetector;
 };

@@ -3,6 +3,7 @@
 
 #include <QUuid>
 #include <string>
+#include <memory>
 #include <QFlags>
 #include <QJsonObject>
 #include <QHostAddress>
@@ -37,7 +38,7 @@ class SensorState
         QJsonObject toIdentityJson() const;
         QJsonObject toDataJson() const;
         void updateData(QJsonObject json);
-        static SensorState fromJson(QJsonObject json);
+        static std::unique_ptr<SensorState> fromJson(QJsonObject json);
 
         const QUuid &getUuid() const;
         const std::string &getName() const;
@@ -75,5 +76,11 @@ class SensorState
 
         static std::string generateSensorName(Capabilities capabilities);
 };
+
+QDebug inline operator<<(QDebug out, const SensorState& sensorState)
+{
+    return out << "[uuid: " << sensorState.getUuid() << ", name: " << sensorState.getName().data() <<
+                  ", address" << sensorState.getAddress() << ", port: " << sensorState.getPort() << "]";
+}
 
 #endif // SENSORSTATE_H

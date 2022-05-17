@@ -24,13 +24,7 @@ int main(int argc, char *argv[])
 
     Server server;
     bool serverStarted = server.startServer();
-
-    std::unique_ptr<DetectionService> detectionService;
-    if (serverStarted)
-    {
-        detectionService = std::make_unique<DetectionService>(server.getServerAddress(), server.getServerPort());
-    }
-    else
+    if (!serverStarted)
     {
         mainPage = "FailedToStart.qml";
     }
