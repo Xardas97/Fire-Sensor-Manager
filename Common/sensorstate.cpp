@@ -6,7 +6,7 @@ SensorState::SensorState(Capabilities capabilities, QHostAddress address, quint1
     : SensorState(QUuid::createUuid(), generateSensorName(capabilities), capabilities, address, port)
 { }
 
-SensorState::SensorState(QUuid uuid, std::string name, Capabilities capabilities, QHostAddress address, quint16 port)
+SensorState::SensorState(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port)
     : QObject {nullptr},
       uuid(uuid),
       name(name),
@@ -20,9 +20,9 @@ SensorState::SensorState(QUuid uuid, std::string name, Capabilities capabilities
       pollution(30)
 { }
 
-std::string SensorState::generateSensorName(Capabilities capabilities)
+QString SensorState::generateSensorName(Capabilities capabilities)
 {
-    std::string name;
+    QString name;
 
     if (capabilities.testFlag(Capability::Temperature))
         name += "T";
@@ -33,7 +33,7 @@ std::string SensorState::generateSensorName(Capabilities capabilities)
     if (capabilities.testFlag(Capability::Pollution))
         name += "P";
 
-    name += ("-" + std::to_string(QRandomGenerator::global()->bounded(1000, 10000)));
+    name += ("-" + QString::number(QRandomGenerator::global()->bounded(1000, 10000)));
 
     return name;
 }
@@ -43,7 +43,7 @@ QJsonObject SensorState::toIdentityJson() const
     QJsonObject json;
 
     json["uuid"] = uuid.toString(QUuid::StringFormat::WithoutBraces);
-    json["name"] = name.c_str();
+    json["name"] = name;
     json["capabilities"] = QString::number(capabilities.toInt());
     json["address"] = address.toString();
     json["port"] = port;
@@ -54,7 +54,7 @@ QJsonObject SensorState::toIdentityJson() const
 std::unique_ptr<SensorState> SensorState::fromJson(QJsonObject json)
 {
     return std::unique_ptr<SensorState>(new SensorState(QUuid::fromString(json["uuid"].toString()),
-                                                        json["name"].toString().toStdString(),
+                                                        json["name"].toString(),
                                                         Capabilities::fromInt(json["capabilities"].toInt()),
                                                         QHostAddress(json["address"].toString()),
                                                         json["port"].toInt()));
@@ -64,7 +64,7 @@ QJsonObject SensorState::toDataJson() const
 {
     QJsonObject json;
 
-    json["name"] = name.c_str();
+    json["name"] = name;
     json["status"] = QString::number(status.toInt());
 
     if (capabilities.testFlag(Capability::Temperature))
@@ -81,7 +81,7 @@ QJsonObject SensorState::toDataJson() const
 
 void SensorState::updateData(QJsonObject json)
 {
-    setName(json["name"].toString().toStdString());
+    setName(json["name"].toString());
     setStatus(Statuses::fromInt(json["status"].toInt()));
 
     if (capabilities.testFlag(Capability::Temperature))
@@ -122,12 +122,12 @@ const QUuid &SensorState::getUuid() const
     return uuid;
 }
 
-const std::string &SensorState::getName() const
+const QString &SensorState::getName() const
 {
     return name;
 }
 
-void SensorState::setName(const std::string &newName)
+void SensorState::setName(const QString &newName)
 {
     name = newName;
     emit nameChanged();

@@ -40,7 +40,7 @@ class SensorState : public QObject
     Q_PROPERTY(QHostAddress address          READ getAddress      CONSTANT)
     Q_PROPERTY(quint16      port             READ getPort         CONSTANT)
 
-    Q_PROPERTY(std::string  name             READ getName             WRITE setName             NOTIFY nameChanged)
+    Q_PROPERTY(QString      name             READ getName             WRITE setName             NOTIFY nameChanged)
     Q_PROPERTY(Statuses     status           READ getStatus           WRITE setStatus           NOTIFY statusChanged)
     Q_PROPERTY(short        temperature      READ getTemperature      WRITE setTemperature      NOTIFY temperatureChanged)
     Q_PROPERTY(bool         smokeDetected    READ getSmokeDetected    WRITE setSmokeDetected    NOTIFY smokeDetectedChanged)
@@ -56,8 +56,8 @@ class SensorState : public QObject
         static std::unique_ptr<SensorState> fromJson(QJsonObject json);
 
         const QUuid &getUuid() const;
-        const std::string &getName() const;
-        void setName(const std::string &newName);
+        const QString &getName() const;
+        void setName(const QString &newName);
         const Capabilities &getCapabilities() const;
         const QHostAddress &getAddress() const;
         quint16 getPort() const;
@@ -81,10 +81,10 @@ class SensorState : public QObject
         void pollutionChanged();
 
     private:
-        SensorState(QUuid uuid, std::string name, Capabilities capabilities, QHostAddress address, quint16 port);
+        SensorState(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port);
 
         QUuid uuid;
-        std::string name;
+        QString name;
         Capabilities capabilities;
 
         QHostAddress address;
@@ -97,12 +97,12 @@ class SensorState : public QObject
         int co2Concentration;
         short pollution;
 
-        static std::string generateSensorName(Capabilities capabilities);
+        static QString generateSensorName(Capabilities capabilities);
 };
 
 QDebug inline operator<<(QDebug out, const SensorState& sensorState)
 {
-    return out << "[uuid: " << sensorState.getUuid() << ", name: " << sensorState.getName().data() <<
+    return out << "[uuid: " << sensorState.getUuid() << ", name: " << sensorState.getName() <<
                   ", address" << sensorState.getAddress() << ", port: " << sensorState.getPort() << "]";
 }
 
