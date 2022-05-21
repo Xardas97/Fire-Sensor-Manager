@@ -32,7 +32,7 @@ bool Server::startServer()
         return false;
     }
 
-    Capabilities capabilities = Capability::Temperature;
+    Capabilities capabilities = Capability::Temperature | Capability::CO2Concentration | Capability::Smoke | Capability::Pollution;
     sensorState = std::make_shared<SensorState>(capabilities, tcpServer->getServerAddress(), tcpServer->getServerPort());
     emit sensorStateChanged();
 

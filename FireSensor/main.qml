@@ -1,49 +1,30 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Controls
+
+import "Values"
 
 Window {
-    minimumWidth: column.width * 1.2
-    minimumHeight: column.height + 50
-    width: minimumWidth
-    height: minimumHeight
+    id: root
+    title: qsTr("FireSensor")
+
+    minimumWidth: 400
+    minimumHeight: 250
+    width: minimumWidth * 2
+    height: minimumHeight * 2
 
     visible: true
 
-    title: qsTr("FireSensor")
+    property int fontSize: dummyText.font.pixelSize * Math.min(height / minimumHeight, width / minimumWidth)
+    Text { id: dummyText }
 
-    ColumnLayout {
-        id: column
+    DynamicSensorValues {
+        id: gridValues
 
+        fontSize: root.fontSize
+
+        width: parent.width * 0.9
+        height: parent.height * 0.9
         anchors.centerIn: parent
-
-        RowLayout {
-            id: temperatureRow
-
-            Layout.alignment: Qt.AlignCenter
-
-            Label {
-                id: lbltemperature
-
-                Layout.alignment: Qt.AlignCenter
-
-                text: "Temperature:"
-                color: "black"
-            }
-
-            SpinBox {
-                id: spintemperature
-
-                Layout.alignment: Qt.AlignCenter
-
-                value: server.sensorState.temperature
-                from: -20
-                to: 100
-                editable: true
-
-                onValueModified: server.sensorState.temperature = value
-            }
-        }
-
     }
 }
