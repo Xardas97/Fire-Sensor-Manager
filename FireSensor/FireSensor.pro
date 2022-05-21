@@ -4,7 +4,7 @@ QT += quick \
 SOURCES += \
         detectionservice.cpp \
         main.cpp \
-        server.cpp
+        sensor.cpp
 
 RESOURCES += resources.qrc
 
@@ -21,7 +21,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     detectionservice.h \
-    server.h
+    sensor.h
 
 DISTFILES +=
 

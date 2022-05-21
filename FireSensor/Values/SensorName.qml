@@ -37,7 +37,7 @@ Row {
 
         font.pixelSize: fontSize
 
-        text: server.sensorState.name
-        onEditingFinished: server.sensorState.name = text
+        text: sensor.sensorState.name
+        onEditingFinished: sensor.sensorState.name = text
     }
 }

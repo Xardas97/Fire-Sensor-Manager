@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef SENSOR_H
+#define SENSOR_H
 
 #include "sensorstate.h"
 
@@ -11,16 +11,16 @@ class TcpSocket;
 class QHostAddress;
 class DetectionService;
 
-class Server : public QObject
+class Sensor : public QObject
 {
     Q_OBJECT
 
     Q_PROPERTY(SensorState* sensorState READ getSensorState NOTIFY sensorStateChanged)
 public:
-    explicit Server(QObject *parent = nullptr);
-    ~Server();
+    explicit Sensor(QObject *parent = nullptr);
+    ~Sensor();
 
-    bool startServer();
+    bool startSensor();
     SensorState* getSensorState() const;
 
 signals:
@@ -36,4 +36,4 @@ private:
     std::unique_ptr<DetectionService> detectionService;
 };
 
-#endif // SERVER_H
+#endif // SENSOR_H

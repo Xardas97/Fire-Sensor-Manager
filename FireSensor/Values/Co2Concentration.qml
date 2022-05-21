@@ -34,12 +34,12 @@ Row {
 
         font.pixelSize: fontSize
 
-        value: server.sensorState.co2Concentration
+        value: sensor.sensorState.co2Concentration
         from: 0
         to: 100000
         stepSize: 200
         editable: true
 
-        onValueModified: server.sensorState.co2Concentration = value
+        onValueModified: sensor.sensorState.co2Concentration = value
     }
 }

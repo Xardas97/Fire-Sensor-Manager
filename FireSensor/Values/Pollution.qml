@@ -34,12 +34,12 @@ Row {
 
         font.pixelSize: fontSize
 
-        value: server.sensorState.pollution
+        value: sensor.sensorState.pollution
         from: 0
         to: 500
         stepSize: 20
         editable: true
 
-        onValueModified: server.sensorState.pollution = value
+        onValueModified: sensor.sensorState.pollution = value
     }
 }

@@ -32,7 +32,7 @@ Row {
         height: root.height
         width: root.width * 0.62
 
-        checked: server.sensorState.smokeDetected
-        onCheckStateChanged: server.sensorState.smokeDetected = checked
+        checked: sensor.sensorState.smokeDetected
+        onCheckStateChanged: sensor.sensorState.smokeDetected = checked
     }
 }

@@ -34,11 +34,11 @@ Row {
 
         font.pixelSize: fontSize
 
-        value: server.sensorState.temperature
+        value: sensor.sensorState.temperature
         from: -20
         to: 100
         editable: true
 
-        onValueModified: server.sensorState.temperature = value
+        onValueModified: sensor.sensorState.temperature = value
     }
 }

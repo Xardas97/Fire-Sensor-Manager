@@ -1,4 +1,4 @@
-#include "server.h"
+#include "sensor.h"
 #include "detectionservice.h"
 
 #include <memory>
@@ -22,9 +22,9 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     auto mainPage = "main.qml";
 
-    Server server;
-    bool serverStarted = server.startServer();
-    if (!serverStarted)
+    Sensor sensor;
+    bool sensorStarter = sensor.startSensor();
+    if (!sensorStarter)
     {
         mainPage = "FailedToStart.qml";
     }
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     QQmlContext* rootContext = engine.rootContext();
-    rootContext->setContextProperty("server", &server);
+    rootContext->setContextProperty("sensor", &sensor);
 
     setupUi(app, engine, mainPage);
 

@@ -1,4 +1,4 @@
-#include "server.h"
+#include "sensor.h"
 
 #include "ports.h"
 #include "tcpserver.h"
@@ -10,13 +10,13 @@
 #include <QTcpSocket>
 #include <QNetworkInterface>
 
-Server::Server(QObject *parent)
+Sensor::Sensor(QObject *parent)
     : QObject{parent}, tcpServer(new TcpServer())
 {
-    QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &Server::onReceivedCommand);
+    QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &Sensor::onReceivedCommand);
 }
 
-bool Server::startServer()
+bool Sensor::startSensor()
 {
     auto localAddress = getLocalAddress();
 
@@ -41,7 +41,7 @@ bool Server::startServer()
     return true;
 }
 
-void Server::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
+void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
     if (data == TcpMessages::Command::GetData)
     {
@@ -59,7 +59,7 @@ void Server::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
     qDebug() << "Command unknown, error response returned!";
 }
 
-QHostAddress Server::getLocalAddress()
+QHostAddress Sensor::getLocalAddress()
 {
     auto addresses = QNetworkInterface::allAddresses();
     for (const auto &address: addresses)
@@ -76,9 +76,9 @@ QHostAddress Server::getLocalAddress()
     return QHostAddress::Null;
 }
 
-SensorState* Server::getSensorState() const
+SensorState* Sensor::getSensorState() const
 {
     return sensorState.get();
 }
 
-Server::~Server() = default;
+Sensor::~Sensor() = default;

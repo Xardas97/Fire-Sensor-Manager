@@ -13,10 +13,10 @@ CheckBox {
     checked: false
     onCheckStateChanged: {
         if (checked) {
-            server.sensorState.status = server.sensorState.status | root.mask
+            sensor.sensorState.status = sensor.sensorState.status | root.mask
         }
         else {
-            server.sensorState.status = server.sensorState.status & root.mask
+            sensor.sensorState.status = sensor.sensorState.status & root.mask
         }
     }
 }
