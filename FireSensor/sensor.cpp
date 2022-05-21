@@ -16,7 +16,7 @@ Sensor::Sensor(QObject *parent)
     QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &Sensor::onReceivedCommand);
 }
 
-bool Sensor::startSensor()
+bool Sensor::startSensor(Capabilities capabilities)
 {
     auto localAddress = getLocalAddress();
 
@@ -32,7 +32,6 @@ bool Sensor::startSensor()
         return false;
     }
 
-    Capabilities capabilities = Capability::Temperature | Capability::CO2Concentration | Capability::Smoke | Capability::Pollution;
     sensorState = std::make_shared<SensorState>(capabilities, tcpServer->getServerAddress(), tcpServer->getServerPort());
     emit sensorStateChanged();
 

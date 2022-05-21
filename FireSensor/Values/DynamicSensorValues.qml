@@ -30,6 +30,8 @@ ColumnLayout {
     SmokeDetection {
         id: smokeDetection
 
+        visible: sensor.sensorState.capabilities & 2
+
         fontSize: root.fontSize
 
         Layout.fillWidth: true
@@ -39,6 +41,8 @@ ColumnLayout {
 
     Temperature {
         id: temperature
+
+        visible: sensor.sensorState.capabilities & 1
 
         fontSize: root.fontSize
 
@@ -50,6 +54,8 @@ ColumnLayout {
     Co2Concentration {
         id: co2Concentration
 
+        visible: sensor.sensorState.capabilities & 4
+
         fontSize: root.fontSize
 
         Layout.fillWidth: true
@@ -59,6 +65,8 @@ ColumnLayout {
 
     Pollution {
         id: pollution
+
+        visible: sensor.sensorState.capabilities & 8
 
         fontSize: root.fontSize
 

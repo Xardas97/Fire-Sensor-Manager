@@ -20,21 +20,15 @@ void setupUi(const QGuiApplication& app, QQmlApplicationEngine& engine, QString 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    auto mainPage = "main.qml";
 
     Sensor sensor;
-    bool sensorStarter = sensor.startSensor();
-    if (!sensorStarter)
-    {
-        mainPage = "FailedToStart.qml";
-    }
 
     QQmlApplicationEngine engine;
 
     QQmlContext* rootContext = engine.rootContext();
     rootContext->setContextProperty("sensor", &sensor);
 
-    setupUi(app, engine, mainPage);
+    setupUi(app, engine, "main.qml");
 
     return app.exec();
 }

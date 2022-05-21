@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>FailedToStart.qml</file>
         <file>Values/SensorStatuses.qml</file>
         <file>Values/SmokeDetection.qml</file>
         <file>Values/Temperature.qml</file>
@@ -10,5 +9,6 @@
         <file>Values/SensorName.qml</file>
         <file>Values/SensorStatus.qml</file>
         <file>Values/DynamicSensorValues.qml</file>
+        <file>SensorSetup.qml</file>
     </qresource>
 </RCC>

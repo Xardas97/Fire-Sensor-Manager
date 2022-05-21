@@ -20,8 +20,10 @@ public:
     explicit Sensor(QObject *parent = nullptr);
     ~Sensor();
 
-    bool startSensor();
     SensorState* getSensorState() const;
+
+public slots:
+    bool startSensor(Capabilities capabilities);
 
 signals:
     void sensorStateChanged();
