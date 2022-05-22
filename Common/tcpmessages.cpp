@@ -4,6 +4,7 @@ namespace TcpMessages
 {
     const QJsonObject Command::Identify        = {{"command", "IDENTIFY"}};
     const QJsonObject Command::GetData         = {{"command", "GET_DATA"}};
+    const QJsonObject Command::SetName         = {{"command", "SET_NAME"}};
     const QJsonObject Command::DiscoverSensors = {{"command", "DISCOVER_FIRE_SENSORS"}};
 
     const QJsonObject Response::Ack                  = {{"response", "ACK"}};

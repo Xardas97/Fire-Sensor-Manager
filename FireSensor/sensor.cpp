@@ -50,7 +50,7 @@ void Sensor::stopSensor()
 
 void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
-    if (data == TcpMessages::Command::GetData)
+    if (data["command"] == TcpMessages::Command::GetData["command"])
     {
         qDebug() << "Client asked for sensor data, returing temperature: " << sensorState->getTemperature();
 
@@ -58,6 +58,26 @@ void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
         response["data"] = sensorState->toDataJson();
         socket.write(response);
         qDebug() << "Sensor data written";
+
+        return;
+    }
+
+    if (data["command"] == TcpMessages::Command::SetName["command"])
+    {
+        qDebug() << "Client wants to change sensor name";
+
+        if (!data.contains("name")) {
+            qWarning() << "Name field missing!";
+            socket.write(TcpMessages::Response::BrokenData);
+            return;
+        }
+
+        auto newName = data["name"].toString();
+        qDebug() << "Changing name to: " << newName;
+        sensorState->setName(newName);
+
+        auto response = TcpMessages::Response::Ack;
+        socket.write(response);
 
         return;
     }

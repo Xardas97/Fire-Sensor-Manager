@@ -17,6 +17,7 @@ namespace TcpMessages
         public:
             static const QJsonObject Identify;
             static const QJsonObject GetData;
+            static const QJsonObject SetName;
             static const QJsonObject DiscoverSensors;
     };
 
