@@ -35,10 +35,10 @@ class SensorState : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QUuid        uuid             READ getUuid         CONSTANT)
-    Q_PROPERTY(Capabilities capabilities     READ getCapabilities CONSTANT)
-    Q_PROPERTY(QHostAddress address          READ getAddress      CONSTANT)
-    Q_PROPERTY(quint16      port             READ getPort         CONSTANT)
+    Q_PROPERTY(QUuid        uuid             READ getUuid           CONSTANT)
+    Q_PROPERTY(Capabilities capabilities     READ getCapabilities   CONSTANT)
+    Q_PROPERTY(QString      address          READ getAddressString  CONSTANT)
+    Q_PROPERTY(quint16      port             READ getPort           CONSTANT)
 
     Q_PROPERTY(QString      name             READ getName             WRITE setName             NOTIFY nameChanged)
     Q_PROPERTY(Statuses     status           READ getStatus           WRITE setStatus           NOTIFY statusChanged)
@@ -60,6 +60,7 @@ class SensorState : public QObject
         void setName(const QString &newName);
         const Capabilities &getCapabilities() const;
         const QHostAddress &getAddress() const;
+        const QString getAddressString() const;
         quint16 getPort() const;
         const Statuses &getStatus() const;
         void setStatus(const Statuses &newStatus);

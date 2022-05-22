@@ -11,5 +11,6 @@
         <file>Values/DynamicSensorValues.qml</file>
         <file>SensorSetup.qml</file>
         <file>RunningSensor.qml</file>
+        <file>Values/AdditionalInfoPopup.qml</file>
     </qresource>
 </RCC>

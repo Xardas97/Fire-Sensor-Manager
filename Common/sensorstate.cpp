@@ -143,6 +143,11 @@ const QHostAddress &SensorState::getAddress() const
     return address;
 }
 
+const QString SensorState::getAddressString() const
+{
+    return address.toString();
+}
+
 quint16 SensorState::getPort() const
 {
     return port;
