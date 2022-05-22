@@ -10,7 +10,7 @@ Row {
         id: lblSmokeDetected
 
         height: root.height
-        width: root.width * 0.35
+        width: root.width * 0.45
 
         horizontalAlignment: "AlignRight"
         verticalAlignment: "AlignVCenter"
@@ -30,7 +30,6 @@ Row {
         id: chboxSmokeDetected
 
         height: root.height
-        width: root.width * 0.62
 
         checked: sensor.sensorState.smokeDetected
         onCheckStateChanged: sensor.sensorState.smokeDetected = checked

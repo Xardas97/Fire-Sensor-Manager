@@ -11,7 +11,7 @@ Row {
         id: lblStatus
 
         height: root.height
-        width: root.width * 0.35
+        width: root.width * 0.2
 
         horizontalAlignment: "AlignRight"
         verticalAlignment: "AlignVCenter"
@@ -31,10 +31,11 @@ Row {
         id: rowStatuses
 
         height: root.height
-        width: root.width * 0.62
+        width: root.width * 0.77
 
         SensorStatus {
-            Layout.alignment: Qt.AlignLeft
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+            Layout.preferredHeight: rowStatuses.height
 
             mask: 1
             name: qsTr("Error")
@@ -42,7 +43,8 @@ Row {
         }
 
         SensorStatus {
-            Layout.alignment: Qt.AlignLeft
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+            Layout.preferredHeight: rowStatuses.height
 
             mask: 2
             name: qsTr("Dirty")
@@ -50,7 +52,8 @@ Row {
         }
 
         SensorStatus {
-            Layout.alignment: Qt.AlignLeft
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+            Layout.preferredHeight: rowStatuses.height
 
             mask: 4
             name: qsTr("Maintenance")

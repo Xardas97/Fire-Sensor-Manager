@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-Row {
+Item {
     id: root
 
     property int fontSize
@@ -21,19 +21,19 @@ Row {
         color: "black"
     }
 
-    Item {
-        height: root.height
-        width: root.width * 0.03
-    }
-
     TextArea {
         id: txtName
 
-        height: root.height
         width: root.width * 0.62
 
+        anchors {
+            left: lblName.right
+            leftMargin: root.width * 0.03
+            top: root.top
+            topMargin: (root.height - height) / 2
+        }
+
         horizontalAlignment: "AlignLeft"
-        verticalAlignment: "AlignVCenter"
 
         font.pixelSize: fontSize
 

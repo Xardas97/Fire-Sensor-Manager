@@ -35,7 +35,6 @@ Window {
                 loaderMainPage.source = "RunningSensor.qml"
             else
                 lblFailedToStart.visible = true
-
         }
     }
 

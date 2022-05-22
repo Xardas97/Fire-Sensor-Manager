@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-Row {
+Item {
     id: root
 
     property int fontSize
@@ -10,7 +10,7 @@ Row {
         id: lblTemperature
 
         height: root.height
-        width: root.width * 0.35
+        width: root.width * 0.45
 
         horizontalAlignment: "AlignRight"
         verticalAlignment: "AlignVCenter"
@@ -21,16 +21,17 @@ Row {
         color: "black"
     }
 
-    Item {
-        height: root.height
-        width: root.width * 0.03
-    }
-
     SpinBox {
         id: spinTemperature
 
-        height: root.height
-        width: root.width * 0.62
+        width: root.width * 0.52
+
+        anchors {
+            left: lblTemperature.right
+            leftMargin: root.width * 0.03
+            top: root.top
+            topMargin: (root.height - height) / 2
+        }
 
         font.pixelSize: fontSize
 
