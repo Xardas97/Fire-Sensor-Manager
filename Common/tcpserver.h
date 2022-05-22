@@ -30,6 +30,7 @@ public:
     ~TcpServer();
 
     bool startServer(const QHostAddress& address, quint16 port);
+    void stopServer();
     bool isListening() const;
 
     quint16 getServerPort() const;

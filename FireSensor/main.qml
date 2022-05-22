@@ -9,7 +9,7 @@ Window {
     title: qsTr("FireSensor")
 
     minimumWidth: 400
-    minimumHeight: 250
+    minimumHeight: 300
     width: minimumWidth * 2
     height: minimumHeight * 2
 
@@ -32,7 +32,7 @@ Window {
 
             var success = sensor.startSensor(enabledCapabilities)
             if (success)
-                loaderMainPage.source = "Values/DynamicSensorValues.qml"
+                loaderMainPage.source = "RunningSensor.qml"
             else
                 lblFailedToStart.visible = true
 
@@ -46,7 +46,16 @@ Window {
         height: parent.height * 0.9
         anchors.centerIn: parent
 
-        onLoaded: item.fontSize = Qt.binding(function() { return root.fontSize})
+        onLoaded: {
+            item.onCloseRequested.connect(onCloseRequested)
+            item.fontSize = Qt.binding(function() { return root.fontSize})
+        }
+
+        function onCloseRequested() {
+            loaderMainPage.source = ""
+            sensorSetup.visible = true
+            sensor.stopSensor()
+        }
     }
 
     Label {

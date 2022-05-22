@@ -24,6 +24,7 @@ public:
 
 public slots:
     bool startSensor(Capabilities capabilities);
+    void stopSensor();
 
 signals:
     void sensorStateChanged();

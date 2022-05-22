@@ -40,6 +40,14 @@ bool Sensor::startSensor(Capabilities capabilities)
     return true;
 }
 
+void Sensor::stopSensor()
+{
+    tcpServer->stopServer();
+    detectionService = nullptr;
+    sensorState = nullptr;
+    emit sensorStateChanged();
+}
+
 void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
     if (data == TcpMessages::Command::GetData)

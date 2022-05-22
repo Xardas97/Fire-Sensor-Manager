@@ -10,5 +10,6 @@
         <file>Values/SensorStatus.qml</file>
         <file>Values/DynamicSensorValues.qml</file>
         <file>SensorSetup.qml</file>
+        <file>RunningSensor.qml</file>
     </qresource>
 </RCC>

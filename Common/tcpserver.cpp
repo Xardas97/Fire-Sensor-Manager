@@ -29,6 +29,12 @@ bool TcpServer::startServer(const QHostAddress& address, quint16 port)
     return true;
 }
 
+void TcpServer::stopServer()
+{
+    qDebug() << "Stopping TCP server";
+    tcpServer->close();
+}
+
 void TcpServer::serverNewConnection()
 {
     qDebug() << "TcpServer - New connection arrived";

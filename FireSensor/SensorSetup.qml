@@ -63,7 +63,7 @@ ColumnLayout {
 
         enabled: enabledCapabilities
 
-        text: qsTr("Start Sensor")
+        text: qsTr("Start New Sensor")
         font.pixelSize: fontSize
     }
 }
