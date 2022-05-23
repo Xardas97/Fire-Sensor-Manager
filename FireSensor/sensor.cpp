@@ -82,6 +82,17 @@ void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
         return;
     }
 
+    if (data["command"] == TcpMessages::Command::Identify["command"])
+    {
+        qDebug() << "Clients requested identification";
+
+        QJsonObject response = TcpMessages::Response::Ack;
+        response["data"] = sensorState->toIdentityJson();
+
+        socket.write(response);
+        return;
+    }
+
     socket.write(TcpMessages::Response::CommandNotRecognized);
     qDebug() << "Command unknown, error response returned!";
 }

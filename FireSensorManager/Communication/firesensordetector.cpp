@@ -2,6 +2,7 @@
 
 #include "ports.h"
 #include "tcpserver.h"
+#include "tcpclient.h"
 #include "tcpmessages.h"
 #include "sensorstate.h"
 
@@ -37,25 +38,46 @@ void FireSensorDetector::discoverSensors()
     qDebug() << "Broadcast message sent!";
 }
 
+bool FireSensorDetector::discoverSensor(const QHostAddress& address, quint16 port)
+{
+    TcpClient tcpClient;
+    auto response = tcpClient.sendRequest(address, port, TcpMessages::Command::Identify);
+    return parseIncomingSensorIdentification(response);
+}
+
 void FireSensorDetector::onReceivedCommand(const TcpSocket& socket, const QJsonObject& command)
 {
     if (command["command"] == TcpMessages::Command::Identify["command"])
     {
-        if (!command.contains("data"))
+        auto success = parseIncomingSensorIdentification(command);
+        if (success)
+        {
+            socket.write(TcpMessages::Response::Ack);
+        }
+        else
         {
             qWarning() << "Sensor returned no data!";
-            return;
+            socket.write(TcpMessages::Response::BrokenData);
         }
 
-        auto sensor = SensorState::fromJson(command["data"].toObject());
-        emit onSensorDiscovered(std::move(sensor));
-
-        socket.write(TcpMessages::Response::Ack);
         return;
     }
 
     socket.write(TcpMessages::Response::CommandNotRecognized);
     qDebug() << "Command unknown, error response returned!";
+}
+
+bool FireSensorDetector::parseIncomingSensorIdentification(const QJsonObject& json)
+{
+    if (!json.contains("data"))
+    {
+        qWarning() << "Sensor returned no data!";
+        return false;
+    }
+
+    auto sensor = SensorState::fromJson(json["data"].toObject());
+    emit onSensorDiscovered(std::move(sensor));
+    return true;
 }
 
 FireSensorDetector::~FireSensorDetector() = default;

@@ -17,12 +17,14 @@ public:
     ~FireSensorDetector();
 
     void discoverSensors();
+    bool discoverSensor(const QHostAddress& address, quint16 port);
 
 signals:
     void onSensorDiscovered(std::shared_ptr<SensorState> sensorState);
 
 private:
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
+    bool parseIncomingSensorIdentification(const QJsonObject& json);
 
     std::unique_ptr<TcpServer> tcpServer;
 };
