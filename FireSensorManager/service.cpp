@@ -7,6 +7,7 @@
 #include "Communication/firesensordetector.h"
 
 #include <QDebug>
+#include <algorithm>
 #include <QTcpSocket>
 #include <QRandomGenerator>
 
@@ -26,8 +27,19 @@ int Service::getTemperature()
         return -1;
     }
 
-    auto rand = QRandomGenerator::global()->bounded(0, (int)knownSensors.size());
-    auto sensor = knownSensors[rand];
+    std::vector<std::shared_ptr<SensorState>> temperatureSupportingSensors;
+    std::copy_if(knownSensors.begin(),
+                 knownSensors.end(),
+                 std::back_inserter(temperatureSupportingSensors),
+                 [&](const std::shared_ptr<SensorState>& sensor) { return sensor->getCapabilities().testFlag(Capability::Temperature); });
+    if (temperatureSupportingSensors.empty())
+    {
+        qDebug() << "No sensor supports temperature!";
+        return -1;
+    }
+
+    auto rand = QRandomGenerator::global()->bounded(0, (int)temperatureSupportingSensors.size());
+    auto sensor = temperatureSupportingSensors[rand];
 
     auto address = sensor->getAddress();
     auto port = sensor->getPort();
@@ -39,14 +51,16 @@ int Service::getTemperature()
         return -1;
     }
 
-    auto data = response["data"].toObject();
-    if (!data.contains("temperature"))
+    auto sameSensor = sensor->updateData(response["data"].toObject());
+    if (!sameSensor)
     {
-        qWarning() << "Sensor did not return temperature!";
+        // Long term solution is to mark it as "inactive" somehow
+        qDebug() << "New sensor on this IP address, removing it from known sensors!";
+        knownSensors.erase(std::remove(knownSensors.begin(), knownSensors.end(), sensor), knownSensors.end());
         return -1;
     }
 
-    int temperature = data["temperature"].toInt();
+    auto temperature = sensor->getTemperature();
     qDebug() << "User asked for temperature, returing: " << temperature;
     return temperature;
 }

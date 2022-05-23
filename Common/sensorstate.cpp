@@ -66,6 +66,8 @@ QJsonObject SensorState::toDataJson() const
 
     json["name"] = name;
     json["status"] = (ushort)status.toInt();
+    // API user needs UUID to ensure that it's still the same sensor on this address
+    json["uuid"] = uuid.toString(QUuid::StringFormat::WithoutBraces);
 
     if (capabilities.testFlag(Capability::Temperature))
         json["temperature"] = temperature;
@@ -79,8 +81,12 @@ QJsonObject SensorState::toDataJson() const
     return json;
 }
 
-void SensorState::updateData(QJsonObject json)
+bool SensorState::updateData(QJsonObject json)
 {
+    auto dataUuid = QUuid::fromString(json["uuid"].toString());
+    if (dataUuid != this->uuid)
+        return false;
+
     setName(json["name"].toString());
     setStatus(Statuses::fromInt(json["status"].toInt()));
 
@@ -115,6 +121,8 @@ void SensorState::updateData(QJsonObject json)
         else
             qWarning("API - Pollution expected but missing!");
     }
+
+    return true;
 }
 
 const QUuid &SensorState::getUuid() const

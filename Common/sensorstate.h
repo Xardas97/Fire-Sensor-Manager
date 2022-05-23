@@ -52,7 +52,7 @@ class SensorState : public QObject
 
         QJsonObject toIdentityJson() const;
         QJsonObject toDataJson() const;
-        void updateData(QJsonObject json);
+        bool updateData(QJsonObject json);
         static std::unique_ptr<SensorState> fromJson(QJsonObject json);
 
         const QUuid &getUuid() const;
