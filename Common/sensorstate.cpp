@@ -44,7 +44,7 @@ QJsonObject SensorState::toIdentityJson() const
 
     json["uuid"] = uuid.toString(QUuid::StringFormat::WithoutBraces);
     json["name"] = name;
-    json["capabilities"] = QString::number(capabilities.toInt());
+    json["capabilities"] = (ushort)capabilities.toInt();
     json["address"] = address.toString();
     json["port"] = port;
 
@@ -65,7 +65,7 @@ QJsonObject SensorState::toDataJson() const
     QJsonObject json;
 
     json["name"] = name;
-    json["status"] = QString::number(status.toInt());
+    json["status"] = (ushort)status.toInt();
 
     if (capabilities.testFlag(Capability::Temperature))
         json["temperature"] = temperature;
