@@ -81,9 +81,10 @@ class SensorState : public QObject
         void co2ConcentrationChanged();
         void pollutionChanged();
 
-    private:
+    protected:
         SensorState(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port);
 
+    private:
         QUuid uuid;
         QString name;
         Capabilities capabilities;

@@ -2,6 +2,7 @@ QT += quick \
       network
 
 SOURCES += \
+        Communication/communicationsensorstate.cpp \
         Communication/firesensordetector.cpp \
         Communication/sensorcommunication.cpp \
         main.cpp \
@@ -21,6 +22,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Communication/communicationsensorstate.h \
     Communication/firesensordetector.h \
     Communication/sensorcommunication.h \
     service.h

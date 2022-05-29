@@ -1,12 +1,13 @@
 #ifndef FIRESENSORDETECTOR_H
 #define FIRESENSORDETECTOR_H
 
+#include "communicationsensorstate.h"
+
 #include <memory>
 #include <QObject>
 
 class TcpServer;
 class TcpSocket;
-class SensorState;
 class QHostAddress;
 
 class FireSensorDetector : public QObject
@@ -20,7 +21,7 @@ public:
     bool discoverSensor(const QHostAddress& address, quint16 port);
 
 signals:
-    void onSensorDiscovered(std::shared_ptr<SensorState> sensorState);
+    void onSensorDiscovered(std::shared_ptr<Sensor> sensorState);
 
 private:
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);

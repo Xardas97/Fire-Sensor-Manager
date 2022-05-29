@@ -1,6 +1,5 @@
 #include "service.h"
 
-#include "sensorstate.h"
 #include "Communication/sensorcommunication.h"
 
 #include <algorithm>
@@ -19,11 +18,11 @@ int Service::getTemperature()
         return -1;
     }
 
-    std::vector<std::shared_ptr<SensorState>> temperatureSupportingSensors;
+    std::vector<std::shared_ptr<Sensor>> temperatureSupportingSensors;
     std::copy_if(knownSensors.begin(),
                  knownSensors.end(),
                  std::back_inserter(temperatureSupportingSensors),
-                 [&](const std::shared_ptr<SensorState>& sensor) { return sensor->getCapabilities().testFlag(Capability::Temperature); });
+                 [&](const std::shared_ptr<Sensor>& sensor) { return sensor->getCapabilities().testFlag(Capability::Temperature) && !sensor->getIsReplaced(); });
     if (temperatureSupportingSensors.empty())
     {
         qDebug() << "No sensor supports temperature!";
@@ -32,10 +31,6 @@ int Service::getTemperature()
 
     auto rand = QRandomGenerator::global()->bounded(0, (int)temperatureSupportingSensors.size());
     auto sensor = temperatureSupportingSensors[rand];
-
-    auto dataUpdated = sensorCommunication->updateData(*sensor);
-    if (!dataUpdated)
-        return -1;
 
     auto temperature = sensor->getTemperature();
     qDebug() << "User asked for temperature, returing: " << temperature;

@@ -2,18 +2,45 @@
 
 #include "tcpclient.h"
 #include "tcpmessages.h"
-#include "sensorstate.h"
 #include "firesensordetector.h"
 
+#include <QTimer>
 #include <algorithm>
 
 SensorCommunication::SensorCommunication()
     : fireSensorDetector(new FireSensorDetector())
 {
     QObject::connect(fireSensorDetector.get(), &FireSensorDetector::onSensorDiscovered, this, &SensorCommunication::onSensorDiscovered);
+    QTimer::singleShot(5000, this, &SensorCommunication::updateSensors);
 }
 
-bool SensorCommunication::updateData(SensorState& sensor)
+void SensorCommunication::updateSensors()
+{
+    sensorUpdatesCount = (sensorUpdatesCount + 1) % checkInactiveSensorsCount;
+    bool updateInactiveSensors = sensorUpdatesCount == 0;
+
+    qDebug() << "Updating sensors, update inactive: " << updateInactiveSensors;
+    for (auto& sensor: knownSensors)
+    {
+        if (sensor->getIsReplaced())
+            continue;
+
+        if (!sensor->getIsActive() && !updateInactiveSensors)
+            continue;
+
+        qDebug() << "Updating sensor: " << sensor->getName();
+        bool updated = updateData(*sensor);
+
+        if (updated)
+            sensor->reportCommunicationSuccess();
+        else
+            sensor->reportCommunicationFailure();
+    }
+
+    QTimer::singleShot(5000, this, &SensorCommunication::updateSensors);
+}
+
+bool SensorCommunication::updateData(Sensor& sensor)
 {
     TcpClient tcpClient;
 
@@ -30,12 +57,8 @@ bool SensorCommunication::updateData(SensorState& sensor)
     auto sameSensor = sensor.updateData(response["data"].toObject());
     if (!sameSensor)
     {
-        // TODO Long term solution is to mark it as "inactive" somehow
-        qDebug() << "New sensor on this IP address, removing it from known sensors!";
-        knownSensors.erase(std::remove_if(knownSensors.begin(),
-                                          knownSensors.end(),
-                                          [&sensor](const std::shared_ptr<SensorState> knownSensor) { return knownSensor.get() == &sensor; }),
-                           knownSensors.end());
+        qDebug() << "New sensor on this IP address, setting replaced!";
+        sensor.setIsReplaced();
         return false;
     }
 
@@ -43,7 +66,7 @@ bool SensorCommunication::updateData(SensorState& sensor)
     return true;
 }
 
-std::vector<std::shared_ptr<SensorState>>& SensorCommunication::getKnownSensors()
+std::vector<std::shared_ptr<Sensor>>& SensorCommunication::getKnownSensors()
 {
     return knownSensors;
 }
@@ -58,15 +81,25 @@ void SensorCommunication::discoverSensor(const QHostAddress &address, quint16 po
     fireSensorDetector->discoverSensor(address, port);
 }
 
-void SensorCommunication::onSensorDiscovered(std::shared_ptr<SensorState> sensor)
+void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
 {
     qDebug() << "Discovered sensor: " << *sensor;
 
     auto found = std::find_if(knownSensors.cbegin(),
                               knownSensors.cend(),
-                              [&sensor](const std::shared_ptr<SensorState> knownSensor) { return knownSensor->getUuid() == sensor->getUuid(); });
-    if (found == knownSensors.cend()) {
+                              [&sensor](const std::shared_ptr<Sensor> knownSensor) { return knownSensor->getUuid() == sensor->getUuid(); });
+
+    if (found == knownSensors.cend())
+    {
         qDebug() << "This is a new sensor!";
+        knownSensors.push_back(sensor);
+        return;
+    }
+
+    if (sensor->getAddress() != (*found)->getAddress() || sensor->getPort() != (*found)->getPort())
+    {
+        qDebug() << "Known sensor found on different address, replacing!";
+        knownSensors.erase(found);
         knownSensors.push_back(sensor);
     }
 }

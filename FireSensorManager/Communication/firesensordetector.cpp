@@ -4,7 +4,6 @@
 #include "tcpserver.h"
 #include "tcpclient.h"
 #include "tcpmessages.h"
-#include "sensorstate.h"
 
 #include <QUdpSocket>
 #include <QTcpSocket>
@@ -75,7 +74,7 @@ bool FireSensorDetector::parseIncomingSensorIdentification(const QJsonObject& js
         return false;
     }
 
-    auto sensor = SensorState::fromJson(json["data"].toObject());
+    auto sensor = Sensor::fromJson(json["data"].toObject());
     emit onSensorDiscovered(std::move(sensor));
     return true;
 }
