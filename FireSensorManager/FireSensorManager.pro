@@ -3,6 +3,7 @@ QT += quick \
 
 SOURCES += \
         Communication/firesensordetector.cpp \
+        Communication/sensorcommunication.cpp \
         main.cpp \
         service.cpp
 
@@ -21,6 +22,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Communication/firesensordetector.h \
+    Communication/sensorcommunication.h \
     service.h
 
 DISTFILES +=

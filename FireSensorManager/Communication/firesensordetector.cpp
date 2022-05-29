@@ -9,8 +9,8 @@
 #include <QUdpSocket>
 #include <QTcpSocket>
 
-FireSensorDetector::FireSensorDetector(QObject *parent)
-    : QObject{parent}, tcpServer(new TcpServer())
+FireSensorDetector::FireSensorDetector()
+    : tcpServer(new TcpServer())
 {
     QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &FireSensorDetector::onReceivedCommand);
 }

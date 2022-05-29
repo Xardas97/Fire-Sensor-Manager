@@ -1,13 +1,10 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include <vector>
 #include <memory>
 #include <QObject>
 
-class SensorState;
-class QHostAddress;
-class FireSensorDetector;
+class SensorCommunication;
 
 class Service : public QObject
 {
@@ -19,13 +16,11 @@ public:
 
 public slots:
     int getTemperature();
+    void discoverSensor(const QString& address, quint16 port);
     void discoverSensors();
 
 private:
-    void onSensorDiscovered(std::shared_ptr<SensorState> sensor);
-
-    std::vector<std::shared_ptr<SensorState>> knownSensors;
-    std::unique_ptr<FireSensorDetector> fireSensorDetector;
+    std::unique_ptr<SensorCommunication> sensorCommunication;
 };
 
 #endif // SERVICE_H

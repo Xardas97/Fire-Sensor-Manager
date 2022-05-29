@@ -13,7 +13,7 @@ class FireSensorDetector : public QObject
 {
     Q_OBJECT
 public:
-    explicit FireSensorDetector(QObject *parent = nullptr);
+    explicit FireSensorDetector();
     ~FireSensorDetector();
 
     void discoverSensors();
