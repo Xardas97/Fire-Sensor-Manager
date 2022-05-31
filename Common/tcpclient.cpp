@@ -15,7 +15,7 @@ QJsonObject TcpClient::sendRequest(const QHostAddress& address, quint16 port, co
     qDebug() << "Client - Connecting to port: " << port;
     socket.connectToHost(address, port);
 
-    if (!socket.waitForConnected(3000))
+    if (!socket.waitForConnected(500))
     {
         qWarning("Client - Failed to connect to server!");
         return TcpMessages::Response::CommunicationFailed;
@@ -25,7 +25,7 @@ QJsonObject TcpClient::sendRequest(const QHostAddress& address, quint16 port, co
     socket.waitForBytesWritten();
 
     qDebug() << "Client - Waiting to read data";
-    if (!socket.waitForReadyRead(3000))
+    if (!socket.waitForReadyRead(500))
     {
         qWarning() << "Client - No data arrived!";
         socket.close();
