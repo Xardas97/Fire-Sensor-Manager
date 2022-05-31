@@ -10,8 +10,8 @@ Window {
 
     minimumWidth: 400
     minimumHeight: 300
-    width: minimumWidth * 2
-    height: minimumHeight * 2
+    width: minimumWidth * 1.3
+    height: minimumHeight * 1.3
 
     visible: true
 
