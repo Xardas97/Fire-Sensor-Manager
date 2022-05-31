@@ -6,6 +6,7 @@
 
 #include <QTimer>
 #include <algorithm>
+#include <QtConcurrent>
 
 SensorCommunication::SensorCommunication()
     : fireSensorDetector(new FireSensorDetector())
@@ -29,12 +30,14 @@ void SensorCommunication::updateSensors()
             continue;
 
         qDebug() << "Updating sensor: " << sensor->getName();
-        bool updated = updateData(*sensor);
-
-        if (updated)
-            sensor->reportCommunicationSuccess();
-        else
-            sensor->reportCommunicationFailure();
+        auto sensorUpdateFuture = QtConcurrent::run([&]()
+        {
+            auto updated = updateData(*sensor);
+            if (updated)
+                sensor->reportCommunicationSuccess();
+            else
+                sensor->reportCommunicationFailure();
+        });
     }
 
     QTimer::singleShot(5000, this, &SensorCommunication::updateSensors);

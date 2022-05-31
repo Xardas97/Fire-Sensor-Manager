@@ -1,5 +1,6 @@
 QT += quick \
-      network
+      network \
+      concurrent
 
 SOURCES += \
         Communication/communicationsensorstate.cpp \
