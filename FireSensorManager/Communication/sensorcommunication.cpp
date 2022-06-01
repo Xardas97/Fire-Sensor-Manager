@@ -20,7 +20,9 @@ void SensorCommunication::updateSensors()
     sensorUpdatesCount = (sensorUpdatesCount + 1) % checkInactiveSensorsCount;
     bool updateInactiveSensors = sensorUpdatesCount == 0;
 
-    qDebug() << "Updating sensors, update inactive: " << updateInactiveSensors;
+    if (updateInactiveSensors)
+        qDebug() << "Updating inactive sensors...";
+
     for (auto& sensor: knownSensors)
     {
         if (sensor->getIsReplaced())
@@ -29,7 +31,6 @@ void SensorCommunication::updateSensors()
         if (!sensor->getIsActive() && !updateInactiveSensors)
             continue;
 
-        qDebug() << "Updating sensor: " << sensor->getName();
         auto sensorUpdateFuture = QtConcurrent::run([&]()
         {
             auto updated = updateData(*sensor);
@@ -53,7 +54,6 @@ bool SensorCommunication::updateData(Sensor& sensor)
     auto response = tcpClient.sendRequest(address, port, TcpMessages::Command::GetData);
     if (!response.contains("data"))
     {
-        qWarning() << "Sensor returned no data!";
         return false;
     }
 

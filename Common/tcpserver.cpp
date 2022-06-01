@@ -37,19 +37,12 @@ void TcpServer::stopServer()
 
 void TcpServer::serverNewConnection()
 {
-    qDebug() << "TcpServer - New connection arrived";
-
     std::unique_ptr<QTcpSocket> socket(tcpServer->nextPendingConnection());
 
-    qDebug() << "TcpServer - Waiting to read data";
     if (!socket->waitForReadyRead(3000))
-    {
-        qWarning() << "TcpServer - No data arrived!";
         return;
-    }
 
     auto data = socket->readAll();
-    qDebug() << "TcpServer - Data arrived: " << data;
 
     QJsonDocument dataDoc = QJsonDocument::fromJson(data);
     emit onReceivedCommand(TcpSocket(std::move(socket)), dataDoc.object());

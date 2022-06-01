@@ -12,28 +12,23 @@ QJsonObject TcpClient::sendRequest(const QHostAddress& address, quint16 port, co
 {
     QTcpSocket socket;
 
-    qDebug() << "Client - Connecting to port: " << port;
     socket.connectToHost(address, port);
 
     if (!socket.waitForConnected(500))
     {
-        qWarning("Client - Failed to connect to server!");
         return TcpMessages::Response::CommunicationFailed;
     }
 
     socket.write(TcpMessages::getBytes(requestData));
     socket.waitForBytesWritten();
 
-    qDebug() << "Client - Waiting to read data";
     if (!socket.waitForReadyRead(500))
     {
-        qWarning() << "Client - No data arrived!";
         socket.close();
         return TcpMessages::Response::CommunicationFailed;
     }
 
     QByteArray data = socket.readAll();
-    qDebug() << "Client - Data has arrived: " << data;
 
     socket.close();
 
