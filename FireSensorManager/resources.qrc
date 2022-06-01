@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Controls/TestControl.qml</file>
+        <file>SensorList/SensorView.qml</file>
     </qresource>
 </RCC>

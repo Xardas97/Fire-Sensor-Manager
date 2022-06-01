@@ -9,13 +9,13 @@ Service::Service(QObject *parent)
     : QObject{parent}, sensorCommunication(new SensorCommunication())
 { }
 
-int Service::getTemperature()
+Sensor* Service::getRandomSensor()
 {
     auto knownSensors = sensorCommunication->getKnownSensors();
     if (knownSensors.size() == 0)
     {
         qDebug() << "No known sensors to send the request to, aborting";
-        return -1;
+        return nullptr;
     }
 
     std::vector<std::shared_ptr<Sensor>> temperatureSupportingSensors;
@@ -26,15 +26,15 @@ int Service::getTemperature()
     if (temperatureSupportingSensors.empty())
     {
         qDebug() << "No sensor supports temperature!";
-        return -1;
+        return nullptr;
     }
 
     auto rand = QRandomGenerator::global()->bounded(0, (int)temperatureSupportingSensors.size());
     auto sensor = temperatureSupportingSensors[rand];
 
-    auto temperature = sensor->getTemperature();
-    qDebug() << "User asked for temperature, returing: " << temperature;
-    return temperature;
+    qDebug() << "Returning sensor: " << sensor->getName();
+
+    return sensor.get();
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)

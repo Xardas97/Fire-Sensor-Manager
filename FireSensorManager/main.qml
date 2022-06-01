@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import "Controls"
+import "SensorList"
 
 Window {
     width: 640
@@ -10,36 +10,43 @@ Window {
     visible: true
     title: qsTr("FireSensorManager")
 
-    ColumnLayout {
+    RowLayout {
+        id: rowWindow
+
         anchors.fill: parent
 
-        Label {
-            id: txt
-
-            Layout.alignment: Qt.AlignCenter
-
-            text: "No temperature information"
-            color: "purple"
+        SensorView {
+            id: sensorView
+            Layout.preferredHeight: parent.height
+            Layout.preferredWidth: parent.width * 0.15
         }
 
-        Button {
-            id: btnSensorRequest
+        ColumnLayout {
+            id: columnMain
 
+            Layout.preferredHeight: parent.height
+            Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
 
-            text: "Send request to sensor"
+            Button {
+                id: btnSensorRequest
 
-            onClicked: txt.text = "Sensor temeprature: " + service.getTemperature()
-        }
+                Layout.alignment: Qt.AlignCenter
 
-        Button {
-            id: btnDiscoverSensors
+                text: "Set a sensor"
 
-            Layout.alignment: Qt.AlignCenter
+                onClicked: sensorView.sensor = service.getRandomSensor()
+            }
 
-            text: "Discover sensors"
+            Button {
+                id: btnDiscoverSensors
 
-            onClicked: service.discoverSensors()
+                Layout.alignment: Qt.AlignCenter
+
+                text: "Discover sensors"
+
+                onClicked: service.discoverSensors()
+            }
         }
     }
 }

@@ -4,6 +4,8 @@
 #include <memory>
 #include <QObject>
 
+class CommunicationSensorState;
+
 class SensorCommunication;
 
 class Service : public QObject
@@ -15,9 +17,10 @@ public:
     ~Service();
 
 public slots:
-    int getTemperature();
     void discoverSensor(const QString& address, quint16 port);
     void discoverSensors();
+
+    CommunicationSensorState* getRandomSensor();
 
 private:
     std::unique_ptr<SensorCommunication> sensorCommunication;

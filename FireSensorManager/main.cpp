@@ -3,10 +3,14 @@
 #include <QQmlContext>
 
 #include "service.h"
+#include "Communication/communicationsensorstate.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+
+
+    qmlRegisterUncreatableType<Sensor>("Custom.Sensors", 1, 0, "Sensor", "Sensor QML object cannot be created");
 
     Service service;
 
