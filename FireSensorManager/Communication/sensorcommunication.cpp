@@ -23,7 +23,7 @@ void SensorCommunication::updateSensors()
     if (updateInactiveSensors)
         qDebug() << "Updating inactive sensors...";
 
-    for (auto& sensor: knownSensors)
+    for (auto& sensor: knownSensors.getSensors())
     {
         if (sensor->getIsReplaced())
             continue;
@@ -69,7 +69,7 @@ bool SensorCommunication::updateData(Sensor& sensor)
     return true;
 }
 
-std::vector<std::shared_ptr<Sensor>>& SensorCommunication::getKnownSensors()
+SensorList& SensorCommunication::getKnownSensors()
 {
     return knownSensors;
 }
@@ -88,22 +88,19 @@ void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
 {
     qDebug() << "Discovered sensor: " << *sensor;
 
-    auto found = std::find_if(knownSensors.cbegin(),
-                              knownSensors.cend(),
-                              [&sensor](const std::shared_ptr<Sensor> knownSensor) { return knownSensor->getUuid() == sensor->getUuid(); });
-
-    if (found == knownSensors.cend())
+    auto found = knownSensors.find(sensor);
+    if (found == nullptr)
     {
         qDebug() << "This is a new sensor!";
-        knownSensors.push_back(sensor);
+        knownSensors.add(sensor);
         return;
     }
 
-    if (sensor->getAddress() != (*found)->getAddress() || sensor->getPort() != (*found)->getPort())
+    if (sensor->getAddress() != found->getAddress() || sensor->getPort() != found->getPort())
     {
         qDebug() << "Known sensor found on different address, replacing!";
-        knownSensors.erase(found);
-        knownSensors.push_back(sensor);
+        knownSensors.remove(found);
+        knownSensors.add(sensor);
     }
 }
 

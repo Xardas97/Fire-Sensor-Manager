@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>SensorList/SensorView.qml</file>
+        <file>SensorList/SensorList.qml</file>
     </qresource>
 </RCC>

@@ -15,38 +15,20 @@ Window {
 
         anchors.fill: parent
 
-        SensorView {
-            id: sensorView
+        SensorList {
+            id: listKnownSensors
             Layout.preferredHeight: parent.height
             Layout.preferredWidth: parent.width * 0.15
         }
 
-        ColumnLayout {
-            id: columnMain
+        Button {
+            id: btnDiscoverSensors
 
-            Layout.preferredHeight: parent.height
-            Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
 
-            Button {
-                id: btnSensorRequest
+            text: "Discover sensors"
 
-                Layout.alignment: Qt.AlignCenter
-
-                text: "Set a sensor"
-
-                onClicked: sensorView.sensor = service.getRandomSensor()
-            }
-
-            Button {
-                id: btnDiscoverSensors
-
-                Layout.alignment: Qt.AlignCenter
-
-                text: "Discover sensors"
-
-                onClicked: service.discoverSensors()
-            }
+            onClicked: service.discoverSensors()
         }
     }
 }

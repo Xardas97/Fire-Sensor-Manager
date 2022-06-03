@@ -6,6 +6,7 @@ SOURCES += \
         Communication/communicationsensorstate.cpp \
         Communication/firesensordetector.cpp \
         Communication/sensorcommunication.cpp \
+        Communication/sensorlist.cpp \
         main.cpp \
         service.cpp
 
@@ -26,6 +27,7 @@ HEADERS += \
     Communication/communicationsensorstate.h \
     Communication/firesensordetector.h \
     Communication/sensorcommunication.h \
+    Communication/sensorlist.h \
     service.h
 
 DISTFILES +=

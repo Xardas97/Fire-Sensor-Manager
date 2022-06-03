@@ -4,10 +4,17 @@ import QtQuick.Layouts
 
 import Custom.Sensors
 
-Item {
+Rectangle {
     id: root
 
     property Sensor sensor
+
+    height: columnSensor.height * 1.2
+
+    border {
+        color: "black"
+        width: 1
+    }
 
     ColumnLayout {
         id: columnSensor
@@ -37,8 +44,8 @@ Item {
     Rectangle {
         id : rectBackground
 
-        width: columnSensor.width
-        height: columnSensor.height
+        width: parent.width
+        height: parent.height
         anchors.centerIn: parent
 
         color: "grey"

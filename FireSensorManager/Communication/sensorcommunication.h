@@ -1,6 +1,7 @@
 #ifndef SENSORCOMMUNICATION_H
 #define SENSORCOMMUNICATION_H
 
+#include "sensorlist.h"
 #include "communicationsensorstate.h"
 
 #include <memory>
@@ -24,7 +25,7 @@ public:
 
     bool updateData(Sensor& sensor);
 
-    auto getKnownSensors() -> std::vector<std::shared_ptr<Sensor>>&;
+    SensorList& getKnownSensors();
 
     void discoverSensors();
     void discoverSensor(const QHostAddress& address, quint16 port);
@@ -34,7 +35,7 @@ private:
 
     void onSensorDiscovered(std::shared_ptr<Sensor> sensor);
 
-    std::vector<std::shared_ptr<Sensor>> knownSensors;
+    SensorList knownSensors;
     std::unique_ptr<FireSensorDetector> fireSensorDetector;
 
     int sensorUpdatesCount = 0;

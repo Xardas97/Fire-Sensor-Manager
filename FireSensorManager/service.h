@@ -3,14 +3,16 @@
 
 #include <memory>
 #include <QObject>
+#include <QAbstractListModel>
 
 class CommunicationSensorState;
-
 class SensorCommunication;
 
 class Service : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QAbstractListModel* knownSensorsModel READ getKnownSensorsModel)
 
 public:
     explicit Service(QObject *parent = nullptr);
@@ -20,7 +22,7 @@ public slots:
     void discoverSensor(const QString& address, quint16 port);
     void discoverSensors();
 
-    CommunicationSensorState* getRandomSensor();
+    QAbstractListModel* getKnownSensorsModel();
 
 private:
     std::unique_ptr<SensorCommunication> sensorCommunication;
