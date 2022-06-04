@@ -9,6 +9,10 @@ Rectangle {
 
     property Sensor sensor
 
+    property bool errorStatus: sensor.status & 1
+    property bool dirtyStatus: sensor.status & 2
+    property bool maintenanceRequiredStatus: sensor.status & 4
+
     height: columnSensor.height * 1.2
 
     border {
@@ -27,8 +31,8 @@ Rectangle {
 
             Layout.alignment: Qt.AlignCenter
 
-            text: sensor != null ? sensor.name : "Null"
-            color: sensor.alarmOn ? "red" : "black"
+            text: sensor.name
+            color: sensor.alarmOn ? "red" : (root.errorStatus || root.dirtyStatus) ? "purple" : "black"
         }
 
         Label {
@@ -36,7 +40,7 @@ Rectangle {
 
             Layout.alignment: Qt.AlignCenter
 
-            text: sensor != null ? sensor.temperature : "Null"
+            text: sensor.temperature
             color: "black"
         }
     }
@@ -49,7 +53,7 @@ Rectangle {
         anchors.centerIn: parent
 
         color: "grey"
-        opacity: sensor != null ? (sensor.isActive || sensor.isReplaced ? 0 : 0.25) : 0
+        opacity: sensor.isActive || sensor.isReplaced ? 0 : 0.25
     }
 
     Rectangle {
@@ -60,7 +64,7 @@ Rectangle {
         anchors.centerIn: parent
 
         color: "red"
-        opacity: sensor != null ? (sensor.isReplaced ? 0.25 : 0) : 0
+        opacity: sensor.isReplaced ? 0.25 : 0
     }
 }
 
