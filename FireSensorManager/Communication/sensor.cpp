@@ -3,8 +3,20 @@
 Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port)
     : SensorState(uuid, name, capabilities, address, port),
       m_isActive(true),
-      m_isReplaced(false)
-{ }
+      m_isReplaced(false),
+      m_temperatureThreshold(default_temperature_threshold),
+      m_co2ConcentrationThreshold(default_co2_concentration_threshold),
+      m_pollutionThreshold(default_pollution_threshold)
+{
+    QObject::connect(this, &SensorState::temperatureChanged, this, &Sensor::alarmStateChanged);
+    QObject::connect(this, &SensorState::smokeDetectedChanged, this, &Sensor::alarmStateChanged);
+    QObject::connect(this, &SensorState::co2ConcentrationChanged, this, &Sensor::alarmStateChanged);
+    QObject::connect(this, &SensorState::pollutionChanged, this, &Sensor::alarmStateChanged);
+
+    QObject::connect(this, &Sensor::temperatureThresholdChanged, this, &Sensor::alarmStateChanged);
+    QObject::connect(this, &Sensor::co2ConcentrationThresholdChanged, this, &Sensor::alarmStateChanged);
+    QObject::connect(this, &Sensor::pollutionThresholdChanged, this, &Sensor::alarmStateChanged);
+}
 
 std::unique_ptr<Sensor> Sensor::fromJson(QJsonObject json)
 {
@@ -54,4 +66,56 @@ void Sensor::reportCommunicationFailure()
         m_isActive = false;
         emit isActiveChanged();
     }
+}
+
+bool Sensor::alarmOn() const
+{
+    bool alarmOn = false;
+
+    if (capabilities().testFlag(Capability::Temperature))
+        alarmOn |= temperature() > m_temperatureThreshold;
+
+    if (capabilities().testFlag(Capability::Smoke))
+        alarmOn |= smokeDetected();
+
+    if (capabilities().testFlag(Capability::CO2Concentration))
+        alarmOn |= co2Concentration() > m_co2ConcentrationThreshold;
+
+    if (capabilities().testFlag(Capability::Pollution))
+        alarmOn |= pollution() > m_pollutionThreshold;
+
+    return alarmOn;
+}
+
+short Sensor::temperatureThreshold() const
+{
+    return m_temperatureThreshold;
+}
+
+void Sensor::setTemperatureThreshold(short temperatureThreshold)
+{
+    m_temperatureThreshold = temperatureThreshold;
+    emit temperatureThresholdChanged();
+}
+
+int Sensor::co2ConcentrationThreshold() const
+{
+    return m_co2ConcentrationThreshold;
+}
+
+void Sensor::setCo2ConcentrationThreshold(int co2ConcentrationThreshold)
+{
+    m_co2ConcentrationThreshold = co2ConcentrationThreshold;
+    emit co2ConcentrationThresholdChanged();
+}
+
+short Sensor::pollutionThreshold() const
+{
+    return m_pollutionThreshold;
+}
+
+void Sensor::setPollutionThreshold(short pollutionThreshold)
+{
+    m_pollutionThreshold = pollutionThreshold;
+    emit pollutionThresholdChanged();
 }

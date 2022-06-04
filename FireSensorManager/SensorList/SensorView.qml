@@ -28,7 +28,7 @@ Rectangle {
             Layout.alignment: Qt.AlignCenter
 
             text: sensor != null ? sensor.name : "Null"
-            color: "black"
+            color: sensor.alarmOn ? "red" : "black"
         }
 
         Label {
