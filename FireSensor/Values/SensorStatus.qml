@@ -16,7 +16,7 @@ CheckBox {
             sensor.sensorState.status = sensor.sensorState.status | root.mask
         }
         else {
-            sensor.sensorState.status = sensor.sensorState.status & root.mask
+            sensor.sensorState.status = sensor.sensorState.status & ~root.mask
         }
     }
 }
