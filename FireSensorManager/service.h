@@ -13,7 +13,7 @@ class Service : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(FilteredSensorListModel* knownSensorsModel READ getKnownSensorsFilterModel CONSTANT)
+    Q_PROPERTY(FilteredSensorListModel* knownSensorsModel READ knownSensorsFilterModel CONSTANT)
 
 public:
     explicit Service(QObject *parent = nullptr);
@@ -23,11 +23,11 @@ public slots:
     void discoverSensor(const QString& address, quint16 port);
     void discoverSensors();
 
-    FilteredSensorListModel* getKnownSensorsFilterModel();
+    FilteredSensorListModel* knownSensorsFilterModel();
 
 private:
-    std::unique_ptr<SensorCommunication> sensorCommunication;
-    std::unique_ptr<FilteredSensorListModel> knownSensorsFilterModel;
+    std::unique_ptr<SensorCommunication>     m_sensorCommunication;
+    std::unique_ptr<FilteredSensorListModel> m_knownSensorsFilterModel;
 };
 
 #endif // SERVICE_H

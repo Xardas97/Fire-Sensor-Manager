@@ -19,8 +19,8 @@ private:
     void processDetectionRequest();
     void sendServerAddressToRequester(const QHostAddress& requesterAddress);
 
-    std::shared_ptr<SensorState> sensorState;
-    std::unique_ptr<QUdpSocket> udpSocket;
+    std::shared_ptr<SensorState> m_sensorState;
+    std::unique_ptr<QUdpSocket>  m_udpSocket;
 };
 
 #endif // DETECTIONSERVICE_H

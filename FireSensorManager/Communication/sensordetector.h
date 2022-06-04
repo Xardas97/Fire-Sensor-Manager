@@ -26,7 +26,7 @@ private:
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
     bool parseIncomingSensorIdentification(const QJsonObject& json);
 
-    std::unique_ptr<TcpServer> tcpServer;
+    std::unique_ptr<TcpServer> m_tcpServer;
 };
 
 #endif // SENSORDETECTOR_H

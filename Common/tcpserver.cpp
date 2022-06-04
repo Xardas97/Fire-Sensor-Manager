@@ -8,17 +8,17 @@
 #include <QJsonDocument>
 
 TcpServer::TcpServer(QObject *parent)
-    : QObject{parent}, tcpServer(new QTcpServer())
+    : QObject{parent}, m_tcpServer(new QTcpServer())
 {
 
-    QObject::connect(tcpServer.get(), &QTcpServer::newConnection, this, &TcpServer::serverNewConnection);
+    QObject::connect(m_tcpServer.get(), &QTcpServer::newConnection, this, &TcpServer::serverNewConnection);
 }
 
 bool TcpServer::startServer(const QHostAddress& address, quint16 port)
 {
     qDebug() << "Starting TCP server...";
 
-    bool success = tcpServer->listen(address, port);
+    bool success = m_tcpServer->listen(address, port);
     if (!success)
     {
         qWarning() << "TCP Server failed to start listening!";
@@ -32,12 +32,12 @@ bool TcpServer::startServer(const QHostAddress& address, quint16 port)
 void TcpServer::stopServer()
 {
     qDebug() << "Stopping TCP server";
-    tcpServer->close();
+    m_tcpServer->close();
 }
 
 void TcpServer::serverNewConnection()
 {
-    std::unique_ptr<QTcpSocket> socket(tcpServer->nextPendingConnection());
+    std::unique_ptr<QTcpSocket> socket(m_tcpServer->nextPendingConnection());
 
     if (!socket->waitForReadyRead(3000))
         return;
@@ -50,29 +50,29 @@ void TcpServer::serverNewConnection()
 
 bool TcpServer::isListening() const
 {
-    return tcpServer->isListening();
+    return m_tcpServer->isListening();
 }
 
-quint16 TcpServer::getServerPort() const
+quint16 TcpServer::serverPort() const
 {
-    return tcpServer->serverPort();
+    return m_tcpServer->serverPort();
 }
 
-QHostAddress TcpServer::getServerAddress() const
+QHostAddress TcpServer::serverAddress() const
 {
-    return tcpServer->serverAddress();
+    return m_tcpServer->serverAddress();
 }
 
 TcpServer::~TcpServer() = default;
 
 TcpSocket::TcpSocket(std::unique_ptr<QTcpSocket> tcpSocket)
-    : tcpSocket(std::move(tcpSocket))
+    : m_tcpSocket(std::move(tcpSocket))
 { }
 
 void TcpSocket::write(const QJsonObject &responseData) const
 {
-    tcpSocket->write(TcpMessages::getBytes(responseData));
-    tcpSocket->waitForBytesWritten();
+    m_tcpSocket->write(TcpMessages::getBytes(responseData));
+    m_tcpSocket->waitForBytesWritten();
 }
 
 TcpSocket::~TcpSocket() = default;

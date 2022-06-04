@@ -16,7 +16,7 @@ class SensorCommunication : public QObject
     Q_OBJECT
 
 private:
-    static const int checkInactiveSensorsCount = 5;
+    static const int check_inactive_sensors_count = 5;
 
 public:
     SensorCommunication();
@@ -24,7 +24,7 @@ public:
 
     bool updateData(Sensor& sensor);
 
-    SensorList& getKnownSensors();
+    SensorList& knownSensors();
 
     void discoverSensors();
     void discoverSensor(const QHostAddress& address, quint16 port);
@@ -34,10 +34,10 @@ private:
 
     void onSensorDiscovered(std::shared_ptr<Sensor> sensor);
 
-    SensorList knownSensors;
-    std::unique_ptr<SensorDetector> fireSensorDetector;
+    SensorList m_knownSensors;
+    std::unique_ptr<SensorDetector> m_sensorDetector;
 
-    int sensorUpdatesCount = 0;
+    int m_sensorUpdatesCount = 0;
 };
 
 #endif // SENSORCOMMUNICATION_H

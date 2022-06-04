@@ -9,33 +9,33 @@ FilteredSensorListModel::FilteredSensorListModel(QObject* parent)
     setDynamicSortFilter(true);
 }
 
-bool FilteredSensorListModel::getReplaceFilterEnabled() const
+bool FilteredSensorListModel::replaceFilterEnabled() const
 {
-    return replaceFilterEnabled;
+    return m_replaceFilterEnabled;
 }
 
 void FilteredSensorListModel::setReplaceFilterEnabled(bool replaceFilterEnabled)
 {
-    if (this->replaceFilterEnabled == replaceFilterEnabled)
+    if (m_replaceFilterEnabled == replaceFilterEnabled)
         return;
 
-    this->replaceFilterEnabled = replaceFilterEnabled;
+    m_replaceFilterEnabled = replaceFilterEnabled;
 
     emit replaceFilterEnabledChanged();
     invalidateFilter();
 }
 
-bool FilteredSensorListModel::getActiveFilterEnabled() const
+bool FilteredSensorListModel::activeFilterEnabled() const
 {
-    return activeFilterEnabled;
+    return m_activeFilterEnabled;
 }
 
 void FilteredSensorListModel::setActiveFilterEnabled(bool activeFilterEnabled)
 {
-    if (this->activeFilterEnabled == activeFilterEnabled)
+    if (m_activeFilterEnabled == activeFilterEnabled)
         return;
 
-    this->activeFilterEnabled = activeFilterEnabled;
+    m_activeFilterEnabled = activeFilterEnabled;
 
     emit activeFilterEnabledChanged();
     invalidateFilter();
@@ -43,13 +43,13 @@ void FilteredSensorListModel::setActiveFilterEnabled(bool activeFilterEnabled)
 
 bool FilteredSensorListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (!replaceFilterEnabled && !activeFilterEnabled)
+    if (!m_replaceFilterEnabled && !m_activeFilterEnabled)
         return true;
 
     const auto index = sourceModel()->index(sourceRow, 0, sourceParent);
     const auto data = index.data(SensorList::Roles::DataRole);
     const Sensor* sensor = data.value<Sensor*>();
 
-    return (!replaceFilterEnabled || !sensor->getIsReplaced()) &&
-           (!activeFilterEnabled  || sensor->getIsActive());
+    return (!m_replaceFilterEnabled || !sensor->isReplaced()) &&
+           (!m_activeFilterEnabled  || sensor->isActive());
 }

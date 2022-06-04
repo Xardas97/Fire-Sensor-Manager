@@ -21,14 +21,14 @@ public:
     void add(std::shared_ptr<Sensor> sensor);
     void remove(std::shared_ptr<Sensor> sensor);
 
-    auto getSensors() -> std::vector<std::shared_ptr<Sensor>>&;
+    auto sensors() -> std::vector<std::shared_ptr<Sensor>>&;
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    std::vector<std::shared_ptr<Sensor>> sensors;
+    std::vector<std::shared_ptr<Sensor>> m_sensors;
 
     void onDataChanged();
 };

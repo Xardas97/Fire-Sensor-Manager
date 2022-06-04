@@ -9,26 +9,26 @@
 #include <QtConcurrent>
 
 SensorCommunication::SensorCommunication()
-    : fireSensorDetector(new SensorDetector())
+    : m_sensorDetector(new SensorDetector())
 {
-    QObject::connect(fireSensorDetector.get(), &SensorDetector::onSensorDiscovered, this, &SensorCommunication::onSensorDiscovered);
+    QObject::connect(m_sensorDetector.get(), &SensorDetector::onSensorDiscovered, this, &SensorCommunication::onSensorDiscovered);
     QTimer::singleShot(5000, this, &SensorCommunication::updateSensors);
 }
 
 void SensorCommunication::updateSensors()
 {
-    sensorUpdatesCount = (sensorUpdatesCount + 1) % checkInactiveSensorsCount;
-    bool updateInactiveSensors = sensorUpdatesCount == 0;
+    m_sensorUpdatesCount = (m_sensorUpdatesCount + 1) % check_inactive_sensors_count;
+    bool updateInactiveSensors = m_sensorUpdatesCount == 0;
 
     if (updateInactiveSensors)
         qDebug() << "Updating inactive sensors...";
 
-    for (auto& sensor: knownSensors.getSensors())
+    for (auto& sensor: m_knownSensors.sensors())
     {
-        if (sensor->getIsReplaced())
+        if (sensor->isReplaced())
             continue;
 
-        if (!sensor->getIsActive() && !updateInactiveSensors)
+        if (!sensor->isActive() && !updateInactiveSensors)
             continue;
 
         auto sensorUpdateFuture = QtConcurrent::run([&]()
@@ -48,8 +48,8 @@ bool SensorCommunication::updateData(Sensor& sensor)
 {
     TcpClient tcpClient;
 
-    auto address = sensor.getAddress();
-    auto port = sensor.getPort();
+    auto address = sensor.address();
+    auto port = sensor.port();
 
     auto response = tcpClient.sendRequest(address, port, TcpMessages::Command::GetData);
     if (!response.contains("data"))
@@ -69,38 +69,38 @@ bool SensorCommunication::updateData(Sensor& sensor)
     return true;
 }
 
-SensorList& SensorCommunication::getKnownSensors()
+SensorList& SensorCommunication::knownSensors()
 {
-    return knownSensors;
+    return m_knownSensors;
 }
 
 void SensorCommunication::discoverSensors()
 {
-    fireSensorDetector->discoverSensors();
+    m_sensorDetector->discoverSensors();
 }
 
 void SensorCommunication::discoverSensor(const QHostAddress &address, quint16 port)
 {
-    fireSensorDetector->discoverSensor(address, port);
+    m_sensorDetector->discoverSensor(address, port);
 }
 
 void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
 {
     qDebug() << "Discovered sensor: " << *sensor;
 
-    auto found = knownSensors.find(sensor);
+    auto found = m_knownSensors.find(sensor);
     if (found == nullptr)
     {
         qDebug() << "This is a new sensor!";
-        knownSensors.add(sensor);
+        m_knownSensors.add(sensor);
         return;
     }
 
-    if (sensor->getAddress() != found->getAddress() || sensor->getPort() != found->getPort())
+    if (sensor->address() != found->address() || sensor->port() != found->port())
     {
         qDebug() << "Known sensor found on different address, replacing!";
-        knownSensors.remove(found);
-        knownSensors.add(sensor);
+        m_knownSensors.remove(found);
+        m_knownSensors.add(sensor);
     }
 }
 

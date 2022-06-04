@@ -15,12 +15,12 @@ class Sensor : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(SensorState* sensorState READ getSensorState NOTIFY sensorStateChanged)
+    Q_PROPERTY(SensorState* sensorState READ sensorState NOTIFY sensorStateChanged)
 public:
     explicit Sensor(QObject *parent = nullptr);
     ~Sensor();
 
-    SensorState* getSensorState() const;
+    SensorState* sensorState() const;
 
 public slots:
     bool startSensor(Capabilities capabilities);
@@ -33,10 +33,10 @@ private:
     QHostAddress getLocalAddress();
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 
-    std::shared_ptr<SensorState> sensorState;
+    std::shared_ptr<SensorState> m_sensorState;
 
-    std::unique_ptr<TcpServer> tcpServer;
-    std::unique_ptr<DetectionService> detectionService;
+    std::unique_ptr<TcpServer> m_tcpServer;
+    std::unique_ptr<DetectionService> m_detectionService;
 };
 
 #endif // SENSOR_H

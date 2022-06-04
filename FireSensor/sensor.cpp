@@ -11,40 +11,40 @@
 #include <QNetworkInterface>
 
 Sensor::Sensor(QObject *parent)
-    : QObject{parent}, tcpServer(new TcpServer())
+    : QObject{parent}, m_tcpServer(new TcpServer())
 {
-    QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &Sensor::onReceivedCommand);
+    QObject::connect(m_tcpServer.get(), &TcpServer::onReceivedCommand, this, &Sensor::onReceivedCommand);
 }
 
 bool Sensor::startSensor(Capabilities capabilities)
 {
     auto localAddress = getLocalAddress();
 
-    for (int i = 0; i < Ports::maxSensorPorts; ++i)
+    for (int i = 0; i < Ports::max_sensor_ports; ++i)
     {
-        auto started = tcpServer->startServer(localAddress, Ports::baseSensorPort + i);
+        auto started = m_tcpServer->startServer(localAddress, Ports::base_sensor_port + i);
         if (started) break;
     }
 
-    if (!tcpServer->isListening())
+    if (!m_tcpServer->isListening())
     {
         qWarning() << "Failed to start the server on any of the ports!";
         return false;
     }
 
-    sensorState = std::make_shared<SensorState>(capabilities, tcpServer->getServerAddress(), tcpServer->getServerPort());
+    m_sensorState = std::make_shared<SensorState>(capabilities, m_tcpServer->serverAddress(), m_tcpServer->serverPort());
     emit sensorStateChanged();
 
-    detectionService = std::make_unique<DetectionService>(sensorState);
+    m_detectionService = std::make_unique<DetectionService>(m_sensorState);
 
     return true;
 }
 
 void Sensor::stopSensor()
 {
-    tcpServer->stopServer();
-    detectionService = nullptr;
-    sensorState = nullptr;
+    m_tcpServer->stopServer();
+    m_detectionService = nullptr;
+    m_sensorState = nullptr;
     emit sensorStateChanged();
 }
 
@@ -52,10 +52,10 @@ void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
     if (data["command"] == TcpMessages::Command::GetData["command"])
     {
-        qDebug() << "Client asked for sensor data, returing temperature: " << sensorState->getTemperature();
+        qDebug() << "Client asked for sensor data, returing temperature: " << m_sensorState->temperature();
 
         auto response = TcpMessages::Response::Ack;
-        response["data"] = sensorState->toDataJson();
+        response["data"] = m_sensorState->toDataJson();
         socket.write(response);
         qDebug() << "Sensor data written";
 
@@ -74,7 +74,7 @@ void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 
         auto newName = data["name"].toString();
         qDebug() << "Changing name to: " << newName;
-        sensorState->setName(newName);
+        m_sensorState->setName(newName);
 
         auto response = TcpMessages::Response::Ack;
         socket.write(response);
@@ -87,7 +87,7 @@ void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
         qDebug() << "Clients requested identification";
 
         QJsonObject response = TcpMessages::Response::Ack;
-        response["data"] = sensorState->toIdentityJson();
+        response["data"] = m_sensorState->toIdentityJson();
 
         socket.write(response);
         return;
@@ -114,9 +114,9 @@ QHostAddress Sensor::getLocalAddress()
     return QHostAddress::Null;
 }
 
-SensorState* Sensor::getSensorState() const
+SensorState* Sensor::sensorState() const
 {
-    return sensorState.get();
+    return m_sensorState.get();
 }
 
 Sensor::~Sensor() = default;

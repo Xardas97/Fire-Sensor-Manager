@@ -35,17 +35,17 @@ class SensorState : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QUuid        uuid             READ getUuid           CONSTANT)
-    Q_PROPERTY(Capabilities capabilities     READ getCapabilities   CONSTANT)
-    Q_PROPERTY(QString      address          READ getAddressString  CONSTANT)
-    Q_PROPERTY(quint16      port             READ getPort           CONSTANT)
+    Q_PROPERTY(QUuid        uuid             READ uuid           CONSTANT)
+    Q_PROPERTY(Capabilities capabilities     READ capabilities   CONSTANT)
+    Q_PROPERTY(QString      address          READ addressString  CONSTANT)
+    Q_PROPERTY(quint16      port             READ port           CONSTANT)
 
-    Q_PROPERTY(QString      name             READ getName             WRITE setName             NOTIFY nameChanged)
-    Q_PROPERTY(Statuses     status           READ getStatus           WRITE setStatus           NOTIFY statusChanged)
-    Q_PROPERTY(short        temperature      READ getTemperature      WRITE setTemperature      NOTIFY temperatureChanged)
-    Q_PROPERTY(bool         smokeDetected    READ getSmokeDetected    WRITE setSmokeDetected    NOTIFY smokeDetectedChanged)
-    Q_PROPERTY(int          co2Concentration READ getCo2Concentration WRITE setCo2Concentration NOTIFY co2ConcentrationChanged)
-    Q_PROPERTY(short        pollution        READ getPollution        WRITE setPollution        NOTIFY pollutionChanged)
+    Q_PROPERTY(QString      name             READ name             WRITE setName             NOTIFY nameChanged)
+    Q_PROPERTY(Statuses     status           READ status           WRITE setStatus           NOTIFY statusChanged)
+    Q_PROPERTY(short        temperature      READ temperature      WRITE setTemperature      NOTIFY temperatureChanged)
+    Q_PROPERTY(bool         smokeDetected    READ smokeDetected    WRITE setSmokeDetected    NOTIFY smokeDetectedChanged)
+    Q_PROPERTY(int          co2Concentration READ co2Concentration WRITE setCo2Concentration NOTIFY co2ConcentrationChanged)
+    Q_PROPERTY(short        pollution        READ pollution        WRITE setPollution        NOTIFY pollutionChanged)
 
     public:
         SensorState(Capabilities capabilities, QHostAddress address, quint16 port);
@@ -55,22 +55,22 @@ class SensorState : public QObject
         bool updateData(QJsonObject json);
         static std::unique_ptr<SensorState> fromJson(QJsonObject json);
 
-        const QUuid &getUuid() const;
-        const QString &getName() const;
+        const QUuid &uuid() const;
+        const QString &name() const;
         void setName(const QString &newName);
-        const Capabilities &getCapabilities() const;
-        const QHostAddress &getAddress() const;
-        const QString getAddressString() const;
-        quint16 getPort() const;
-        const Statuses &getStatus() const;
+        const Capabilities &capabilities() const;
+        const QHostAddress &address() const;
+        const QString addressString() const;
+        quint16 port() const;
+        const Statuses &status() const;
         void setStatus(const Statuses &newStatus);
-        short getTemperature() const;
+        short temperature() const;
         void setTemperature(short newTemperature);
-        bool getSmokeDetected() const;
+        bool smokeDetected() const;
         void setSmokeDetected(bool newSmokeDetected);
-        int getCo2Concentration() const;
+        int co2Concentration() const;
         void setCo2Concentration(int newCo2Concentration);
-        short getPollution() const;
+        short pollution() const;
         void setPollution(short newPollution);
 
     signals:
@@ -85,27 +85,27 @@ class SensorState : public QObject
         SensorState(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port);
 
     private:
-        QUuid uuid;
-        QString name;
-        Capabilities capabilities;
+        QUuid m_uuid;
+        QString m_name;
+        Capabilities m_capabilities;
 
-        QHostAddress address;
-        quint16 port;
+        QHostAddress m_address;
+        quint16 m_port;
 
-        Statuses status;
+        Statuses m_status;
 
-        short temperature;
-        bool smokeDetected;
-        int co2Concentration;
-        short pollution;
+        short m_temperature;
+        bool m_smokeDetected;
+        int m_co2Concentration;
+        short m_pollution;
 
         static QString generateSensorName(Capabilities capabilities);
 };
 
 QDebug inline operator<<(QDebug out, const SensorState& sensorState)
 {
-    return out << "[uuid: " << sensorState.getUuid() << ", name: " << sensorState.getName() <<
-                  ", address" << sensorState.getAddress() << ", port: " << sensorState.getPort() << "]";
+    return out << "[uuid: " << sensorState.uuid() << ", name: " << sensorState.name() <<
+                  ", address" << sensorState.address() << ", port: " << sensorState.port() << "]";
 }
 
 #endif // SENSORSTATE_H

@@ -10,18 +10,18 @@
 #include <QJsonDocument>
 
 DetectionService::DetectionService(std::shared_ptr<SensorState> sensorState, QObject *parent)
-    : QObject{parent}, sensorState(sensorState), udpSocket(new QUdpSocket())
+    : QObject{parent}, m_sensorState(sensorState), m_udpSocket(new QUdpSocket())
 {
-    udpSocket->bind(sensorState->getPort(), QUdpSocket::ShareAddress);
-    QObject::connect(udpSocket.get(), &QUdpSocket::readyRead, this, &DetectionService::processDetectionRequest);
-    qDebug() << "DetectionService listening on port " << sensorState->getPort();
+    m_udpSocket->bind(sensorState->port(), QUdpSocket::ShareAddress);
+    QObject::connect(m_udpSocket.get(), &QUdpSocket::readyRead, this, &DetectionService::processDetectionRequest);
+    qDebug() << "DetectionService listening on port " << sensorState->port();
 }
 
 void DetectionService::processDetectionRequest()
 {
     qDebug() << "DetectionService received a request";
 
-    if (!udpSocket->hasPendingDatagrams())
+    if (!m_udpSocket->hasPendingDatagrams())
     {
         qWarning() << "Udp request received with no pending data!";
         return;
@@ -30,8 +30,8 @@ void DetectionService::processDetectionRequest()
     QByteArray data;
     QHostAddress peerAddress;
 
-    data.resize(int(udpSocket->pendingDatagramSize()));
-    udpSocket->readDatagram(data.data(), data.size(), &peerAddress);
+    data.resize(int(m_udpSocket->pendingDatagramSize()));
+    m_udpSocket->readDatagram(data.data(), data.size(), &peerAddress);
 
     qDebug() << "Received command: " << data;
     QJsonDocument dataDoc = QJsonDocument::fromJson(data);
@@ -49,10 +49,10 @@ void DetectionService::sendServerAddressToRequester(const QHostAddress &requeste
     qDebug() << "Replying with my identify data: " << requesterAddress.toString();
 
     QJsonObject message = TcpMessages::Command::Identify;
-    message["data"] = sensorState->toIdentityJson();
+    message["data"] = m_sensorState->toIdentityJson();
 
     TcpClient tcpClient;
-    tcpClient.sendRequest(requesterAddress, Ports::sensorDetectorPort, message);
+    tcpClient.sendRequest(requesterAddress, Ports::sensor_detector_port, message);
 }
 
 DetectionService::~DetectionService() = default;

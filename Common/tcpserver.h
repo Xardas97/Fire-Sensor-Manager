@@ -19,7 +19,7 @@ class TcpSocket
         void write(const QJsonObject& responseData) const;
 
     private:
-        std::unique_ptr<QTcpSocket> tcpSocket;
+        std::unique_ptr<QTcpSocket> m_tcpSocket;
 };
 
 class TcpServer : public QObject
@@ -31,10 +31,10 @@ public:
 
     bool startServer(const QHostAddress& address, quint16 port);
     void stopServer();
-    bool isListening() const;
 
-    quint16 getServerPort() const;
-    QHostAddress getServerAddress() const;
+    bool isListening() const;
+    quint16 serverPort() const;
+    QHostAddress serverAddress() const;
 
 signals:
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
@@ -42,7 +42,7 @@ signals:
 private:
     void serverNewConnection();
 
-    std::unique_ptr<QTcpServer> tcpServer;
+    std::unique_ptr<QTcpServer> m_tcpServer;
 };
 
 #endif // TCPSERVER_H

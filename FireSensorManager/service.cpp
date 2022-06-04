@@ -5,24 +5,26 @@
 #include <QHostAddress>
 
 Service::Service(QObject *parent)
-    : QObject{parent}, sensorCommunication(new SensorCommunication()), knownSensorsFilterModel(new FilteredSensorListModel())
+    : QObject{parent},
+      m_sensorCommunication(new SensorCommunication()),
+      m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
-    knownSensorsFilterModel->setSourceModel(&sensorCommunication->getKnownSensors());
+    m_knownSensorsFilterModel->setSourceModel(&m_sensorCommunication->knownSensors());
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
 {
-    sensorCommunication->discoverSensor(QHostAddress{address}, port);
+    m_sensorCommunication->discoverSensor(QHostAddress{address}, port);
 }
 
 void Service::discoverSensors()
 {
-    sensorCommunication->discoverSensors();
+    m_sensorCommunication->discoverSensors();
 }
 
-FilteredSensorListModel* Service::getKnownSensorsFilterModel()
+FilteredSensorListModel* Service::knownSensorsFilterModel()
 {
-    return knownSensorsFilterModel.get();
+    return m_knownSensorsFilterModel.get();
 }
 
 Service::~Service() = default;

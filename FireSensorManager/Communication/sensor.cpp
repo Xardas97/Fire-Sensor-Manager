@@ -2,8 +2,8 @@
 
 Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port)
     : SensorState(uuid, name, capabilities, address, port),
-      isActive(true),
-      isReplaced(false)
+      m_isActive(true),
+      m_isReplaced(false)
 { }
 
 std::unique_ptr<Sensor> Sensor::fromJson(QJsonObject json)
@@ -15,43 +15,43 @@ std::unique_ptr<Sensor> Sensor::fromJson(QJsonObject json)
                                                                                   json["port"].toInt()));
 }
 
-bool Sensor::getIsActive() const
+bool Sensor::isActive() const
 {
-    return isActive;
+    return m_isActive;
 }
 
-bool Sensor::getIsReplaced() const
+bool Sensor::isReplaced() const
 {
-    return isReplaced;
+    return m_isReplaced;
 }
 
 void Sensor::setIsReplaced()
 {
-    if (!isReplaced)
+    if (!m_isReplaced)
     {
-        isReplaced = true;
+        m_isReplaced = true;
         emit isReplacedChanged();
     }
 }
 
 void Sensor::reportCommunicationSuccess()
 {
-    communicationFailedCount = 0;
+    m_communicationFailedCount = 0;
 
-    if (!isActive)
+    if (!m_isActive)
     {
-        qDebug() << "Communication with sensor " << getName() << " succeeded, setting as active again!";
-        isActive = true;
+        qDebug() << "Communication with sensor " << name() << " succeeded, setting as active again!";
+        m_isActive = true;
         emit isActiveChanged();
     }
 }
 
 void Sensor::reportCommunicationFailure()
 {
-    if (++communicationFailedCount == maxCommunicationFailed)
+    if (++m_communicationFailedCount == maxCommunicationFailed)
     {
-        qDebug() << "Communication with sensor " << getName() << " failed " << maxCommunicationFailed << " times, setting as inactive!";
-        isActive = false;
+        qDebug() << "Communication with sensor " << name() << " failed " << maxCommunicationFailed << " times, setting as inactive!";
+        m_isActive = false;
         emit isActiveChanged();
     }
 }

@@ -8,16 +8,16 @@ SensorState::SensorState(Capabilities capabilities, QHostAddress address, quint1
 
 SensorState::SensorState(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port)
     : QObject {nullptr},
-      uuid(uuid),
-      name(name),
-      capabilities(capabilities),
-      address(address),
-      port(port),
-      status(Status::NoIssue),
-      temperature(20),
-      smokeDetected(false),
-      co2Concentration(500),
-      pollution(30)
+      m_uuid(uuid),
+      m_name(name),
+      m_capabilities(capabilities),
+      m_address(address),
+      m_port(port),
+      m_status(Status::NoIssue),
+      m_temperature(20),
+      m_smokeDetected(false),
+      m_co2Concentration(500),
+      m_pollution(30)
 { }
 
 QString SensorState::generateSensorName(Capabilities capabilities)
@@ -42,11 +42,11 @@ QJsonObject SensorState::toIdentityJson() const
 {
     QJsonObject json;
 
-    json["uuid"] = uuid.toString(QUuid::StringFormat::WithoutBraces);
-    json["name"] = name;
-    json["capabilities"] = (ushort)capabilities.toInt();
-    json["address"] = address.toString();
-    json["port"] = port;
+    json["uuid"] = m_uuid.toString(QUuid::StringFormat::WithoutBraces);
+    json["name"] = m_name;
+    json["capabilities"] = (ushort)m_capabilities.toInt();
+    json["address"] = m_address.toString();
+    json["port"] = m_port;
 
     return json;
 }
@@ -64,19 +64,19 @@ QJsonObject SensorState::toDataJson() const
 {
     QJsonObject json;
 
-    json["name"] = name;
-    json["status"] = (ushort)status.toInt();
+    json["name"] = m_name;
+    json["status"] = (ushort)m_status.toInt();
     // API user needs UUID to ensure that it's still the same sensor on this address
-    json["uuid"] = uuid.toString(QUuid::StringFormat::WithoutBraces);
+    json["uuid"] = m_uuid.toString(QUuid::StringFormat::WithoutBraces);
 
-    if (capabilities.testFlag(Capability::Temperature))
-        json["temperature"] = temperature;
-    if (capabilities.testFlag(Capability::Smoke))
-        json["smoke"] = smokeDetected;
-    if (capabilities.testFlag(Capability::CO2Concentration))
-        json["co2"] = co2Concentration;
-    if (capabilities.testFlag(Capability::Pollution))
-        json["pollution"] = pollution;
+    if (m_capabilities.testFlag(Capability::Temperature))
+        json["temperature"] = m_temperature;
+    if (m_capabilities.testFlag(Capability::Smoke))
+        json["smoke"] = m_smokeDetected;
+    if (m_capabilities.testFlag(Capability::CO2Concentration))
+        json["co2"] = m_co2Concentration;
+    if (m_capabilities.testFlag(Capability::Pollution))
+        json["pollution"] = m_pollution;
 
     return json;
 }
@@ -84,13 +84,13 @@ QJsonObject SensorState::toDataJson() const
 bool SensorState::updateData(QJsonObject json)
 {
     auto dataUuid = QUuid::fromString(json["uuid"].toString());
-    if (dataUuid != this->uuid)
+    if (dataUuid != m_uuid)
         return false;
 
     setName(json["name"].toString());
     setStatus(Statuses::fromInt(json["status"].toInt()));
 
-    if (capabilities.testFlag(Capability::Temperature))
+    if (m_capabilities.testFlag(Capability::Temperature))
     {
         if (json.contains("temperature"))
             setTemperature(json["temperature"].toInt());
@@ -98,7 +98,7 @@ bool SensorState::updateData(QJsonObject json)
             qWarning("API - Temperature expected but missing!");
     }
 
-    if (capabilities.testFlag(Capability::Smoke))
+    if (m_capabilities.testFlag(Capability::Smoke))
     {
         if (json.contains("smoke"))
             setSmokeDetected(json["smoke"].toBool());
@@ -106,7 +106,7 @@ bool SensorState::updateData(QJsonObject json)
             qWarning("API - Smoke detection expected but missing!");
     }
 
-    if (capabilities.testFlag(Capability::CO2Concentration))
+    if (m_capabilities.testFlag(Capability::CO2Concentration))
     {
         if (json.contains("co2"))
             setCo2Concentration(json["co2"].toInt());
@@ -114,7 +114,7 @@ bool SensorState::updateData(QJsonObject json)
             qWarning("API - CO2 Concentration expected but missing!");
     }
 
-    if (capabilities.testFlag(Capability::Pollution))
+    if (m_capabilities.testFlag(Capability::Pollution))
     {
         if (json.contains("pollution"))
             setPollution(json["pollution"].toInt());
@@ -125,93 +125,93 @@ bool SensorState::updateData(QJsonObject json)
     return true;
 }
 
-const QUuid &SensorState::getUuid() const
+const QUuid &SensorState::uuid() const
 {
-    return uuid;
+    return m_uuid;
 }
 
-const QString &SensorState::getName() const
+const QString &SensorState::name() const
 {
-    return name;
+    return m_name;
 }
 
 void SensorState::setName(const QString &newName)
 {
-    name = newName;
+    m_name = newName;
     emit nameChanged();
 }
 
-const Capabilities &SensorState::getCapabilities() const
+const Capabilities &SensorState::capabilities() const
 {
-    return capabilities;
+    return m_capabilities;
 }
 
-const QHostAddress &SensorState::getAddress() const
+const QHostAddress &SensorState::address() const
 {
-    return address;
+    return m_address;
 }
 
-const QString SensorState::getAddressString() const
+const QString SensorState::addressString() const
 {
-    return address.toString();
+    return m_address.toString();
 }
 
-quint16 SensorState::getPort() const
+quint16 SensorState::port() const
 {
-    return port;
+    return m_port;
 }
 
-const Statuses &SensorState::getStatus() const
+const Statuses &SensorState::status() const
 {
-    return status;
+    return m_status;
 }
 
 void SensorState::setStatus(const Statuses &newStatus)
 {
-    status = newStatus;
+    m_status = newStatus;
     emit statusChanged();
 }
 
-short SensorState::getTemperature() const
+short SensorState::temperature() const
 {
-    return temperature;
+    return m_temperature;
 }
 
 void SensorState::setTemperature(short newTemperature)
 {
-    temperature = newTemperature;
+    m_temperature = newTemperature;
     emit temperatureChanged();
 }
 
-bool SensorState::getSmokeDetected() const
+bool SensorState::smokeDetected() const
 {
-    return smokeDetected;
+    return m_smokeDetected;
 }
 
 void SensorState::setSmokeDetected(bool newSmokeDetected)
 {
-    smokeDetected = newSmokeDetected;
+    m_smokeDetected = newSmokeDetected;
     emit smokeDetectedChanged();
 }
 
-int SensorState::getCo2Concentration() const
+int SensorState::co2Concentration() const
 {
-    return co2Concentration;
+    return m_co2Concentration;
 }
 
 void SensorState::setCo2Concentration(int newCo2Concentration)
 {
-    co2Concentration = newCo2Concentration;
+    m_co2Concentration = newCo2Concentration;
     emit co2ConcentrationChanged();
 }
 
-short SensorState::getPollution() const
+short SensorState::pollution() const
 {
-    return pollution;
+    return m_pollution;
 }
 
 void SensorState::setPollution(short newPollution)
 {
-    pollution = newPollution;
+    m_pollution = newPollution;
     emit pollutionChanged();
 }

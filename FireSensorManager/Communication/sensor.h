@@ -7,8 +7,8 @@ class Sensor : public SensorState
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isActive    READ getIsActive    NOTIFY isActiveChanged)
-    Q_PROPERTY(bool isReplaced  READ getIsReplaced  NOTIFY isReplacedChanged)
+    Q_PROPERTY(bool isActive   READ isActive   NOTIFY isActiveChanged)
+    Q_PROPERTY(bool isReplaced READ isReplaced NOTIFY isReplacedChanged)
 
     private:
         static const short maxCommunicationFailed = 3;
@@ -16,8 +16,8 @@ class Sensor : public SensorState
     public:
         static std::unique_ptr<Sensor> fromJson(QJsonObject json);
 
-        bool getIsActive() const;
-        bool getIsReplaced() const;
+        bool isActive() const;
+        bool isReplaced() const;
 
         void setIsReplaced();
         void reportCommunicationSuccess();
@@ -30,9 +30,9 @@ class Sensor : public SensorState
     private:
         Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port);
 
-        bool isActive;
-        bool isReplaced;
-        short communicationFailedCount;
+        bool m_isActive;
+        bool m_isReplaced;
+        short m_communicationFailedCount;
 };
 
 #endif // SENSOR_H

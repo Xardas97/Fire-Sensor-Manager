@@ -10,29 +10,29 @@
 #include <QTcpSocket>
 
 SensorDetector::SensorDetector()
-    : tcpServer(new TcpServer())
+    : m_tcpServer(new TcpServer())
 {
-    QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &SensorDetector::onReceivedCommand);
+    QObject::connect(m_tcpServer.get(), &TcpServer::onReceivedCommand, this, &SensorDetector::onReceivedCommand);
 }
 
 void SensorDetector::discoverSensors()
 {
     qDebug() << "Discovering sensors...";
 
-    if (!tcpServer->isListening())
+    if (!m_tcpServer->isListening())
     {
         qDebug() << "Starting discovering TcpServer...";
-        bool started = tcpServer->startServer(QHostAddress::Any, Ports::sensorDetectorPort);
+        bool started = m_tcpServer->startServer(QHostAddress::Any, Ports::sensor_detector_port);
         if (!started) return;
     }
 
     QUdpSocket udpSocket;
 
-    for (int i = 0; i < Ports::maxSensorPorts; ++i)
+    for (int i = 0; i < Ports::max_sensor_ports; ++i)
     {
         // Sending broadcast to multiple ports to support simulating multiple sensors on same machine
         auto command = TcpMessages::getBytes(TcpMessages::Command::DiscoverSensors);
-        udpSocket.writeDatagram(command, QHostAddress::Broadcast, Ports::baseSensorPort + i);
+        udpSocket.writeDatagram(command, QHostAddress::Broadcast, Ports::base_sensor_port + i);
     }
 
     qDebug() << "Broadcast message sent!";
