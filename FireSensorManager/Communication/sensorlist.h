@@ -29,6 +29,8 @@ public:
 
 private:
     std::vector<std::shared_ptr<Sensor>> sensors;
+
+    void onDataChanged();
 };
 
 #endif // SENSORLIST_H

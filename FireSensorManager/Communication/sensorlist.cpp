@@ -21,6 +21,9 @@ void SensorList::add(std::shared_ptr<Sensor> sensor)
     beginInsertRows(QModelIndex(), sensors.size(), sensors.size());
     sensors.push_back(sensor);
     endInsertRows();
+
+    QObject::connect(sensor.get(), &Sensor::isReplacedChanged, this, &SensorList::onDataChanged);
+    QObject::connect(sensor.get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
 }
 
 void SensorList::remove(std::shared_ptr<Sensor> removeSensor)
@@ -34,9 +37,17 @@ void SensorList::remove(std::shared_ptr<Sensor> removeSensor)
 
     auto row = found - sensors.cbegin();
 
+    QObject::disconnect(found->get(), &Sensor::isReplacedChanged, this, &SensorList::onDataChanged);
+    QObject::disconnect(found->get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
+
     beginRemoveRows(QModelIndex(), row, row);
     sensors.erase(found);
     endRemoveRows();
+}
+
+void SensorList::onDataChanged()
+{
+    emit dataChanged(index(0), index(sensors.size() - 1));
 }
 
 QVariant SensorList::data(const QModelIndex& index, int role) const

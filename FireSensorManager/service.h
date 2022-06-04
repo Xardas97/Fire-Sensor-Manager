@@ -1,9 +1,10 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+#include "filteredsensorlistmodel.h"
+
 #include <memory>
 #include <QObject>
-#include <QAbstractListModel>
 
 class CommunicationSensorState;
 class SensorCommunication;
@@ -12,7 +13,7 @@ class Service : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QAbstractListModel* knownSensorsModel READ getKnownSensorsModel)
+    Q_PROPERTY(FilteredSensorListModel* knownSensorsModel READ getKnownSensorsFilterModel CONSTANT)
 
 public:
     explicit Service(QObject *parent = nullptr);
@@ -22,10 +23,11 @@ public slots:
     void discoverSensor(const QString& address, quint16 port);
     void discoverSensors();
 
-    QAbstractListModel* getKnownSensorsModel();
+    FilteredSensorListModel* getKnownSensorsFilterModel();
 
 private:
     std::unique_ptr<SensorCommunication> sensorCommunication;
+    std::unique_ptr<FilteredSensorListModel> knownSensorsFilterModel;
 };
 
 #endif // SERVICE_H

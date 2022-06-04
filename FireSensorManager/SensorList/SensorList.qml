@@ -3,12 +3,37 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 
-ListView {
+ColumnLayout {
     id: root
 
-    model: service.knownSensorsModel
-    delegate: SensorView {
-        sensor:  model.data
-        width: root.width
+    CheckBox {
+        id: chboxReplaceFilter
+
+        Layout.alignment: Qt.AlignLeft
+        text: qsTr("Replaced Sensors");
+
+        checked: !service.knownSensorsModel.replaceFilterEnabled
+        onCheckStateChanged: service.knownSensorsModel.replaceFilterEnabled = !checked
+    }
+
+    CheckBox {
+        id: chboxActiveFilter
+
+        Layout.alignment: Qt.AlignLeft
+        text: qsTr("Inactive Sensors");
+
+        checked: !service.knownSensorsModel.activeFilterEnabled
+        onCheckStateChanged: service.knownSensorsModel.activeFilterEnabled = !checked
+    }
+
+    ListView {
+        Layout.preferredWidth: root.width
+        Layout.fillHeight: true
+
+        model: service.knownSensorsModel
+        delegate: SensorView {
+            sensor:  model.data
+            width: root.width
+        }
     }
 }

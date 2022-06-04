@@ -17,7 +17,7 @@ class SensorCommunication : public QObject
     Q_OBJECT
 
 private:
-    static const int checkInactiveSensorsCount = 100;
+    static const int checkInactiveSensorsCount = 5;
 
 public:
     SensorCommunication();

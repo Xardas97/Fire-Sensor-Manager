@@ -42,14 +42,25 @@ Rectangle {
     }
 
     Rectangle {
-        id : rectBackground
+        id : rectInactive
 
         width: parent.width
         height: parent.height
         anchors.centerIn: parent
 
         color: "grey"
-        opacity: sensor != null ? (sensor.isActive ? 0 : 0.25) : 0
+        opacity: sensor != null ? (sensor.isActive || sensor.isReplaced ? 0 : 0.25) : 0
+    }
+
+    Rectangle {
+        id : rectReplaced
+
+        width: parent.width
+        height: parent.height
+        anchors.centerIn: parent
+
+        color: "red"
+        opacity: sensor != null ? (sensor.isReplaced ? 0.25 : 0) : 0
     }
 }
 

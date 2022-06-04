@@ -2,12 +2,13 @@
 
 #include "Communication/sensorcommunication.h"
 
-#include <algorithm>
-#include <QRandomGenerator>
+#include "filteredsensorlistmodel.h"
 
 Service::Service(QObject *parent)
-    : QObject{parent}, sensorCommunication(new SensorCommunication())
-{ }
+    : QObject{parent}, sensorCommunication(new SensorCommunication()), knownSensorsFilterModel(new FilteredSensorListModel())
+{
+    knownSensorsFilterModel->setSourceModel(&sensorCommunication->getKnownSensors());
+}
 
 void Service::discoverSensor(const QString& address, quint16 port)
 {
@@ -19,9 +20,9 @@ void Service::discoverSensors()
     sensorCommunication->discoverSensors();
 }
 
-QAbstractListModel* Service::getKnownSensorsModel()
+FilteredSensorListModel* Service::getKnownSensorsFilterModel()
 {
-    return &sensorCommunication->getKnownSensors();
+    return knownSensorsFilterModel.get();
 }
 
 Service::~Service() = default;
