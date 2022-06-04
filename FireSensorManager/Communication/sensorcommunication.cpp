@@ -65,7 +65,6 @@ bool SensorCommunication::updateData(Sensor& sensor)
         return false;
     }
 
-    sensor.updateData(response["data"].toObject());
     return true;
 }
 
