@@ -3,9 +3,9 @@ QT += quick \
       concurrent
 
 SOURCES += \
-        Communication/communicationsensorstate.cpp \
-        Communication/firesensordetector.cpp \
+        Communication/sensor.cpp \
         Communication/sensorcommunication.cpp \
+        Communication/sensordetector.cpp \
         Communication/sensorlist.cpp \
         filteredsensorlistmodel.cpp \
         main.cpp \
@@ -25,9 +25,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    Communication/communicationsensorstate.h \
-    Communication/firesensordetector.h \
+    Communication/sensor.h \
     Communication/sensorcommunication.h \
+    Communication/sensordetector.h \
     Communication/sensorlist.h \
     filteredsensorlistmodel.h \
     service.h

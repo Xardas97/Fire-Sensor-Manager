@@ -1,32 +1,31 @@
-#include "communicationsensorstate.h"
+#include "sensor.h"
 
-
-CommunicationSensorState::CommunicationSensorState(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port)
+Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port)
     : SensorState(uuid, name, capabilities, address, port),
       isActive(true),
       isReplaced(false)
 { }
 
-std::unique_ptr<CommunicationSensorState> CommunicationSensorState::fromJson(QJsonObject json)
+std::unique_ptr<Sensor> Sensor::fromJson(QJsonObject json)
 {
-    return std::unique_ptr<CommunicationSensorState>(new CommunicationSensorState(QUuid::fromString(json["uuid"].toString()),
+    return std::unique_ptr<Sensor>(new Sensor(QUuid::fromString(json["uuid"].toString()),
                                                                                   json["name"].toString(),
                                                                                   Capabilities::fromInt(json["capabilities"].toInt()),
                                                                                   QHostAddress(json["address"].toString()),
                                                                                   json["port"].toInt()));
 }
 
-bool CommunicationSensorState::getIsActive() const
+bool Sensor::getIsActive() const
 {
     return isActive;
 }
 
-bool CommunicationSensorState::getIsReplaced() const
+bool Sensor::getIsReplaced() const
 {
     return isReplaced;
 }
 
-void CommunicationSensorState::setIsReplaced()
+void Sensor::setIsReplaced()
 {
     if (!isReplaced)
     {
@@ -35,7 +34,7 @@ void CommunicationSensorState::setIsReplaced()
     }
 }
 
-void CommunicationSensorState::reportCommunicationSuccess()
+void Sensor::reportCommunicationSuccess()
 {
     communicationFailedCount = 0;
 
@@ -47,7 +46,7 @@ void CommunicationSensorState::reportCommunicationSuccess()
     }
 }
 
-void CommunicationSensorState::reportCommunicationFailure()
+void Sensor::reportCommunicationFailure()
 {
     if (++communicationFailedCount == maxCommunicationFailed)
     {

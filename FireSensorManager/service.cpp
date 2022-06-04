@@ -2,7 +2,7 @@
 
 #include "Communication/sensorcommunication.h"
 
-#include "filteredsensorlistmodel.h"
+#include <QHostAddress>
 
 Service::Service(QObject *parent)
     : QObject{parent}, sensorCommunication(new SensorCommunication()), knownSensorsFilterModel(new FilteredSensorListModel())

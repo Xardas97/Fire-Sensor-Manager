@@ -2,15 +2,14 @@
 #define SENSORCOMMUNICATION_H
 
 #include "sensorlist.h"
-#include "communicationsensorstate.h"
 
 #include <memory>
 #include <vector>
 #include <QObject>
 
+class Sensor;
 class QHostAddress;
-class FireSensorDetector;
-class CommunicationSensorState;
+class SensorDetector;
 
 class SensorCommunication : public QObject
 {
@@ -36,7 +35,7 @@ private:
     void onSensorDiscovered(std::shared_ptr<Sensor> sensor);
 
     SensorList knownSensors;
-    std::unique_ptr<FireSensorDetector> fireSensorDetector;
+    std::unique_ptr<SensorDetector> fireSensorDetector;
 
     int sensorUpdatesCount = 0;
 };

@@ -1,6 +1,7 @@
-#include "firesensordetector.h"
+#include "sensordetector.h"
 
 #include "ports.h"
+#include "sensor.h"
 #include "tcpserver.h"
 #include "tcpclient.h"
 #include "tcpmessages.h"
@@ -8,13 +9,13 @@
 #include <QUdpSocket>
 #include <QTcpSocket>
 
-FireSensorDetector::FireSensorDetector()
+SensorDetector::SensorDetector()
     : tcpServer(new TcpServer())
 {
-    QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &FireSensorDetector::onReceivedCommand);
+    QObject::connect(tcpServer.get(), &TcpServer::onReceivedCommand, this, &SensorDetector::onReceivedCommand);
 }
 
-void FireSensorDetector::discoverSensors()
+void SensorDetector::discoverSensors()
 {
     qDebug() << "Discovering sensors...";
 
@@ -37,14 +38,14 @@ void FireSensorDetector::discoverSensors()
     qDebug() << "Broadcast message sent!";
 }
 
-bool FireSensorDetector::discoverSensor(const QHostAddress& address, quint16 port)
+bool SensorDetector::discoverSensor(const QHostAddress& address, quint16 port)
 {
     TcpClient tcpClient;
     auto response = tcpClient.sendRequest(address, port, TcpMessages::Command::Identify);
     return parseIncomingSensorIdentification(response);
 }
 
-void FireSensorDetector::onReceivedCommand(const TcpSocket& socket, const QJsonObject& command)
+void SensorDetector::onReceivedCommand(const TcpSocket& socket, const QJsonObject& command)
 {
     if (command["command"] == TcpMessages::Command::Identify["command"])
     {
@@ -66,7 +67,7 @@ void FireSensorDetector::onReceivedCommand(const TcpSocket& socket, const QJsonO
     qDebug() << "Command unknown, error response returned!";
 }
 
-bool FireSensorDetector::parseIncomingSensorIdentification(const QJsonObject& json)
+bool SensorDetector::parseIncomingSensorIdentification(const QJsonObject& json)
 {
     if (!json.contains("data"))
     {
@@ -79,4 +80,4 @@ bool FireSensorDetector::parseIncomingSensorIdentification(const QJsonObject& js
     return true;
 }
 
-FireSensorDetector::~FireSensorDetector() = default;
+SensorDetector::~SensorDetector() = default;

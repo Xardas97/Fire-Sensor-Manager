@@ -1,21 +1,20 @@
-#ifndef FIRESENSORDETECTOR_H
-#define FIRESENSORDETECTOR_H
-
-#include "communicationsensorstate.h"
+#ifndef SENSORDETECTOR_H
+#define SENSORDETECTOR_H
 
 #include <memory>
 #include <QObject>
 
+class Sensor;
 class TcpServer;
 class TcpSocket;
 class QHostAddress;
 
-class FireSensorDetector : public QObject
+class SensorDetector : public QObject
 {
     Q_OBJECT
 public:
-    explicit FireSensorDetector();
-    ~FireSensorDetector();
+    explicit SensorDetector();
+    ~SensorDetector();
 
     void discoverSensors();
     bool discoverSensor(const QHostAddress& address, quint16 port);
@@ -30,4 +29,4 @@ private:
     std::unique_ptr<TcpServer> tcpServer;
 };
 
-#endif // FIRESENSORDETECTOR_H
+#endif // SENSORDETECTOR_H

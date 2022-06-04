@@ -1,11 +1,11 @@
 #ifndef SENSORLIST_H
 #define SENSORLIST_H
 
-#include "communicationsensorstate.h"
-
 #include <memory>
 #include <vector>
 #include <QAbstractListModel>
+
+class Sensor;
 
 class SensorList : public QAbstractListModel {
     Q_OBJECT

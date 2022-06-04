@@ -6,7 +6,7 @@
 #include <memory>
 #include <QObject>
 
-class CommunicationSensorState;
+class Sensor;
 class SensorCommunication;
 
 class Service : public QObject

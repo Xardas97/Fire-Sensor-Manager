@@ -3,7 +3,7 @@
 #include <QQmlContext>
 
 #include "service.h"
-#include "Communication/communicationsensorstate.h"
+#include "Communication/sensor.h"
 
 int main(int argc, char *argv[])
 {

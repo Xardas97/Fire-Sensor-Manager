@@ -1,17 +1,17 @@
 #include "sensorcommunication.h"
 
+#include "sensor.h"
 #include "tcpclient.h"
 #include "tcpmessages.h"
-#include "firesensordetector.h"
+#include "sensordetector.h"
 
 #include <QTimer>
-#include <algorithm>
 #include <QtConcurrent>
 
 SensorCommunication::SensorCommunication()
-    : fireSensorDetector(new FireSensorDetector())
+    : fireSensorDetector(new SensorDetector())
 {
-    QObject::connect(fireSensorDetector.get(), &FireSensorDetector::onSensorDiscovered, this, &SensorCommunication::onSensorDiscovered);
+    QObject::connect(fireSensorDetector.get(), &SensorDetector::onSensorDiscovered, this, &SensorCommunication::onSensorDiscovered);
     QTimer::singleShot(5000, this, &SensorCommunication::updateSensors);
 }
 

@@ -1,4 +1,7 @@
 #include "sensorlist.h"
+#include "sensor.h"
+
+#include <algorithm>
 
 SensorList::SensorList(QObject* parent)
     : QAbstractListModel(parent)

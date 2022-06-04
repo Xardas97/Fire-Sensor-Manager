@@ -1,4 +1,6 @@
 #include "filteredsensorlistmodel.h"
+
+#include "Communication/sensor.h"
 #include "Communication/sensorlist.h"
 
 FilteredSensorListModel::FilteredSensorListModel(QObject* parent)
