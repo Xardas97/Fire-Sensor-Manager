@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>SensorList/SensorView.qml</file>
         <file>SensorList/SensorList.qml</file>
+        <file>SensorList/SensorToolTip.qml</file>
     </qresource>
 </RCC>

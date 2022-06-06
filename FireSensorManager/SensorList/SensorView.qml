@@ -13,7 +13,7 @@ Rectangle {
     property bool dirtyStatus: sensor.status & 2
     property bool maintenanceRequiredStatus: sensor.status & 4
 
-    height: columnSensor.height * 1.2
+    height: columnSensor.height * 2
 
     border {
         color: "black"
@@ -34,15 +34,12 @@ Rectangle {
             text: sensor.name
             color: sensor.alarmOn ? "red" : (root.errorStatus || root.dirtyStatus) ? "purple" : "black"
         }
+    }
 
-        Label {
-            id: txtTemperature
-
-            Layout.alignment: Qt.AlignCenter
-
-            text: sensor.temperature
-            color: "black"
-        }
+    SensorToolTip {
+        id: sensorToolTip
+        anchors.fill: parent
+        sensor: root.sensor
     }
 
     Rectangle {
