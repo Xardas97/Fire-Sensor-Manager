@@ -50,6 +50,8 @@ bool FilteredSensorListModel::filterAcceptsRow(int sourceRow, const QModelIndex 
     const auto data = index.data(SensorList::Roles::DataRole);
     const Sensor* sensor = data.value<Sensor*>();
 
-    return (!m_replaceFilterEnabled || !sensor->isReplaced()) &&
-           (!m_activeFilterEnabled  || sensor->isActive());
+    if (sensor->isReplaced())
+        return !m_replaceFilterEnabled;
+
+    return !m_activeFilterEnabled || sensor->isActive();
 }
