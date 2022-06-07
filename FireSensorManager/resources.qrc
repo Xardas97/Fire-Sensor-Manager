@@ -5,5 +5,10 @@
         <file>SensorList/SensorList.qml</file>
         <file>SensorList/SensorToolTip.qml</file>
         <file>Icons/SensorSettings.png</file>
+        <file>SensorList/Settings/SensorSettingsDialog.qml</file>
+        <file>SensorList/Settings/Co2Concentration.qml</file>
+        <file>SensorList/Settings/Pollution.qml</file>
+        <file>SensorList/Settings/SensorName.qml</file>
+        <file>SensorList/Settings/Temperature.qml</file>
     </qresource>
 </RCC>

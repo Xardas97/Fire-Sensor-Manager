@@ -4,6 +4,8 @@ import QtQuick.Layouts
 
 import Custom.Sensors
 
+import "Settings"
+
 Rectangle {
     id: root
 
@@ -50,14 +52,23 @@ Rectangle {
         }
 
         icon.source: "qrc:/Icons/SensorSettings.png"
-
         background: Rectangle { opacity: 0 }
+
+        onClicked: sensorSettingsDialog.open()
     }
 
     SensorToolTip {
         id: sensorToolTip
-        anchors.fill: parent
+        anchors.fill: txtName
+        sensor: root.sensor
+    }
 
+    SensorSettingsDialog {
+        id: sensorSettingsDialog
+        height: 250
+        width: 350
+        x: btnSettings.x
+        y: btnSettings.y
         sensor: root.sensor
     }
 
