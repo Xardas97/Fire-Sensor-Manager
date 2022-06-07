@@ -5,10 +5,13 @@ import QtQuick.Layouts
 import "SensorList"
 
 Window {
-    width: 640
-    height: 480
-    visible: true
     title: qsTr("FireSensorManager")
+    visible: true
+
+    width: 1360
+    height: 765
+    minimumWidth: 1056
+    minimumHeight: 594
 
     RowLayout {
         id: rowWindow
