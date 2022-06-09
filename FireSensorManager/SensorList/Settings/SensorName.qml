@@ -6,8 +6,10 @@ import Custom.Sensors
 Item {
     id: root
 
-    property Sensor sensor
+    property string currentName
     property alias value: txtName.text
+
+    onCurrentNameChanged: txtName.text = currentName
 
     Label {
         id: lblName
@@ -25,7 +27,7 @@ Item {
     TextArea {
         id: txtName
 
-        width: root.width * 0.62
+        width: root.width * 0.51
 
         anchors {
             left: lblName.right
@@ -35,7 +37,28 @@ Item {
         }
 
         horizontalAlignment: "AlignLeft"
+    }
 
-        text: sensor.name
+    Button {
+        id: btnSettings
+
+        height: root.height
+        width: root.width * 0.10
+
+        anchors {
+            left: txtName.right
+            leftMargin: root.width * 0.01
+
+            top: root.top
+            topMargin: (root.height - height) / 2
+
+            bottom: root.bottom
+            bottomMargin: (root.height - height) / 2
+        }
+
+        icon.source: "qrc:/Icons/Refresh.png"
+        background: Rectangle { opacity: 0 }
+
+        onClicked: txtName.text = currentName
     }
 }

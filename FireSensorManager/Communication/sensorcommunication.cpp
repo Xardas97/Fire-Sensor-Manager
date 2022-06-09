@@ -68,6 +68,29 @@ bool SensorCommunication::updateData(Sensor& sensor)
     return true;
 }
 
+bool SensorCommunication::updateName(Sensor& sensor, const QString& name)
+{
+    qDebug() << "Updating name of the sensor " << sensor.name() << " to " << name;
+    TcpClient tcpClient;
+
+    auto address = sensor.address();
+    auto port = sensor.port();
+
+    auto command = TcpMessages::Command::SetName;
+    command["name"] = name;
+
+    auto response = tcpClient.sendRequest(address, port, command);
+
+    if (response != TcpMessages::Response::Ack)
+    {
+        qDebug() << "Failed to update name of the sensor";
+        return false;
+    }
+
+    sensor.setName(name);
+    return true;
+}
+
 SensorList& SensorCommunication::knownSensors()
 {
     return m_knownSensors;

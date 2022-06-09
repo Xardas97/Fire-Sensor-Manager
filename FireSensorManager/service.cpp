@@ -22,6 +22,11 @@ void Service::discoverSensors()
     m_sensorCommunication->discoverSensors();
 }
 
+bool Service::updateName(Sensor* sensor, const QString& name)
+{
+    return m_sensorCommunication->updateName(*sensor, name);
+}
+
 FilteredSensorListModel* Service::knownSensorsFilterModel()
 {
     return m_knownSensorsFilterModel.get();

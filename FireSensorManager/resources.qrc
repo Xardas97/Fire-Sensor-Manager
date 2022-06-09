@@ -10,5 +10,6 @@
         <file>SensorList/Settings/Pollution.qml</file>
         <file>SensorList/Settings/SensorName.qml</file>
         <file>SensorList/Settings/Temperature.qml</file>
+        <file>Icons/Refresh.png</file>
     </qresource>
 </RCC>

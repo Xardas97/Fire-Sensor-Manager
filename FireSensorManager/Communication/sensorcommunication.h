@@ -23,6 +23,7 @@ public:
     ~SensorCommunication();
 
     bool updateData(Sensor& sensor);
+    bool updateName(Sensor& sensor, const QString& name);
 
     SensorList& knownSensors();
 

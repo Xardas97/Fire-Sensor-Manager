@@ -23,6 +23,8 @@ public slots:
     void discoverSensor(const QString& address, quint16 port);
     void discoverSensors();
 
+    bool updateName(Sensor* sensor, const QString& name);
+
     FilteredSensorListModel* knownSensorsFilterModel();
 
 private:
