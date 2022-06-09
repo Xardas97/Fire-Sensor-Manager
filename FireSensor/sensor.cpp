@@ -52,7 +52,7 @@ void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
 {
     if (data["command"] == TcpMessages::Command::GetData["command"])
     {
-        qDebug() << "Client asked for sensor data, returing temperature: " << m_sensorState->temperature();
+        qDebug() << "Client asked for sensor data";
 
         auto response = TcpMessages::Response::Ack;
         response["data"] = m_sensorState->toDataJson();
