@@ -1,12 +1,14 @@
 QT += quick \
       network \
-      concurrent
+      concurrent \
+      sql
 
 SOURCES += \
         Communication/sensor.cpp \
         Communication/sensorcommunication.cpp \
         Communication/sensordetector.cpp \
         Communication/sensorlist.cpp \
+        database.cpp \
         filteredsensorlistmodel.cpp \
         main.cpp \
         service.cpp
@@ -29,6 +31,7 @@ HEADERS += \
     Communication/sensorcommunication.h \
     Communication/sensordetector.h \
     Communication/sensorlist.h \
+    database.h \
     filteredsensorlistmodel.h \
     service.h
 

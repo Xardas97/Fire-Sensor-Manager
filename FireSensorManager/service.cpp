@@ -1,12 +1,14 @@
 #include "service.h"
 
+#include "database.h"
 #include "Communication/sensorcommunication.h"
 
 #include <QHostAddress>
 
 Service::Service(QObject *parent)
     : QObject{parent},
-      m_sensorCommunication(new SensorCommunication()),
+      m_database(new Database()),
+      m_sensorCommunication(new SensorCommunication(m_database)),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
     m_knownSensorsFilterModel->setSourceModel(&m_sensorCommunication->knownSensors());

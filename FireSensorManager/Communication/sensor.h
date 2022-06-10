@@ -3,6 +3,8 @@
 
 #include "sensorstate.h"
 
+class QSqlRecord;
+
 class Sensor : public SensorState
 {
     Q_OBJECT
@@ -24,7 +26,8 @@ class Sensor : public SensorState
         static const short default_pollution_threshold       = 100;
 
     public:
-        static std::unique_ptr<Sensor> fromJson(QJsonObject json);
+        static std::unique_ptr<Sensor> fromJson(const QJsonObject& json);
+        static std::unique_ptr<Sensor> fromSqlRecord(const QSqlRecord& record);
 
         bool isActive() const;
         bool isReplaced() const;

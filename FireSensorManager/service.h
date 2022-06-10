@@ -7,6 +7,7 @@
 #include <QObject>
 
 class Sensor;
+class Database;
 class SensorCommunication;
 
 class Service : public QObject
@@ -28,6 +29,7 @@ public slots:
     FilteredSensorListModel* knownSensorsFilterModel();
 
 private:
+    std::shared_ptr<Database>                m_database;
     std::unique_ptr<SensorCommunication>     m_sensorCommunication;
     std::unique_ptr<FilteredSensorListModel> m_knownSensorsFilterModel;
 };

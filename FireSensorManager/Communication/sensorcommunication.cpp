@@ -1,6 +1,7 @@
 #include "sensorcommunication.h"
 
 #include "sensor.h"
+#include "database.h"
 #include "tcpclient.h"
 #include "tcpmessages.h"
 #include "sensordetector.h"
@@ -8,9 +9,15 @@
 #include <QTimer>
 #include <QtConcurrent>
 
-SensorCommunication::SensorCommunication()
+SensorCommunication::SensorCommunication(std::shared_ptr<Database> database)
     : m_sensorDetector(new SensorDetector())
 {
+    m_database = database;
+    for (auto& sensor: m_database->loadSensors())
+    {
+        m_knownSensors.add(std::move(sensor));
+    }
+
     QObject::connect(m_sensorDetector.get(), &SensorDetector::onSensorDiscovered, this, &SensorCommunication::onSensorDiscovered);
     QTimer::singleShot(5000, this, &SensorCommunication::updateSensors);
 }
@@ -126,4 +133,7 @@ void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
     }
 }
 
-SensorCommunication::~SensorCommunication() = default;
+SensorCommunication::~SensorCommunication()
+{
+    m_database->saveSensors(m_knownSensors.sensors());
+}

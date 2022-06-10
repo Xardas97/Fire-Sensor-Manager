@@ -1,5 +1,7 @@
 #include "sensor.h"
 
+#include <QSqlRecord>
+
 Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port)
     : SensorState(uuid, name, capabilities, address, port),
       m_isActive(true),
@@ -18,13 +20,30 @@ Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress
     QObject::connect(this, &Sensor::pollutionThresholdChanged, this, &Sensor::alarmStateChanged);
 }
 
-std::unique_ptr<Sensor> Sensor::fromJson(QJsonObject json)
+std::unique_ptr<Sensor> Sensor::fromJson(const QJsonObject& json)
 {
     return std::unique_ptr<Sensor>(new Sensor(QUuid::fromString(json["uuid"].toString()),
-                                                                                  json["name"].toString(),
-                                                                                  Capabilities::fromInt(json["capabilities"].toInt()),
-                                                                                  QHostAddress(json["address"].toString()),
-                                                                                  json["port"].toInt()));
+                                              json["name"].toString(),
+                                              Capabilities::fromInt(json["capabilities"].toInt()),
+                                              QHostAddress(json["address"].toString()),
+                                              json["port"].toInt()));
+}
+
+std::unique_ptr<Sensor> Sensor::fromSqlRecord(const QSqlRecord& record)
+{
+    auto uuid = record.value("uuid").toUuid();
+    auto name = record.value("name").toString();
+    auto capabilities = Capabilities::fromInt(record.value("capabilities").toInt());
+    QHostAddress address{record.value("address").toString()};
+    auto port = record.value("port").toInt();
+
+    auto sensor = std::unique_ptr<Sensor>(new Sensor(uuid, name, capabilities, address, port));
+
+    sensor->setTemperatureThreshold(record.value("temperature_threshold").toInt());
+    sensor->setCo2ConcentrationThreshold(record.value("co2_threshold").toInt());
+    sensor->setPollutionThreshold(record.value("pollution_threshold").toInt());
+
+    return sensor;
 }
 
 bool Sensor::isActive() const

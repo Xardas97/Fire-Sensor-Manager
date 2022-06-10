@@ -8,6 +8,7 @@
 #include <QObject>
 
 class Sensor;
+class Database;
 class QHostAddress;
 class SensorDetector;
 
@@ -19,7 +20,7 @@ private:
     static const int check_inactive_sensors_count = 5;
 
 public:
-    SensorCommunication();
+    SensorCommunication(std::shared_ptr<Database> database);
     ~SensorCommunication();
 
     bool updateData(Sensor& sensor);
@@ -36,6 +37,7 @@ private:
     void onSensorDiscovered(std::shared_ptr<Sensor> sensor);
 
     SensorList m_knownSensors;
+    std::shared_ptr<Database>       m_database;
     std::unique_ptr<SensorDetector> m_sensorDetector;
 
     int m_sensorUpdatesCount = 0;
