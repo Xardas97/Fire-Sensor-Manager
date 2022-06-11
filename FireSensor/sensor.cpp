@@ -6,8 +6,12 @@
 #include "sensorstate.h"
 #include "detectionservice.h"
 
+#include <QFile>
 #include <QDebug>
 #include <QTcpSocket>
+#include <QJsonObject>
+#include <QTextStream>
+#include <QJsonDocument>
 #include <QNetworkInterface>
 
 Sensor::Sensor(QObject *parent)
@@ -17,6 +21,86 @@ Sensor::Sensor(QObject *parent)
 }
 
 bool Sensor::startSensor(Capabilities capabilities)
+{
+    if (!startServer())
+        return false;
+
+    m_sensorState = std::make_shared<SensorState>(capabilities, m_tcpServer->serverAddress(), m_tcpServer->serverPort());
+    m_detectionService = std::make_unique<DetectionService>(m_sensorState);
+    emit sensorStateChanged();
+
+    return true;
+}
+
+void Sensor::stopSensor()
+{
+    m_tcpServer->stopServer();
+    m_detectionService = nullptr;
+    m_sensorState = nullptr;
+    emit sensorStateChanged();
+}
+
+bool Sensor::loadSensor(const QUrl& url)
+{
+    qDebug() << "User asked to load sensor from: " << url.toLocalFile();
+
+    QFile file {url.toLocalFile()};
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qWarning() << "Failed to open the desired file";
+        return false;
+    }
+
+    QTextStream in(&file);
+    auto data = in.readAll();
+
+    file.close();
+
+    QJsonDocument dataDoc = QJsonDocument::fromJson(data.toUtf8());
+    auto json = dataDoc.object();
+
+    auto sensor = SensorState::fromJson(json);
+
+    if (!startServer())
+        return false;
+
+    sensor->setPort(m_tcpServer->serverPort());
+    sensor->setAddress(m_tcpServer->serverAddress());
+
+    m_sensorState = std::move(sensor);
+    m_detectionService = std::make_unique<DetectionService>(m_sensorState);
+    emit sensorStateChanged();
+
+    qDebug() << "Successfully loaded sensor data";
+    return true;
+}
+
+bool Sensor::saveSensor(const QUrl& url)
+{
+    qDebug() << "User asked to save sensor to: " << url.toLocalFile();
+    if (!m_sensorState)
+        return false;
+
+    QFile file {url.toLocalFile()};
+    if (!file.open(QIODevice::WriteOnly | QIODeviceBase::Truncate | QIODevice::Text))
+    {
+        qWarning() << "Failed to open the desired file";
+        return false;
+    }
+
+    auto json = m_sensorState->toIdentityJson();
+    auto data = QJsonDocument{json}.toJson(QJsonDocument::JsonFormat::Indented);
+
+    QTextStream out(&file);
+    out << data;
+
+    file.close();
+
+    qDebug() << "Successfully saved sensor data";
+    return true;
+}
+
+bool Sensor::startServer()
 {
     auto localAddress = getLocalAddress();
 
@@ -32,20 +116,7 @@ bool Sensor::startSensor(Capabilities capabilities)
         return false;
     }
 
-    m_sensorState = std::make_shared<SensorState>(capabilities, m_tcpServer->serverAddress(), m_tcpServer->serverPort());
-    emit sensorStateChanged();
-
-    m_detectionService = std::make_unique<DetectionService>(m_sensorState);
-
     return true;
-}
-
-void Sensor::stopSensor()
-{
-    m_tcpServer->stopServer();
-    m_detectionService = nullptr;
-    m_sensorState = nullptr;
-    emit sensorStateChanged();
 }
 
 void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)

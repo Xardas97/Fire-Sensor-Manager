@@ -26,10 +26,14 @@ public slots:
     bool startSensor(Capabilities capabilities);
     void stopSensor();
 
+    bool loadSensor(const QUrl& url);
+    bool saveSensor(const QUrl& url);
+
 signals:
     void sensorStateChanged();
 
 private:
+    bool startServer();
     QHostAddress getLocalAddress();
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 

@@ -1,14 +1,18 @@
+import QtCore
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Dialogs as Dialogs
 
 ColumnLayout {
     id: root
 
-    property alias btnStartSensor: btnStartSensor
     property int enabledCapabilities: chboxTemperature.checked  | chboxSmoke.checked << 1 | chboxCo2Concentration.checked << 2 | chboxPollution.checked << 3
 
     property int fontSize
+
+    signal startRequested
+    signal loadRequested(url url)
 
     GridLayout {
         id: rowCapabilities
@@ -55,15 +59,49 @@ ColumnLayout {
         }
     }
 
-    Button {
-        id: btnStartSensor
-
+    Column {
         Layout.preferredWidth: root.width / 2
         Layout.alignment: Qt.AlignCenter
 
-        enabled: enabledCapabilities
+        Button {
+            id: btnStartSensor
 
-        text: qsTr("Start New Sensor")
-        font.pixelSize: fontSize
+            width: parent.width
+
+            enabled: enabledCapabilities
+
+            text: qsTr("Start New Sensor")
+            font.pixelSize: fontSize
+
+            onClicked: startRequested()
+        }
+
+        Item {
+            id: padding
+            width: parent.width
+            height: btnStartSensor.height / 3
+        }
+
+        Button {
+            id: btnLoadSensor
+
+            width: parent.width
+
+            text: qsTr("Load Sensor")
+            font.pixelSize: fontSize
+
+            onClicked: fileDialogLoad.open()
+        }
+    }
+
+    Dialogs.FileDialog {
+        id: fileDialogLoad
+
+        defaultSuffix: "sns"
+        fileMode: Dialogs.FileDialog.OpenFile
+        nameFilters: ["Sensor files (*.sns)"]
+        currentFolder: StandardPaths.writableLocation(StandardPaths.AppLocalDataLocation)
+
+        onAccepted: loadRequested(fileDialogLoad.selectedFile)
     }
 }

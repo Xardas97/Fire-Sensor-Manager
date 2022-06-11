@@ -27,10 +27,20 @@ Window {
         height: parent.height * 0.5
         anchors.centerIn: parent
 
-        btnStartSensor.onClicked: {
+        onStartRequested: {
             sensorSetup.visible = false;
 
             var success = sensor.startSensor(enabledCapabilities)
+            if (success)
+                loaderMainPage.source = "RunningSensor.qml"
+            else
+                lblFailedToStart.visible = true
+        }
+
+        onLoadRequested: function(url) {
+            sensorSetup.visible = false;
+
+            var success = sensor.loadSensor(url)
             if (success)
                 loaderMainPage.source = "RunningSensor.qml"
             else
