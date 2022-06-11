@@ -6,6 +6,7 @@ Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress
     : SensorState(uuid, name, capabilities, address, port),
       m_isActive(true),
       m_isReplaced(false),
+      m_communicationFailedCount(0),
       m_temperatureThreshold(default_temperature_threshold),
       m_co2ConcentrationThreshold(default_co2_concentration_threshold),
       m_pollutionThreshold(default_pollution_threshold)
@@ -56,11 +57,11 @@ bool Sensor::isReplaced() const
     return m_isReplaced;
 }
 
-void Sensor::setIsReplaced()
+void Sensor::setIsReplaced(bool isReplaced)
 {
-    if (!m_isReplaced)
+    if (m_isReplaced != isReplaced)
     {
-        m_isReplaced = true;
+        m_isReplaced = isReplaced;
         emit isReplacedChanged();
     }
 }

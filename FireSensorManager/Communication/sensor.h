@@ -32,7 +32,7 @@ class Sensor : public SensorState
         bool isActive() const;
         bool isReplaced() const;
 
-        void setIsReplaced();
+        void setIsReplaced(bool isReplaced);
         void reportCommunicationSuccess();
         void reportCommunicationFailure();
 

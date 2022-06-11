@@ -151,6 +151,11 @@ const QHostAddress &SensorState::address() const
     return m_address;
 }
 
+void SensorState::setAddress(const QHostAddress &newAddress)
+{
+    m_address = newAddress;
+}
+
 const QString SensorState::addressString() const
 {
     return m_address.toString();
@@ -159,6 +164,11 @@ const QString SensorState::addressString() const
 quint16 SensorState::port() const
 {
     return m_port;
+}
+
+void SensorState::setPort(quint16 newPort)
+{
+    m_port = newPort;
 }
 
 const Statuses &SensorState::status() const

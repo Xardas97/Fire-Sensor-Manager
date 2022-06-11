@@ -60,8 +60,10 @@ class SensorState : public QObject
         void setName(const QString &newName);
         const Capabilities &capabilities() const;
         const QHostAddress &address() const;
+        void setAddress(const QHostAddress &newAddress);
         const QString addressString() const;
         quint16 port() const;
+        void setPort(quint16 newPort);
         const Statuses &status() const;
         void setStatus(const Statuses &newStatus);
         short temperature() const;

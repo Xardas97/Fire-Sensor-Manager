@@ -68,7 +68,7 @@ bool SensorCommunication::updateData(Sensor& sensor)
     if (!sameSensor)
     {
         qDebug() << "New sensor on this IP address, setting replaced!";
-        sensor.setIsReplaced();
+        sensor.setIsReplaced(true);
         return false;
     }
 
@@ -127,10 +127,13 @@ void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
 
     if (sensor->address() != found->address() || sensor->port() != found->port())
     {
-        qDebug() << "Known sensor found on different address, replacing!";
-        m_knownSensors.remove(found);
-        m_knownSensors.add(sensor);
+        qDebug() << "Known sensor found on different address, updating location!";
+        found->setAddress(sensor->address());
+        found->setPort(sensor->port());
     }
+
+    found->setIsReplaced(false);
+    found->reportCommunicationSuccess();
 }
 
 SensorCommunication::~SensorCommunication()
