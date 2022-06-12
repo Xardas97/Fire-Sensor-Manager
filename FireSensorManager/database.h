@@ -16,10 +16,15 @@ public:
     auto loadSensors() -> std::vector<std::unique_ptr<Sensor>>;
     void saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors);
 
+    bool loadSensorData(Sensor& sensor);
+    void saveSensorData(const Sensor& sensor);
+
 private:
     bool open();
     void close();
     bool createTables();
+
+    void saveSensor(const Sensor& sensor);
 };
 
 #endif // DATABASE_H

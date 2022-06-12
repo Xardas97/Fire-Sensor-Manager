@@ -91,8 +91,7 @@ void Database::saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors)
 {
     qDebug() << "Deleting current database sensors...";
 
-    QSqlQuery query;
-    auto success = query.exec("DELETE FROM sensors");
+    auto success = QSqlQuery{}.exec("DELETE FROM sensors");
     if (!success)
     {
         qWarning() << "Failed to delete sensors from the dabatase!";
@@ -103,29 +102,66 @@ void Database::saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors)
 
     for (auto& sensor: sensors)
     {
-        auto queryText = "INSERT INTO sensors "
-                         "(uuid, capabilities, address, port, name, temperature_threshold, co2_threshold, pollution_threshold) "
-                         "VALUES (:uuid, :capabilities, :address, :port, :name, :temperature_threshold, :co2_threshold, :pollution_threshold)";
-
-        query.prepare(queryText);
-        query.bindValue(":uuid",                sensor->uuid());
-        query.bindValue(":capabilities",        sensor->capabilities().toInt());
-        query.bindValue(":address",             sensor->address().toString());
-        query.bindValue(":port",                sensor->port());
-        query.bindValue(":name",                sensor->name());
-        query.bindValue(":temperature_threshold", sensor->temperatureThreshold());
-        query.bindValue(":co2_threshold",       sensor->co2ConcentrationThreshold());
-        query.bindValue(":pollution_threshold", sensor->pollutionThreshold());
-
-        success = query.exec();
-        if (!success)
-        {
-            qWarning() << "Failed to insert new sensors into the dabatase: " << query.lastError().text();
-            return;
-        }
+        saveSensor(*sensor);
     }
 
     qDebug() << "Finished inserting sensors into the databse";
+}
+
+bool Database::loadSensorData(Sensor& sensor)
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM sensors WHERE uuid = :uuid");
+    query.bindValue(":uuid", sensor.uuid());
+
+    auto success = query.exec();
+    if (!success)
+        return false;
+
+    if (query.next())
+    {
+        sensor.setTemperatureThreshold(query.value("temperature_threshold").toInt());
+        sensor.setCo2ConcentrationThreshold(query.value("co2_threshold").toInt());
+        sensor.setPollutionThreshold(query.value("pollution_threshold").toInt());
+        return true;
+    }
+
+    return false;
+}
+
+void Database::saveSensorData(const Sensor& sensor)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM sensors WHERE uuid = :uuid");
+    query.bindValue(":uuid", sensor.uuid());
+    query.exec();
+
+    saveSensor(sensor);
+}
+
+void Database::saveSensor(const Sensor& sensor)
+{
+    auto queryText = "INSERT INTO sensors "
+                     "(uuid, capabilities, address, port, name, temperature_threshold, co2_threshold, pollution_threshold) "
+                     "VALUES (:uuid, :capabilities, :address, :port, :name, :temperature_threshold, :co2_threshold, :pollution_threshold)";
+
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":uuid",                  sensor.uuid());
+    query.bindValue(":capabilities",          sensor.capabilities().toInt());
+    query.bindValue(":address",               sensor.address().toString());
+    query.bindValue(":port",                  sensor.port());
+    query.bindValue(":name",                  sensor.name());
+    query.bindValue(":temperature_threshold", sensor.temperatureThreshold());
+    query.bindValue(":co2_threshold",         sensor.co2ConcentrationThreshold());
+    query.bindValue(":pollution_threshold",   sensor.pollutionThreshold());
+
+    auto success = query.exec();
+    if (!success)
+    {
+        qWarning() << "Failed to insert new sensors into the dabatase: " << query.lastError().text();
+        return;
+    }
 }
 
 void Database::close()
