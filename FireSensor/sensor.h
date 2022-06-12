@@ -34,6 +34,7 @@ signals:
 
 private:
     bool startServer();
+    bool startServer(quint16 desiredPort);
     QHostAddress getLocalAddress();
     void onReceivedCommand(const TcpSocket& socket, const QJsonObject& data);
 

@@ -61,7 +61,7 @@ bool Sensor::loadSensor(const QUrl& url)
 
     auto sensor = SensorState::fromJson(json);
 
-    if (!startServer())
+    if (!startServer(sensor->port()))
         return false;
 
     sensor->setPort(m_tcpServer->serverPort());
@@ -117,6 +117,17 @@ bool Sensor::startServer()
     }
 
     return true;
+}
+
+bool Sensor::startServer(quint16 desiredPort)
+{
+    auto localAddress = getLocalAddress();
+    auto started = m_tcpServer->startServer(localAddress, desiredPort);
+
+    if (started)
+        return true;
+
+    return startServer();
 }
 
 void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
