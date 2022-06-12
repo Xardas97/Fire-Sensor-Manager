@@ -43,13 +43,15 @@ std::shared_ptr<Sensor> SensorList::remove(const Sensor& removeSensor)
     QObject::disconnect(found->get(), &Sensor::isReplacedChanged, this, &SensorList::onDataChanged);
     QObject::disconnect(found->get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
 
-    auto removed = *found;
+    // Holding it in a property temporarily because
+    // ListView does not disconnect delegate immediatly
+    m_removedSensor = *found;
 
     beginRemoveRows(QModelIndex(), row, row);
     m_sensors.erase(found);
     endRemoveRows();
 
-    return removed;
+    return m_removedSensor;
 }
 
 void SensorList::onDataChanged()

@@ -106,8 +106,6 @@ SensorList& SensorCommunication::knownSensors()
 
 void SensorCommunication::removeSensor(Sensor& sensor)
 {
-    // TODO: Fix exceptions when removing sensor
-    //       One possible workaround is to keep smart pointed
     auto removed = m_knownSensors.remove(sensor);
     m_database->saveSensorData(*removed);
 }

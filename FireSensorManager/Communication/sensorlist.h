@@ -29,6 +29,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<Sensor>> m_sensors;
+    std::shared_ptr<Sensor> m_removedSensor;
 
     void onDataChanged();
 };
