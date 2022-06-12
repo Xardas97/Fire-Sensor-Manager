@@ -137,6 +137,9 @@ const QString &SensorState::name() const
 
 void SensorState::setName(const QString &newName)
 {
+    if (m_name == newName)
+        return;
+
     m_name = newName;
     emit nameChanged();
 }
@@ -178,6 +181,9 @@ const Statuses &SensorState::status() const
 
 void SensorState::setStatus(const Statuses &newStatus)
 {
+    if (m_status == newStatus)
+        return;
+
     m_status = newStatus;
     emit statusChanged();
 }
@@ -189,6 +195,9 @@ short SensorState::temperature() const
 
 void SensorState::setTemperature(short newTemperature)
 {
+    if (m_temperature == newTemperature)
+        return;
+
     m_temperature = newTemperature;
     emit temperatureChanged();
 }
@@ -200,6 +209,9 @@ bool SensorState::smokeDetected() const
 
 void SensorState::setSmokeDetected(bool newSmokeDetected)
 {
+    if (m_smokeDetected == newSmokeDetected)
+        return;
+
     m_smokeDetected = newSmokeDetected;
     emit smokeDetectedChanged();
 }
@@ -211,6 +223,9 @@ int SensorState::co2Concentration() const
 
 void SensorState::setCo2Concentration(int newCo2Concentration)
 {
+    if (m_co2Concentration == newCo2Concentration)
+        return;
+
     m_co2Concentration = newCo2Concentration;
     emit co2ConcentrationChanged();
 }
@@ -222,6 +237,9 @@ short SensorState::pollution() const
 
 void SensorState::setPollution(short newPollution)
 {
+    if (m_pollution == newPollution)
+        return;
+
     m_pollution = newPollution;
     emit pollutionChanged();
 }

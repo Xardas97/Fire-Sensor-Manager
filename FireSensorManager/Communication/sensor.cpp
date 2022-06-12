@@ -114,6 +114,9 @@ short Sensor::temperatureThreshold() const
 
 void Sensor::setTemperatureThreshold(short temperatureThreshold)
 {
+    if (m_temperatureThreshold == temperatureThreshold)
+        return;
+
     m_temperatureThreshold = temperatureThreshold;
     emit temperatureThresholdChanged();
 }
@@ -125,6 +128,9 @@ int Sensor::co2ConcentrationThreshold() const
 
 void Sensor::setCo2ConcentrationThreshold(int co2ConcentrationThreshold)
 {
+    if (m_co2ConcentrationThreshold == co2ConcentrationThreshold)
+        return;
+
     m_co2ConcentrationThreshold = co2ConcentrationThreshold;
     emit co2ConcentrationThresholdChanged();
 }
@@ -136,6 +142,9 @@ short Sensor::pollutionThreshold() const
 
 void Sensor::setPollutionThreshold(short pollutionThreshold)
 {
+    if (m_pollutionThreshold == pollutionThreshold)
+        return;
+
     m_pollutionThreshold = pollutionThreshold;
     emit pollutionThresholdChanged();
 }
