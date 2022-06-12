@@ -20,8 +20,14 @@ Window {
 
         SensorList {
             id: listKnownSensors
-            Layout.preferredHeight: parent.height
+            Layout.fillHeight: true
             Layout.preferredWidth: parent.width * 0.15
+        }
+
+        Image {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            source: "image://MapImageProvider/plan1"
         }
     }
 }

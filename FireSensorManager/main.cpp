@@ -1,8 +1,10 @@
 #include <QQmlContext>
 #include <QGuiApplication>
+#include <QQuickImageProvider>
 #include <QQmlApplicationEngine>
 
 #include "service.h"
+#include "Map/mapimageprovider.h"
 #include "Communication/sensor.h"
 
 int main(int argc, char *argv[])
@@ -23,6 +25,9 @@ int main(int argc, char *argv[])
 
     QQmlContext* rootContext = engine.rootContext();
     rootContext->setContextProperty("service", &service);
+
+    MapImageProvider mapImageProvider;
+    engine.addImageProvider("MapImageProvider", &mapImageProvider);
 
     engine.load(url);
 
