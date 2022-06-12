@@ -137,9 +137,16 @@ void Sensor::onReceivedCommand(const TcpSocket& socket, const QJsonObject& data)
     {
         qDebug() << "Client wants to change sensor name";
 
-        if (!data.contains("name")) {
-            qWarning() << "Name field missing!";
+        if (!data.contains("name") || !data.contains("uuid")) {
+            qWarning() << "Name or uuid field missing!";
             socket.write(TcpMessages::Response::BrokenData);
+            return;
+        }
+
+        if (data["uuid"] != m_sensorState->uuid().toString())
+        {
+            qWarning() << "This is not the sensor the caller is expecting!";
+            socket.write(TcpMessages::Response::WrongSensor);
             return;
         }
 

@@ -26,6 +26,7 @@ namespace TcpMessages
         public:
             static const QJsonObject Ack;
             static const QJsonObject BrokenData;
+            static const QJsonObject WrongSensor;
             static const QJsonObject CommunicationFailed;
             static const QJsonObject CommandNotRecognized;
     };

@@ -84,13 +84,14 @@ bool SensorCommunication::updateName(Sensor& sensor, const QString& name)
     auto port = sensor.port();
 
     auto command = TcpMessages::Command::SetName;
+    command["uuid"] = sensor.uuid().toString();
     command["name"] = name;
 
     auto response = tcpClient.sendRequest(address, port, command);
 
     if (response != TcpMessages::Response::Ack)
     {
-        qDebug() << "Failed to update name of the sensor";
+        qDebug() << "Failed to update name of the sensor: " << response["response"];
         return false;
     }
 
