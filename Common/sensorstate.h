@@ -47,6 +47,11 @@ class SensorState : public QObject
     Q_PROPERTY(int          co2Concentration READ co2Concentration WRITE setCo2Concentration NOTIFY co2ConcentrationChanged)
     Q_PROPERTY(short        pollution        READ pollution        WRITE setPollution        NOTIFY pollutionChanged)
 
+    protected:
+        static const short default_temperature     = 20;
+        static const int default_co2_concentration = 500;
+        static const short default_pollution       = 30;
+
     public:
         SensorState(Capabilities capabilities, QHostAddress address, quint16 port);
 

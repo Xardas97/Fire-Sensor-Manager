@@ -14,10 +14,10 @@ SensorState::SensorState(QUuid uuid, QString name, Capabilities capabilities, QH
       m_address(address),
       m_port(port),
       m_status(Status::NoIssue),
-      m_temperature(20),
+      m_temperature(default_temperature),
       m_smokeDetected(false),
-      m_co2Concentration(500),
-      m_pollution(30)
+      m_co2Concentration(default_co2_concentration),
+      m_pollution(default_pollution)
 { }
 
 QString SensorState::generateSensorName(Capabilities capabilities)

@@ -11,6 +11,10 @@ Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress
       m_co2ConcentrationThreshold(default_co2_concentration_threshold),
       m_pollutionThreshold(default_pollution_threshold)
 {
+    setTemperature(0);
+    setCo2Concentration(0);
+    setPollution(0);
+
     QObject::connect(this, &SensorState::temperatureChanged, this, &Sensor::alarmStateChanged);
     QObject::connect(this, &SensorState::smokeDetectedChanged, this, &Sensor::alarmStateChanged);
     QObject::connect(this, &SensorState::co2ConcentrationChanged, this, &Sensor::alarmStateChanged);
