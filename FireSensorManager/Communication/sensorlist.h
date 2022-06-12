@@ -17,9 +17,9 @@ public:
 
     explicit SensorList(QObject* parent = nullptr);
 
-    auto find(std::shared_ptr<Sensor> sensor) const -> std::shared_ptr<Sensor>;
+    auto find(const Sensor& checkSensor) const -> std::shared_ptr<Sensor>;
     void add(std::shared_ptr<Sensor> sensor);
-    void remove(std::shared_ptr<Sensor> sensor);
+    auto remove(const Sensor& removeSensor) -> std::shared_ptr<Sensor>;
 
     auto sensors() -> std::vector<std::shared_ptr<Sensor>>&;
 

@@ -26,6 +26,9 @@ public slots:
 
     bool updateName(Sensor* sensor, const QString& name);
 
+    void removeSensor(Sensor* sensor);
+    bool reactivateSensor(Sensor* sensor);
+
     FilteredSensorListModel* knownSensorsFilterModel();
 
 private:

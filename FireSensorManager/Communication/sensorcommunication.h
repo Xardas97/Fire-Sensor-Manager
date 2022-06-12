@@ -17,7 +17,7 @@ class SensorCommunication : public QObject
     Q_OBJECT
 
 private:
-    static const int check_inactive_sensors_count = 5;
+    static const int check_inactive_sensors_count = 12;
 
 public:
     SensorCommunication(std::shared_ptr<Database> database);
@@ -27,6 +27,9 @@ public:
     bool updateName(Sensor& sensor, const QString& name);
 
     SensorList& knownSensors();
+
+    void removeSensor(Sensor& sensor);
+    bool reactivateSensor(Sensor &sensor);
 
     void discoverSensors();
     void discoverSensor(const QHostAddress& address, quint16 port);

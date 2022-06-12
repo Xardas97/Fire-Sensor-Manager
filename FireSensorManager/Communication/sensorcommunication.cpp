@@ -104,6 +104,22 @@ SensorList& SensorCommunication::knownSensors()
     return m_knownSensors;
 }
 
+void SensorCommunication::removeSensor(Sensor& sensor)
+{
+    // TODO: Fix exceptions when removing sensor
+    //       One possible workaround is to keep smart pointed
+    m_knownSensors.remove(sensor);
+}
+
+bool SensorCommunication::reactivateSensor(Sensor& sensor)
+{
+    auto updated = updateData(sensor);
+    if (updated)
+        sensor.reportCommunicationSuccess();
+
+    return updated;
+}
+
 void SensorCommunication::discoverSensors()
 {
     m_sensorDetector->discoverSensors();
@@ -118,7 +134,7 @@ void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
 {
     qDebug() << "Discovered sensor: " << *sensor;
 
-    auto found = m_knownSensors.find(sensor);
+    auto found = m_knownSensors.find(*sensor);
     if (found == nullptr)
     {
         qDebug() << "This is a new sensor!";

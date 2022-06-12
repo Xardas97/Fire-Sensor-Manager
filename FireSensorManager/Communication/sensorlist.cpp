@@ -7,11 +7,11 @@ SensorList::SensorList(QObject* parent)
     : QAbstractListModel(parent)
 { }
 
-std::shared_ptr<Sensor> SensorList::find(std::shared_ptr<Sensor> checkSensor) const
+std::shared_ptr<Sensor> SensorList::find(const Sensor& checkSensor) const
 {
     auto found = std::find_if(m_sensors.cbegin(),
                               m_sensors.cend(),
-                              [&checkSensor](const std::shared_ptr<Sensor> sensor) { return sensor->uuid() == checkSensor->uuid(); });
+                              [&checkSensor](const std::shared_ptr<Sensor> sensor) { return sensor->uuid() == checkSensor.uuid(); });
 
     if (found == m_sensors.cend())
         return nullptr;
@@ -29,23 +29,27 @@ void SensorList::add(std::shared_ptr<Sensor> sensor)
     QObject::connect(sensor.get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
 }
 
-void SensorList::remove(std::shared_ptr<Sensor> removeSensor)
+std::shared_ptr<Sensor> SensorList::remove(const Sensor& removeSensor)
 {
     auto found = std::find_if(m_sensors.cbegin(),
                               m_sensors.cend(),
-                              [&removeSensor](const std::shared_ptr<Sensor> sensor) { return sensor->uuid() == removeSensor->uuid(); });
+                              [&removeSensor](const std::shared_ptr<Sensor> sensor) { return sensor->uuid() == removeSensor.uuid(); });
 
     if (found == m_sensors.cend())
-        return;
+        return nullptr;
 
     auto row = found - m_sensors.cbegin();
 
     QObject::disconnect(found->get(), &Sensor::isReplacedChanged, this, &SensorList::onDataChanged);
     QObject::disconnect(found->get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
 
+    auto removed = *found;
+
     beginRemoveRows(QModelIndex(), row, row);
     m_sensors.erase(found);
     endRemoveRows();
+
+    return removed;
 }
 
 void SensorList::onDataChanged()

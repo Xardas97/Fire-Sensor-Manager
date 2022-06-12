@@ -57,6 +57,33 @@ Rectangle {
         onClicked: sensorSettingsDialog.open()
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onClicked: contextMenu.popup()
+    }
+
+    Menu {
+        id: contextMenu
+        width: root.width * 0.75
+
+        MenuItem {
+            id: menuItemReactivate
+            text: qsTr("Try to Reactivate")
+            visible: !sensor.isActive && !sensor.isReplaced
+            height: visible? implicitHeight : 0
+            onTriggered: service.reactivateSensor(sensor)
+        }
+        MenuItem {
+            text: qsTr("Settings")
+            onTriggered: sensorSettingsDialog.open()
+        }
+        MenuItem {
+            text: qsTr("Remove")
+            onTriggered: service.removeSensor(sensor)
+        }
+    }
+
     SensorToolTip {
         id: sensorToolTip
         anchors.fill: txtName
