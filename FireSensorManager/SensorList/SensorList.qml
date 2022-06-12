@@ -34,15 +34,25 @@ Rectangle {
             onCheckStateChanged: service.knownSensorsModel.activeFilterEnabled = !checked
         }
 
-        ListView {
+        ScrollView {
             Layout.preferredWidth: root.width
             Layout.fillHeight: true
 
-            model: service.knownSensorsModel
-            delegate: SensorView {
-                sensor:  model.data
-                width: root.width
-                height: root.height / 10
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+            ListView {
+                width: parent.width
+                clip: true
+
+                boundsMovement: Flickable.StopAtBounds
+
+                model: service.knownSensorsModel
+                delegate: SensorView {
+                    sensor:  model.data
+                    width: root.width
+                    height: root.height / 10
+                }
             }
         }
     }

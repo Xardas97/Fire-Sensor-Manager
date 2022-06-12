@@ -23,7 +23,7 @@ Rectangle {
     Label {
         id: txtName
 
-        width: root.width - btnSettings.width - 0.15 * root.width
+        width: root.width - btnSettings.width - 0.2 * root.width
         height: root.height
 
         anchors {
@@ -47,7 +47,7 @@ Rectangle {
 
         anchors {
             right: root.right
-            rightMargin: root.width * 0.05
+            rightMargin: root.width * 0.1
             verticalCenter: root.verticalCenter
         }
 
