@@ -111,6 +111,7 @@ Dialog {
         sensorName.currentName = sensor.name
         sensor.onNameChanged.connect(updateSensorName)
     }
+    Component.onDestruction: sensor.onNameChanged.disconnect(updateSensorName)
     function updateSensorName() {
         if (sensor.name != sensorName.currentName)
             sensorName.currentName = sensor.name
