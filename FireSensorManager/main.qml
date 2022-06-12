@@ -23,15 +23,5 @@ Window {
             Layout.preferredHeight: parent.height
             Layout.preferredWidth: parent.width * 0.15
         }
-
-        Button {
-            id: btnDiscoverSensors
-
-            Layout.alignment: Qt.AlignCenter
-
-            text: "Discover sensors"
-
-            onClicked: service.discoverSensors()
-        }
     }
 }

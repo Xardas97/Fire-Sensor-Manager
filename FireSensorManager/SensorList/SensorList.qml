@@ -3,7 +3,6 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 Rectangle {
-
     border {
         color: "black"
         width: 1
@@ -12,7 +11,9 @@ Rectangle {
     ColumnLayout {
         id: root
 
-        anchors.fill: parent
+        width: parent.width - 2
+        height: parent.height - 2
+        anchors.centerIn: parent
 
         CheckBox {
             id: chboxReplaceFilter
@@ -54,6 +55,27 @@ Rectangle {
                     height: root.height / 10
                 }
             }
+        }
+
+        Item {
+            // padding item
+            Layout.preferredHeight: root.height * 0.02
+        }
+
+        Button {
+            id: btnDiscoverSensors
+
+            //Layout.preferredWidth: root.width
+            Layout.alignment: Qt.AlignCenter
+
+            text: qsTr("Discover sensors")
+
+            onClicked: service.discoverSensors()
+        }
+
+        Item {
+            // padding item
+            Layout.preferredHeight: root.height * 0.02
         }
     }
 }
