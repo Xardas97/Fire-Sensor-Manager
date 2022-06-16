@@ -3,6 +3,8 @@
 #include "Communication/sensor.h"
 
 #include <QDebug>
+#include <QBuffer>
+#include <QPixmap>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
@@ -43,9 +45,42 @@ bool Database::createTables()
 {
     qDebug() << "Creating missing database tables...";
 
+    auto success = createMapsTable() || createSensorsTable();
+    if (!success)
+    {
+        qWarning() << "Creating tables failed!";
+        return false;
+    }
+
+    qDebug() << "Finished creating missing tables";
+    return true;
+}
+
+bool Database::createMapsTable()
+{
+    auto queryText = "CREATE TABLE IF NOT EXISTS maps "
+                     "("
+                   //"  uuid  INTEGER PRIMARY KEY,"
+                     "  floor INTEGER,"
+                     "  image BLOB"
+                     ")";
+
+    QSqlQuery query;
+    auto res = query.exec(queryText);
+    if (!res)
+    {
+        qWarning() << "Creating maps table failed: " << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool Database::createSensorsTable()
+{
     auto queryText = "CREATE TABLE IF NOT EXISTS sensors "
                      "("
-                     "  uuid                  TEXT        PRIMARY KEY, "
+                     "  uuid                  TEXT        PRIMARY KEY,"
                      "  capabilities          INTEGER,"
                      "  address               TEXT,"
                      "  port                  INTEGER,"
@@ -55,15 +90,92 @@ bool Database::createTables()
                      "  pollution_threshold   INTEGER"
                      ")";
 
-    auto res = QSqlQuery{}.exec(queryText);
+    QSqlQuery query;
+    auto res = query.exec(queryText);
     if (!res)
     {
-        qWarning() << "Creating sensors table failed!";
+        qWarning() << "Creating sensors table failed: " << query.lastError().text();
         return false;
     }
 
-    qDebug() << "Finished creating missing tables";
     return true;
+}
+
+void Database::loadMaps(std::function<void(int, const QPixmap&)> addFunc)
+{
+    std::unordered_map<int, std::vector<QPixmap>> maps;
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM maps");
+
+    auto success = query.exec();
+    if (!success)
+    {
+        qWarning() << "Failed to load map from database!";
+        return;
+    }
+
+    while (query.next())
+    {
+        auto floor = query.value("floor").toInt();
+
+        auto imageBytes = query.value("image").toByteArray();
+        QPixmap map;
+        map.loadFromData(imageBytes);
+
+        addFunc(floor, map);
+    }
+
+    return;
+}
+
+void Database::saveMaps(const std::unordered_map<int, std::vector<QPixmap>>& maps)
+{
+    qDebug() << "Deleting current database maps...";
+
+    auto success = QSqlQuery{}.exec("DELETE FROM maps");
+    if (!success)
+    {
+        qWarning() << "Failed to delete maps from the dabatase!";
+        return;
+    }
+
+    qDebug() << "Inserting new maps into the database...";
+
+    for (auto& floorMaps: maps)
+    {
+        auto floor = floorMaps.first;
+        for (auto& map: floorMaps.second)
+        {
+            saveMap(floor, map);
+        }
+    }
+
+    qDebug() << "Finished adding maps to database";
+}
+
+void Database::saveMap(int floor, const QPixmap& pixmap)
+{
+    auto queryText = "INSERT INTO maps "
+                     "(floor, image) "
+                     "VALUES (:floor, :image)";
+
+    QByteArray inByteArray;
+    QBuffer inBuffer {&inByteArray};
+    inBuffer.open(QIODevice::WriteOnly);
+    pixmap.save(&inBuffer, "PNG");
+
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":floor", floor);
+    query.bindValue(":image", inByteArray);
+
+    auto success = query.exec();
+    if (!success)
+    {
+        qWarning() << "Failed to insert map into the dabatase: " << query.lastError().text();
+        return;
+    }
 }
 
 std::vector<std::unique_ptr<Sensor>> Database::loadSensors()

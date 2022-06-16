@@ -11,8 +11,12 @@ MapImageProvider::MapImageProvider(std::shared_ptr<Database> database)
     : QQuickImageProvider{QQuickImageProvider::Pixmap},
       m_database(database)
 {
+    m_database->loadMaps([&](int floor, const QPixmap& pixmap) { add(floor, pixmap); });
+
     if (findPixmap(0, 0) == nullptr)
     {
+        qDebug() << "Map not found in database, loading from file system...";
+
         auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
         path += "/plan1.jpg";
 
@@ -25,6 +29,7 @@ MapImageProvider::MapImageProvider(std::shared_ptr<Database> database)
             return;
         }
 
+        qDebug() << "Adding loaded map to internal structure";
         add(0, QPixmap::fromImage(image));
     }
 }
@@ -86,4 +91,9 @@ short MapImageProvider::floorSize(int floor)
         return 0;
 
     return floorMapsIterator->second.size();
+}
+
+MapImageProvider::~MapImageProvider()
+{
+    m_database->saveMaps(m_maps);
 }

@@ -11,6 +11,7 @@ class MapImageProvider : public QQuickImageProvider
 {
 public:
     MapImageProvider(std::shared_ptr<Database> database);
+    virtual ~MapImageProvider();
 
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
