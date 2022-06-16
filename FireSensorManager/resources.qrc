@@ -11,5 +11,8 @@
         <file>SensorList/Settings/SensorName.qml</file>
         <file>SensorList/Settings/Temperature.qml</file>
         <file>Icons/Refresh.png</file>
+        <file>TopLine/TopLine.qml</file>
+        <file>FloorMaps/FloorMaps.qml</file>
+        <file>FloorMaps/FloorMapControls.qml</file>
     </qresource>
 </RCC>

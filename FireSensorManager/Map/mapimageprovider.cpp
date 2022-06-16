@@ -12,6 +12,7 @@ MapImageProvider::MapImageProvider(std::shared_ptr<Database> database)
       m_database(database)
 {
     m_database->loadMaps([&](int floor, const QPixmap& pixmap) { add(floor, pixmap); });
+    emit availableFloorsChanged();
 
     if (findPixmap(0, 0) == nullptr)
     {
@@ -63,6 +64,7 @@ void MapImageProvider::add(int floor, const QPixmap& pixmap)
     if (floorMapsIterator == m_maps.end())
     {
         m_maps[floor] = std::vector<QPixmap>{pixmap};
+        emit availableFloorsChanged();
         return;
     }
 
@@ -84,7 +86,19 @@ QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)
     return &((*floorMaps)[floorPart]);
 }
 
-short MapImageProvider::floorSize(int floor)
+std::set<int> MapImageProvider::availableFloors() const
+{
+    std::set<int> availableFloors;
+
+    for (auto& floor: m_maps)
+    {
+        availableFloors.insert(floor.first);
+    }
+
+    return availableFloors;
+}
+
+short MapImageProvider::floorSize(int floor) const
 {
     auto floorMapsIterator = m_maps.find(floor);
     if (floorMapsIterator == m_maps.end())

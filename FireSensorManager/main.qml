@@ -2,9 +2,13 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import "TopLine"
+import "FloorMaps"
 import "SensorList"
 
 Window {
+    id: root
+
     title: qsTr("FireSensorManager")
     visible: true
 
@@ -13,21 +17,39 @@ Window {
     minimumWidth: 1056
     minimumHeight: 594
 
-    RowLayout {
-        id: rowWindow
-
+    ColumnLayout {
+        id: columnWindow
         anchors.fill: parent
 
-        SensorList {
-            id: listKnownSensors
-            Layout.fillHeight: true
-            Layout.preferredWidth: parent.width * 0.15
+        TopLine {
+            Layout.fillWidth: true
+            Layout.preferredHeight: root.height / 20
+
+            onChosenFloorChanged: function(floor) {
+                console.log("Chosen floor changed to: " + floor)
+                floorMaps.chosenFloor = floor
+            }
         }
 
-        Image {
-            Layout.fillHeight: true
+        RowLayout {
+            id: rowWindow
+
             Layout.fillWidth: true
-            source: "image://MapImageProvider/0/0"
+            Layout.fillHeight: true
+
+            SensorList {
+                id: listKnownSensors
+                Layout.fillHeight: true
+                Layout.preferredWidth: parent.width * 0.15
+            }
+
+            FloorMaps {
+                id: floorMaps
+
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
         }
     }
+
 }

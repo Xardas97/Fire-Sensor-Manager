@@ -16,6 +16,7 @@ class Service : public QObject
     Q_OBJECT
 
     Q_PROPERTY(FilteredSensorListModel* knownSensorsModel READ knownSensorsFilterModel CONSTANT)
+    Q_PROPERTY(QStringList availableFloors READ availableFloors NOTIFY availableFloorsChanged)
 
 public:
     explicit Service(QObject *parent = nullptr);
@@ -32,6 +33,11 @@ public slots:
 
     MapImageProvider*        mapImageProvider();
     FilteredSensorListModel* knownSensorsFilterModel();
+
+    QStringList availableFloors();
+
+signals:
+    void availableFloorsChanged();
 
 private:
     std::shared_ptr<Database>                m_database;
