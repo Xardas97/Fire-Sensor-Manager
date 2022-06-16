@@ -1,6 +1,7 @@
 #include "service.h"
 
 #include "database.h"
+#include "Map/mapimageprovider.h"
 #include "Communication/sensorcommunication.h"
 
 #include <QHostAddress>
@@ -8,6 +9,7 @@
 Service::Service(QObject *parent)
     : QObject{parent},
       m_database(new Database()),
+      m_mapImageProvider(new MapImageProvider(m_database)),
       m_sensorCommunication(new SensorCommunication(m_database)),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
@@ -42,6 +44,11 @@ bool Service::reactivateSensor(Sensor* sensor)
 FilteredSensorListModel* Service::knownSensorsFilterModel()
 {
     return m_knownSensorsFilterModel.get();
+}
+
+MapImageProvider* Service::mapImageProvider()
+{
+    return m_mapImageProvider.get();
 }
 
 Service::~Service() = default;

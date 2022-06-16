@@ -27,7 +27,7 @@ Window {
         Image {
             Layout.fillHeight: true
             Layout.fillWidth: true
-            source: "image://MapImageProvider/plan1"
+            source: "image://MapImageProvider/0/0"
         }
     }
 }

@@ -8,6 +8,7 @@
 
 class Sensor;
 class Database;
+class MapImageProvider;
 class SensorCommunication;
 
 class Service : public QObject
@@ -29,10 +30,12 @@ public slots:
     void removeSensor(Sensor* sensor);
     bool reactivateSensor(Sensor* sensor);
 
+    MapImageProvider*        mapImageProvider();
     FilteredSensorListModel* knownSensorsFilterModel();
 
 private:
     std::shared_ptr<Database>                m_database;
+    std::unique_ptr<MapImageProvider>        m_mapImageProvider;
     std::unique_ptr<SensorCommunication>     m_sensorCommunication;
     std::unique_ptr<FilteredSensorListModel> m_knownSensorsFilterModel;
 };

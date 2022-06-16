@@ -26,8 +26,7 @@ int main(int argc, char *argv[])
     QQmlContext* rootContext = engine.rootContext();
     rootContext->setContextProperty("service", &service);
 
-    MapImageProvider mapImageProvider;
-    engine.addImageProvider("MapImageProvider", &mapImageProvider);
+    engine.addImageProvider("MapImageProvider", service.mapImageProvider());
 
     engine.load(url);
 

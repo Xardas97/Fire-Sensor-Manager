@@ -1,33 +1,46 @@
 #include "mapimageprovider.h"
 
+#include "database.h"
+
 #include <QFile>
+#include <vector>
 #include <QTextStream>
 #include <QStandardPaths>
 
-MapImageProvider::MapImageProvider()
-    : QQuickImageProvider{QQuickImageProvider::Pixmap}
+MapImageProvider::MapImageProvider(std::shared_ptr<Database> database)
+    : QQuickImageProvider{QQuickImageProvider::Pixmap},
+      m_database(database)
 {
-    auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    path += "/plan1.jpg";
-
-    QImage image;
-    auto loaded = image.load(path);
-
-    if (!loaded)
+    if (findPixmap(0, 0) == nullptr)
     {
-        qWarning() << "Failed to load image from: " << path;
-        return;
-    }
+        auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        path += "/plan1.jpg";
 
-    m_pixmap = QPixmap::fromImage(image);
+        QImage image;
+
+        auto loaded = image.load(path);
+        if (!loaded)
+        {
+            qWarning() << "Failed to load image from: " << path;
+            return;
+        }
+
+        add(0, QPixmap::fromImage(image));
+    }
 }
 
 QPixmap MapImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    if (id != "plan1")
+    auto location = id.split('/');
+    if (location.size() != 2)
         return QPixmap{};
 
-    auto chosenImage = &m_pixmap;
+    auto floor = location[0].toInt();
+    auto floorPart = location[1].toInt();
+
+    auto chosenImage = findPixmap(floor, floorPart);
+    if (!chosenImage)
+        return QPixmap{};
 
     auto originalSize = chosenImage->size();
     if (size)
@@ -37,4 +50,40 @@ QPixmap MapImageProvider::requestPixmap(const QString &id, QSize *size, const QS
     auto finalHeight = requestedSize.height() > 0 ? requestedSize.height() : originalSize.height();
 
     return chosenImage->scaled(finalWidth, finalHeight);
+}
+
+void MapImageProvider::add(int floor, const QPixmap& pixmap)
+{
+    auto floorMapsIterator = m_maps.find(floor);
+    if (floorMapsIterator == m_maps.end())
+    {
+        m_maps[floor] = std::vector<QPixmap>{pixmap};
+        return;
+    }
+
+   floorMapsIterator->second.push_back(pixmap);
+}
+
+QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)
+{
+    qDebug() << "Looking for image at: " << floor << "-" << floorPart;
+
+    auto floorMapsIterator = m_maps.find(floor);
+    if (floorMapsIterator == m_maps.end())
+        return nullptr;
+
+    auto floorMaps = &floorMapsIterator->second;
+    if (floorMaps->size() <= (unsigned long long)floorPart)
+        return nullptr;
+
+    return &((*floorMaps)[floorPart]);
+}
+
+short MapImageProvider::floorSize(int floor)
+{
+    auto floorMapsIterator = m_maps.find(floor);
+    if (floorMapsIterator == m_maps.end())
+        return 0;
+
+    return floorMapsIterator->second.size();
 }
