@@ -4,9 +4,17 @@ import QtQuick.Controls
 Item {
     id: root
 
-    property int chosenFloor: 0
+    function chosenFloorChanged(floor)
+    {
+        console.log("Chosen floor changed to: " + floor)
+        imageMap.source = "image://MapImageProvider/" + floor +  "/0"
+    }
 
-    onChosenFloorChanged: imageMap.source = "image://MapImageProvider/" + chosenFloor +  "/0"
+    function noAvailableFloors()
+    {
+        console.log("No valid floor found")
+        imageMap.source = ""
+    }
 
     Image {
         id: imageMap

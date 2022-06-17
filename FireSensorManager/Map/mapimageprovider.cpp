@@ -12,7 +12,6 @@ MapImageProvider::MapImageProvider(std::shared_ptr<Database> database)
       m_database(database)
 {
     m_database->loadMaps([&](int floor, const QPixmap& pixmap) { add(floor, pixmap); });
-    emit availableFloorsChanged();
 }
 
 QPixmap MapImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
@@ -44,7 +43,7 @@ void MapImageProvider::add(int floor, const QPixmap& pixmap)
     if (floorMapsIterator == m_maps.end())
     {
         m_maps[floor] = std::vector<QPixmap>{pixmap};
-        emit availableFloorsChanged();
+        emit floorAdded(floor);
         return;
     }
 
@@ -68,7 +67,7 @@ QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)
 
 bool MapImageProvider::upload(int floor, const QUrl& url)
 {
-    qDebug() << "Uploading map " << url << " to floor " << url.toLocalFile();
+    qDebug() << "Uploading map " << url.toLocalFile() << " to floor " << floor;
 
     QImage image;
     auto loaded = image.load(url.toLocalFile());
@@ -80,7 +79,7 @@ bool MapImageProvider::upload(int floor, const QUrl& url)
 
     add(floor, QPixmap::fromImage(image));
 
-    qDebug() << "Successfully loaded sensor data";
+    qDebug() << "Successfully loaded the map";
     return true;
 }
 

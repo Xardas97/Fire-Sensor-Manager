@@ -28,10 +28,8 @@ Window {
             onSettingsFlowEntered: columnWindow.opacity = 0.3
             onSettingsFlowLeft: columnWindow.opacity = 1
 
-            onChosenFloorChanged: function(floor) {
-                console.log("Chosen floor changed to: " + floor)
-                floorMaps.chosenFloor = floor
-            }
+            onChosenFloorChanged: function(floor) { floorMaps.chosenFloorChanged(floor) }
+            onNoAvailableFloors: floorMaps.noAvailableFloors()
         }
 
         RowLayout {

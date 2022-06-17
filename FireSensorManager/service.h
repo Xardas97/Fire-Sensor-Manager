@@ -38,9 +38,14 @@ public slots:
     FilteredSensorListModel* knownSensorsFilterModel();
 
 signals:
+    void floorAdded(int floor);
+    void floorRemoved(int floor);
     void availableFloorsChanged();
 
 private:
+    void onFloorAdded(int floor);
+    void onFloorRemoved(int floor);
+
     std::shared_ptr<Database>                m_database;
     std::unique_ptr<MapImageProvider>        m_mapImageProvider;
     std::unique_ptr<SensorCommunication>     m_sensorCommunication;

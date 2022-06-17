@@ -24,7 +24,8 @@ public:
     std::set<int> availableFloors() const;
 
 signals:
-    void availableFloorsChanged();
+    void floorAdded(int floor);
+    void floorRemoved(int floor);
 
 private:
     void add(int floor, const QPixmap& pixmap);

@@ -14,7 +14,8 @@ Service::Service(QObject *parent)
       m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
     m_knownSensorsFilterModel->setSourceModel(&m_sensorCommunication->knownSensors());
-    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::availableFloorsChanged, this, &Service::availableFloorsChanged);
+    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorAdded, this, &Service::onFloorAdded);
+    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorRemoved, this, &Service::onFloorRemoved);
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
@@ -70,6 +71,18 @@ FilteredSensorListModel* Service::knownSensorsFilterModel()
 MapImageProvider* Service::mapImageProvider()
 {
     return m_mapImageProvider.get();
+}
+
+void Service::onFloorAdded(int floor)
+{
+    emit availableFloorsChanged();
+    emit floorAdded(floor);
+}
+
+void Service::onFloorRemoved(int floor)
+{
+    emit availableFloorsChanged();
+    emit floorRemoved(floor);
 }
 
 Service::~Service() = default;

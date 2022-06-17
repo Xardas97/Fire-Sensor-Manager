@@ -8,6 +8,8 @@ Rectangle {
     id: root
 
     signal chosenFloorChanged(int floor)
+    signal noAvailableFloors()
+
     signal settingsFlowEntered
     signal settingsFlowLeft
 
@@ -43,5 +45,6 @@ Rectangle {
         anchors.rightMargin: 10
 
         onChosenFloorChanged: function(floor) { root.chosenFloorChanged(floor) }
+        onNoAvailableFloors: root.noAvailableFloors()
     }
 }
