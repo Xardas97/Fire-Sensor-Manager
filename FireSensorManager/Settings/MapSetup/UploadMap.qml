@@ -4,40 +4,57 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Dialogs as Dialogs
 
-RowLayout {
+ColumnLayout {
     id: root
 
-    Label {
-        text: qsTr("Floor:")
-    }
+    property bool errorLabelVisibility: false
 
-    SpinBox {
-        id: spinFloor
-
-        width: root.width * 0.5
-
-        from: -99
-        to: 999
-
-        editable: true
-    }
-
-    Button {
-        text: qsTr("Upload")
-        onClicked: fileDialogUploadMap.open()
-    }
-
-    Dialogs.FileDialog {
-        id: fileDialogUploadMap
-
-        fileMode: Dialogs.FileDialog.OpenFile
-        nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
-        currentFolder: StandardPaths.writableLocation(StandardPaths.PicturesLocation)
-
-        onAccepted: {
-            var uploaded = service.uploadMap(spinFloor.value, fileDialogUploadMap.selectedFile)
-            if (uploaded)
-                spinFloor.value = 0
+    RowLayout {
+        Label {
+            text: qsTr("Floor:")
         }
+
+        SpinBox {
+            id: spinFloor
+
+            from: -99
+            to: 999
+
+            editable: true
+        }
+
+        Button {
+            text: qsTr("Upload")
+            onClicked: fileDialogUploadMap.open()
+        }
+
+        Dialogs.FileDialog {
+            id: fileDialogUploadMap
+
+            fileMode: Dialogs.FileDialog.OpenFile
+            nameFilters: [ "Image files (*.jpg *.png)", "All files (*)" ]
+            currentFolder: StandardPaths.writableLocation(StandardPaths.PicturesLocation)
+
+            onAccepted: {
+                var uploaded = service.uploadMap(spinFloor.value, fileDialogUploadMap.selectedFile)
+                if (uploaded) {
+                    errorLabelVisibility = false
+                    spinFloor.value = 0
+                }
+                else {
+                    errorLabelVisibility = true
+                }
+            }
+        }
+    }
+
+    Label {
+        id: lblUploadFailed
+        Layout.alignment: Qt.AlignRight
+
+        opacity: errorLabelVisibility ? 1 : 0
+
+        text: qsTr("Upload failed!")
+        color: "red"
     }
 }
