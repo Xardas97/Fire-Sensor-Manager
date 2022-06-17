@@ -11,13 +11,12 @@ Dialog {
     ColumnLayout {
         id: layout
 
-        Label {
-            text: qsTr("Upload map");
-            font.underline: true
-        }
-
         UploadMap {
             id: uploadMap
+        }
+
+        RemoveFloor {
+            id: removeFloor
         }
     }
 

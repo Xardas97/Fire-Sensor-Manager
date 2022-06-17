@@ -33,6 +33,7 @@ public slots:
 
     QStringList availableFloors();
     bool uploadMap(int floor, const QUrl& url);
+    void removeFloor(int floor);
 
     MapImageProvider*        mapImageProvider();
     FilteredSensorListModel* knownSensorsFilterModel();

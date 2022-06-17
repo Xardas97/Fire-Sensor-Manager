@@ -83,6 +83,16 @@ bool MapImageProvider::upload(int floor, const QUrl& url)
     return true;
 }
 
+void MapImageProvider::removeFloor(int floor)
+{
+    auto floorMapsIterator = m_maps.find(floor);
+    if (floorMapsIterator == m_maps.end())
+        return;
+
+    m_maps.erase(floorMapsIterator);
+    emit floorRemoved(floor);
+}
+
 std::set<int> MapImageProvider::availableFloors() const
 {
     std::set<int> availableFloors;

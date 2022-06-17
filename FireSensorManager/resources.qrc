@@ -18,5 +18,6 @@
         <file>Settings/SettingsPopup.qml</file>
         <file>Settings/MapSetup/MapSetup.qml</file>
         <file>Settings/MapSetup/UploadMap.qml</file>
+        <file>Settings/MapSetup/RemoveFloor.qml</file>
     </qresource>
 </RCC>

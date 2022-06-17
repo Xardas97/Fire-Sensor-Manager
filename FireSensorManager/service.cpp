@@ -48,6 +48,11 @@ bool Service::uploadMap(int floor, const QUrl& url)
     return m_mapImageProvider->upload(floor, url);
 }
 
+void Service::removeFloor(int floor)
+{
+    m_mapImageProvider->removeFloor(floor);
+}
+
 QStringList Service::availableFloors()
 {
     auto availableFloorsSet = m_mapImageProvider->availableFloors();

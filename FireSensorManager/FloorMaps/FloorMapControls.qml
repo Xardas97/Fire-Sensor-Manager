@@ -34,12 +34,13 @@ RowLayout {
         }
 
         function onFloorRemoved(floor) {
-            comboBoxFloors.currentIndex = 0
+            if (service.availableFloors.length > 0)
+                comboBoxFloors.currentIndex = 0
         }
     }
 
     function raiseFloorEvent() {
-        if (comboBoxFloors.currentIndex === undefined) {
+        if (service.availableFloors.length == 0) {
             noAvailableFloors()
             return
         }

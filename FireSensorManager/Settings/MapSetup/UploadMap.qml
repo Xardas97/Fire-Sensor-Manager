@@ -9,6 +9,11 @@ ColumnLayout {
 
     property bool errorLabelVisibility: false
 
+    Label {
+        text: qsTr("Upload map");
+        font.underline: true
+    }
+
     RowLayout {
         Label {
             text: qsTr("Floor:")

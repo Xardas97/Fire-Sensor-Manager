@@ -19,6 +19,7 @@ public:
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
     bool upload(int floor, const QUrl& pixmap);
+    void removeFloor(int floor);
 
     short floorSize(int floor) const;
     std::set<int> availableFloors() const;
