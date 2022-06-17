@@ -76,7 +76,6 @@ void Sensor::reportCommunicationSuccess()
 
     if (!m_isActive)
     {
-        qDebug() << "Communication with sensor " << name() << " succeeded, setting as active again!";
         m_isActive = true;
         emit isActiveChanged();
     }
@@ -86,7 +85,6 @@ void Sensor::reportCommunicationFailure()
 {
     if (++m_communicationFailedCount == maxCommunicationFailed)
     {
-        qDebug() << "Communication with sensor " << name() << " failed " << maxCommunicationFailed << " times, setting as inactive!";
         m_isActive = false;
         emit isActiveChanged();
     }
