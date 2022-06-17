@@ -42,14 +42,9 @@ bool Service::reactivateSensor(Sensor* sensor)
     return m_sensorCommunication->reactivateSensor(*sensor);
 }
 
-FilteredSensorListModel* Service::knownSensorsFilterModel()
+bool Service::uploadMap(int floor, const QUrl& url)
 {
-    return m_knownSensorsFilterModel.get();
-}
-
-MapImageProvider* Service::mapImageProvider()
-{
-    return m_mapImageProvider.get();
+    return m_mapImageProvider->upload(floor, url);
 }
 
 QStringList Service::availableFloors()
@@ -65,6 +60,16 @@ QStringList Service::availableFloors()
     }
 
     return availableFloors;
+}
+
+FilteredSensorListModel* Service::knownSensorsFilterModel()
+{
+    return m_knownSensorsFilterModel.get();
+}
+
+MapImageProvider* Service::mapImageProvider()
+{
+    return m_mapImageProvider.get();
 }
 
 Service::~Service() = default;

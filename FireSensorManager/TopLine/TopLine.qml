@@ -8,7 +8,8 @@ Rectangle {
     id: root
 
     signal chosenFloorChanged(int floor)
-    property alias popupSettings: popupSettings
+    signal settingsFlowEntered
+    signal settingsFlowLeft
 
     color: "grey"
 
@@ -29,6 +30,9 @@ Rectangle {
     SettingsPopup {
         id: popupSettings
         anchors.centerIn: Overlay.overlay
+
+        onSettingsFlowEntered: root.settingsFlowEntered()
+        onSettingsFlowLeft: root.settingsFlowLeft()
     }
 
     FloorMapControls {

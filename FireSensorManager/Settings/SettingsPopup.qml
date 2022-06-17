@@ -2,8 +2,13 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import "MapSetup"
+
 Popup {
     id: root
+
+    signal settingsFlowEntered
+    signal settingsFlowLeft
 
     width: columnSettings.width * 1.2
     height: columnSettings.height * 1.2
@@ -11,6 +16,9 @@ Popup {
     modal: true
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+    onOpened: settingsFlowEntered()
+    onClosed: settingsFlowLeft()
 
     ColumnLayout {
         id: columnSettings
@@ -24,12 +32,13 @@ Popup {
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
 
-            enabled: false
-
             font.pixelSize: columnSettings.fontSize
             text: qsTr("Map Setup")
 
-            onClicked: console.log("Map Setup settings requested")
+            onClicked: {
+                root.close()
+                dialogMapSetup.open()
+            }
         }
 
         Button {
@@ -71,5 +80,14 @@ Popup {
 
             onClicked: root.close()
         }
+    }
+
+    MapSetup {
+        id: dialogMapSetup
+        parent: Overlay.overlay
+
+        anchors.centerIn: parent
+        onOpened: settingsFlowEntered()
+        onClosed: settingsFlowLeft()
     }
 }

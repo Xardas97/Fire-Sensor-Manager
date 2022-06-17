@@ -13,26 +13,6 @@ MapImageProvider::MapImageProvider(std::shared_ptr<Database> database)
 {
     m_database->loadMaps([&](int floor, const QPixmap& pixmap) { add(floor, pixmap); });
     emit availableFloorsChanged();
-
-    if (findPixmap(0, 0) == nullptr)
-    {
-        qDebug() << "Map not found in database, loading from file system...";
-
-        auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-        path += "/plan1.jpg";
-
-        QImage image;
-
-        auto loaded = image.load(path);
-        if (!loaded)
-        {
-            qWarning() << "Failed to load image from: " << path;
-            return;
-        }
-
-        qDebug() << "Adding loaded map to internal structure";
-        add(0, QPixmap::fromImage(image));
-    }
 }
 
 QPixmap MapImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
@@ -84,6 +64,24 @@ QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)
         return nullptr;
 
     return &((*floorMaps)[floorPart]);
+}
+
+bool MapImageProvider::upload(int floor, const QUrl& url)
+{
+    qDebug() << "Uploading map " << url << " to floor " << url.toLocalFile();
+
+    QImage image;
+    auto loaded = image.load(url.toLocalFile());
+    if (!loaded)
+    {
+        qWarning() << "Failed to load image from the file";
+        return false;
+    }
+
+    add(floor, QPixmap::fromImage(image));
+
+    qDebug() << "Successfully loaded sensor data";
+    return true;
 }
 
 std::set<int> MapImageProvider::availableFloors() const

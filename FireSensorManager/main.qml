@@ -25,10 +25,8 @@ Window {
             Layout.fillWidth: true
             Layout.preferredHeight: root.height / 20
 
-            popupSettings {
-                onOpened: columnWindow.opacity = 0.3
-                onClosed: columnWindow.opacity = 1
-            }
+            onSettingsFlowEntered: columnWindow.opacity = 0.3
+            onSettingsFlowLeft: columnWindow.opacity = 1
 
             onChosenFloorChanged: function(floor) {
                 console.log("Chosen floor changed to: " + floor)

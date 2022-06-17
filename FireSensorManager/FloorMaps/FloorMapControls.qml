@@ -22,5 +22,6 @@ RowLayout {
         font.pointSize: 13
 
         onActivated: chosenFloorChanged(currentValue)
+        Component.onCompleted: chosenFloorChanged(currentValue)
     }
 }

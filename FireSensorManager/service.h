@@ -31,10 +31,11 @@ public slots:
     void removeSensor(Sensor* sensor);
     bool reactivateSensor(Sensor* sensor);
 
+    QStringList availableFloors();
+    bool uploadMap(int floor, const QUrl& url);
+
     MapImageProvider*        mapImageProvider();
     FilteredSensorListModel* knownSensorsFilterModel();
-
-    QStringList availableFloors();
 
 signals:
     void availableFloorsChanged();

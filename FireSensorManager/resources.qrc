@@ -16,5 +16,7 @@
         <file>FloorMaps/FloorMapControls.qml</file>
         <file>Icons/Menu.png</file>
         <file>Settings/SettingsPopup.qml</file>
+        <file>Settings/MapSetup/MapSetup.qml</file>
+        <file>Settings/MapSetup/UploadMap.qml</file>
     </qresource>
 </RCC>
