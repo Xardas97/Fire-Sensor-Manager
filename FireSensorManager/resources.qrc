@@ -14,5 +14,7 @@
         <file>TopLine/TopLine.qml</file>
         <file>FloorMaps/FloorMaps.qml</file>
         <file>FloorMaps/FloorMapControls.qml</file>
+        <file>Icons/Menu.png</file>
+        <file>Settings/SettingsPopup.qml</file>
     </qresource>
 </RCC>

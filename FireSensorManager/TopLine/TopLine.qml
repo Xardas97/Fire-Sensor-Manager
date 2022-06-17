@@ -1,14 +1,35 @@
 import QtQuick
 import QtQuick.Controls
 
+import "../Settings"
 import "../FloorMaps"
 
 Rectangle {
     id: root
 
     signal chosenFloorChanged(int floor)
+    property alias popupSettings: popupSettings
 
     color: "grey"
+
+    Button {
+        id: btnSettingsMenu
+
+        anchors.verticalCenter: root.verticalCenter
+        anchors.left: root.left
+        anchors.leftMargin: 10
+
+        icon.color: "transparent"
+        icon.source: "qrc:/Icons/Menu.png"
+        background: Rectangle { opacity: 0 }
+
+        onClicked: popupSettings.open()
+    }
+
+    SettingsPopup {
+        id: popupSettings
+        anchors.centerIn: Overlay.overlay
+    }
 
     FloorMapControls {
         id: floorMapControls
