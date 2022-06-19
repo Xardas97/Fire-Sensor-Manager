@@ -5,9 +5,6 @@ import QtQuick.Controls
 RowLayout {
     id: root
 
-    signal chosenFloorChanged(int floor)
-    signal noAvailableFloors()
-
     Label {
         id: lblFloors
 
@@ -22,29 +19,48 @@ RowLayout {
 
         font.pointSize: 13
 
-        onCurrentValueChanged: raiseFloorEvent()
+        onCurrentValueChanged: {
+            comboBoxFloorParts.currentIndex = 0
+            service.selectedFloor = currentValue !== undefined ? currentValue : null
+        }
+    }
+
+    Label {
+        id: lblFloorParts
+
+        text: qsTr("Floor part:")
+        font.pointSize: 13
+        color: "white"
+    }
+
+    ComboBox {
+        id: comboBoxFloorParts
+        model: service.availableFloorParts
+
+        font.pointSize: 13
+
+        onCurrentValueChanged: {
+            service.selectedFloorPart = currentValue !== undefined ? currentValue : null
+        }
     }
 
     Connections {
         target: service
 
         function onFloorAdded(floor) {
-            var index = comboBoxFloors.indexOfValue(floor)
-            comboBoxFloors.currentIndex = index
+            comboBoxFloors.currentIndex = comboBoxFloors.indexOfValue(floor)
         }
 
         function onFloorRemoved(floor) {
             if (service.availableFloors.length > 0)
                 comboBoxFloors.currentIndex = 0
         }
-    }
 
-    function raiseFloorEvent() {
-        if (service.availableFloors.length == 0) {
-            noAvailableFloors()
-            return
+        function onFloorPartAdded(floor) {
+            comboBoxFloors.currentIndex = comboBoxFloors.indexOfValue(floor)
+            comboBoxFloorParts.currentIndex = service.availableFloorParts.length - 1
         }
 
-        chosenFloorChanged(comboBoxFloors.currentValue)
+        function onFloorPartRemoved(floor) { /* ... */ }
     }
 }

@@ -27,9 +27,6 @@ Window {
 
             onSettingsFlowEntered: columnWindow.opacity = 0.3
             onSettingsFlowLeft: columnWindow.opacity = 1
-
-            onChosenFloorChanged: function(floor) { floorMaps.chosenFloorChanged(floor) }
-            onNoAvailableFloors: floorMaps.noAvailableFloors()
         }
 
         RowLayout {

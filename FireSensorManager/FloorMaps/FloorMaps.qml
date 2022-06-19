@@ -5,18 +5,6 @@ import QtQuick.Controls
 Item {
     id: root
 
-    function chosenFloorChanged(floor)
-    {
-        console.log("Chosen floor changed to: " + floor)
-        imageMap.source = "image://MapImageProvider/" + floor +  "/0"
-    }
-
-    function noAvailableFloors()
-    {
-        console.log("No valid floor found")
-        imageMap.source = ""
-    }
-
     Flickable {
         anchors.fill: parent
 
@@ -29,8 +17,15 @@ Item {
         Image {
             id: imageMap
             transformOrigin: Item.TopLeft
-            source: ""
+            source: imageSource()
         }
+    }
+
+    function imageSource() {
+        if (service.selectedFloor == null || service.selectedFloorPart == null)
+            return ""
+
+        return "image://MapImageProvider/" + service.selectedFloor +  "/" + service.selectedFloorPart
     }
 
     RowLayout {
@@ -39,8 +34,9 @@ Item {
             right: root.right
             margins: 10
         }
-
         spacing: 0
+
+        visible: imageMap.source != ""
 
         Button {
             onClicked: imageMap.scale += 0.2

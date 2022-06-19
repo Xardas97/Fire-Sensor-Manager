@@ -16,6 +16,8 @@ Service::Service(QObject *parent)
     m_knownSensorsFilterModel->setSourceModel(&m_sensorCommunication->knownSensors());
     QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorAdded, this, &Service::onFloorAdded);
     QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorRemoved, this, &Service::onFloorRemoved);
+    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorPartAdded, this, &Service::onFloorPartAdded);
+    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorPartRemoved, this, &Service::onFloorPartRemoved);
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
@@ -53,6 +55,43 @@ void Service::removeFloor(int floor)
     m_mapImageProvider->removeFloor(floor);
 }
 
+QVariant Service::selectedFloor()
+{
+    if (!m_selectedFloor)
+        return QVariant{};
+
+    return *m_selectedFloor;
+}
+
+QVariant Service::selectedFloorPart()
+{
+    if (!m_selectedFloorPart)
+        return QVariant{};
+
+    return *m_selectedFloorPart;
+}
+
+void Service::setSelectedFloor(QVariant floor)
+{
+    if (!floor.isNull())
+        m_selectedFloor = std::make_unique<int>(floor.toInt());
+    else
+        m_selectedFloor = nullptr;
+
+    emit selectedFloorChanged();
+    emit availableFloorPartsChanged();
+}
+
+void Service::setSelectedFloorPart(QVariant floorPart)
+{
+    if (!floorPart.isNull())
+        m_selectedFloorPart = std::make_unique<int>(floorPart.toInt());
+    else
+        m_selectedFloorPart = nullptr;
+
+    emit selectedFloorPartChanged();
+}
+
 QStringList Service::availableFloors()
 {
     auto availableFloorsSet = m_mapImageProvider->availableFloors();
@@ -66,6 +105,22 @@ QStringList Service::availableFloors()
     }
 
     return availableFloors;
+}
+
+QStringList Service::availableFloorParts()
+{
+    if (!m_selectedFloor)
+        return QStringList {};
+
+    auto floorSize = m_mapImageProvider->floorSize(*m_selectedFloor);
+
+    QStringList availableFloorParts;
+    for (int i = 0; i < floorSize; ++i)
+    {
+        availableFloorParts.append(QString::number(i));
+    }
+
+    return availableFloorParts;
 }
 
 FilteredSensorListModel* Service::knownSensorsFilterModel()
@@ -88,6 +143,18 @@ void Service::onFloorRemoved(int floor)
 {
     emit availableFloorsChanged();
     emit floorRemoved(floor);
+}
+
+void Service::onFloorPartAdded(int floor)
+{
+    emit availableFloorPartsChanged();
+    emit floorPartAdded(floor);
+}
+
+void Service::onFloorPartRemoved(int floor)
+{
+    emit availableFloorPartsChanged();
+    emit floorPartRemoved(floor);
 }
 
 Service::~Service() = default;

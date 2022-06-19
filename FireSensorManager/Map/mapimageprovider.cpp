@@ -46,7 +46,8 @@ void MapImageProvider::add(int floor, const QPixmap& pixmap)
         return;
     }
 
-   floorMapsIterator->second.push_back(pixmap);
+    floorMapsIterator->second.push_back(pixmap);
+    emit floorPartAdded(floor);
 }
 
 QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)

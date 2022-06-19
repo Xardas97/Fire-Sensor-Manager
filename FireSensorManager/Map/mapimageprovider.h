@@ -27,6 +27,8 @@ public:
 signals:
     void floorAdded(int floor);
     void floorRemoved(int floor);
+    void floorPartAdded(int floor);
+    void floorPartRemoved(int floor);
 
 private:
     void add(int floor, const QPixmap& pixmap);
