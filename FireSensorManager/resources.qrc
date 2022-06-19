@@ -19,5 +19,8 @@
         <file>Settings/MapSetup/MapSetup.qml</file>
         <file>Settings/MapSetup/UploadMap.qml</file>
         <file>Settings/MapSetup/RemoveFloor.qml</file>
+        <file>Icons/Minus.png</file>
+        <file>Icons/Plus.png</file>
+        <file>Icons/Reset.png</file>
     </qresource>
 </RCC>

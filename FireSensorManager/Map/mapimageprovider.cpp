@@ -33,8 +33,7 @@ QPixmap MapImageProvider::requestPixmap(const QString &id, QSize *size, const QS
 
     auto finalWidth = requestedSize.width() > 0 ? requestedSize.width() : originalSize.width();
     auto finalHeight = requestedSize.height() > 0 ? requestedSize.height() : originalSize.height();
-
-    return chosenImage->scaled(finalWidth, finalHeight);
+    return chosenImage->scaled(finalWidth, finalHeight, Qt::KeepAspectRatio);
 }
 
 void MapImageProvider::add(int floor, const QPixmap& pixmap)
