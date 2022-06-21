@@ -22,14 +22,16 @@ MouseArea {
             id: columnText
             anchors.centerIn: parent
 
-            property bool errorStatus: sensor.status & 1
-            property bool dirtyStatus: sensor.status & 2
-            property bool maintenanceRequiredStatus: sensor.status & 4
+            Label {
+                id: lblName
+                text: sensor.name
+                font.underline: true
+            }
 
             Label {
                 id: lblError
 
-                visible: errorStatus
+                visible: sensor.status & 1
 
                 text: qsTr("Sensor is reporting an error!")
                 color: "red"
@@ -38,7 +40,7 @@ MouseArea {
             Label {
                 id: lblDirty
 
-                visible: dirtyStatus
+                visible: sensor.status & 2
 
                 text: qsTr("Sensor is dirty!")
                 color: "red"
@@ -47,7 +49,7 @@ MouseArea {
             Label {
                 id: lblMaintenance
 
-                visible: maintenanceRequiredStatus
+                visible: sensor.status & 4
 
                 text: qsTr("Sensor requires maintenance!")
                 color: "red"

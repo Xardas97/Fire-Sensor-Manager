@@ -22,5 +22,7 @@
         <file>Icons/Minus.png</file>
         <file>Icons/Plus.png</file>
         <file>Icons/Reset.png</file>
+        <file>FloorMaps/SensorIcon.qml</file>
+        <file>Icons/Sensor.png</file>
     </qresource>
 </RCC>

@@ -46,6 +46,9 @@ Window {
 
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+
+                selectedSensor: listKnownSensors.selectedSensor
+                onSelectedSensorPlaced: listKnownSensors.selectedSensor = null
             }
         }
     }

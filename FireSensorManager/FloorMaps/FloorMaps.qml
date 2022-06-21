@@ -2,10 +2,16 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import Custom.Sensors
+
 Item {
     id: root
 
+    property Sensor selectedSensor
+    signal selectedSensorPlaced()
+
     Flickable {
+        id: flickable
         anchors.fill: parent
 
         boundsMovement: Flickable.StopAtBounds
@@ -18,14 +24,42 @@ Item {
             id: imageMap
             transformOrigin: Item.TopLeft
             source: imageSource()
+
+            function imageSource() {
+                if (service.selectedFloor == null || service.selectedFloorPart == null)
+                    return ""
+
+                return "image://MapImageProvider/" + service.selectedFloor +  "/" + service.selectedFloorPart
+            }
+
         }
-    }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: function(mouse) {
+                if (selectedSensor != null) {
+                    var created = createSensorIconObject(selectedSensor, mouse.x, mouse.y)
+                    if (created)
+                        selectedSensorPlaced()
+                }
+            }
 
-    function imageSource() {
-        if (service.selectedFloor == null || service.selectedFloorPart == null)
-            return ""
+            function createSensorIconObject(sensor, x, y) {
+                var component = Qt.createComponent("SensorIcon.qml");
+                var icon = component.createObject(imageMap, {x: x, y: y, sensor: sensor});
 
-        return "image://MapImageProvider/" + service.selectedFloor +  "/" + service.selectedFloorPart
+                if (icon === null) {
+                    console.log("Error creating object");
+                    return false
+                }
+
+                var realX = x - icon.width / 2
+                var realY = y - icon.height / 2
+                icon.x = Math.min(Math.max(realX, 0), imageMap.width - icon.width)
+                icon.y = Math.min(Math.max(realY, 0), imageMap.height - icon.height)
+
+                return true
+            }
+        }
     }
 
     RowLayout {
