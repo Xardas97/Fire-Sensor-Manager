@@ -60,7 +60,7 @@ bool Database::createMapsTable()
 {
     auto queryText = "CREATE TABLE IF NOT EXISTS maps "
                      "("
-                   //"  uuid  INTEGER PRIMARY KEY,"
+                     "  id    INTEGER PRIMARY KEY AUTOINCREMENT,"
                      "  floor INTEGER,"
                      "  image BLOB"
                      ")";
