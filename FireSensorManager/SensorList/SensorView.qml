@@ -11,13 +11,34 @@ Rectangle {
 
     property Sensor sensor
 
+    property bool isSelected: false
+    signal selected()
+    signal deselected()
+
     property bool errorStatus: sensor.status & 1
     property bool dirtyStatus: sensor.status & 2
     property bool maintenanceRequiredStatus: sensor.status & 4
 
     border {
-        color: "black"
-        width: 1
+        color: isSelected? "red" : "black"
+        width: isSelected? 2 : 1
+    }
+
+    ListView.onRemove: if (isSelected) deselected()
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton | Qt.LeftButton
+        onClicked: function (mouse) {
+            if (mouse.button === Qt.LeftButton) {
+                if (isSelected) deselected()
+                else selected()
+            }
+            else if (mouse.button === Qt.RightButton) {
+                contextMenu.popup()
+            }
+
+        }
     }
 
     Label {
@@ -55,12 +76,6 @@ Rectangle {
         background: Rectangle { opacity: 0 }
 
         onClicked: sensorSettingsDialog.open()
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
-        onClicked: contextMenu.popup()
     }
 
     Menu {

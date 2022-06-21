@@ -7,6 +7,7 @@ import Custom.Sensors
 MouseArea {
     id: root
     hoverEnabled: true
+    acceptedButtons: Qt.NoButton
 
     property Sensor sensor
 

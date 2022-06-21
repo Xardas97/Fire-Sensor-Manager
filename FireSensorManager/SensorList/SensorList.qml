@@ -2,11 +2,15 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import Custom.Sensors
+
 Rectangle {
     border {
         color: "black"
         width: 1
     }
+
+    property Sensor selectedSensor: null
 
     ColumnLayout {
         id: root
@@ -53,6 +57,10 @@ Rectangle {
                     sensor:  model.data
                     width: root.width
                     height: root.height / 10
+
+                    isSelected: sensor == selectedSensor
+                    onSelected: selectedSensor = sensor
+                    onDeselected: selectedSensor = null
                 }
             }
         }
@@ -64,12 +72,9 @@ Rectangle {
 
         Button {
             id: btnDiscoverSensors
-
-            //Layout.preferredWidth: root.width
             Layout.alignment: Qt.AlignCenter
 
             text: qsTr("Discover sensors")
-
             onClicked: service.discoverSensors()
         }
 
