@@ -3,6 +3,7 @@
 
 #include "sensorstate.h"
 
+class MapEntry;
 class QSqlRecord;
 
 class Sensor : public SensorState
@@ -17,6 +18,9 @@ class Sensor : public SensorState
     Q_PROPERTY(short temperatureThreshold      READ temperatureThreshold      WRITE setTemperatureThreshold      NOTIFY temperatureThresholdChanged)
     Q_PROPERTY(int   co2ConcentrationThreshold READ co2ConcentrationThreshold WRITE setCo2ConcentrationThreshold NOTIFY co2ConcentrationThresholdChanged)
     Q_PROPERTY(short pollutionThreshold        READ pollutionThreshold        WRITE setPollutionThreshold        NOTIFY pollutionThresholdChanged)
+
+    Q_PROPERTY(int x READ x WRITE setX NOTIFY xChanged)
+    Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
 
     private:
         static const short maxCommunicationFailed = 3;
@@ -45,6 +49,13 @@ class Sensor : public SensorState
         short pollutionThreshold() const;
         void setPollutionThreshold(short pollutionThreshold);
 
+        int x() const;
+        void setX(int x);
+        int y() const;
+        void setY(int y);
+        MapEntry* map();
+        void setMap(MapEntry* map);
+
     signals:
         void isActiveChanged();
         void isReplacedChanged();
@@ -54,6 +65,11 @@ class Sensor : public SensorState
         void temperatureThresholdChanged();
         void co2ConcentrationThresholdChanged();
         void pollutionThresholdChanged();
+
+        void xChanged();
+        void yChanged();
+
+        void removedFromMap();
 
     private:
         Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port);
@@ -65,6 +81,10 @@ class Sensor : public SensorState
         short m_temperatureThreshold;
         int m_co2ConcentrationThreshold;
         short m_pollutionThreshold;
+
+        int m_x;
+        int m_y;
+        MapEntry* m_map = nullptr;
 };
 
 #endif // SENSOR_H

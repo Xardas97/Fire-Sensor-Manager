@@ -1,8 +1,10 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
+#include "Communication/sensor.h"
 #include "filteredsensorlistmodel.h"
 
+#include <QList>
 #include <memory>
 #include <QObject>
 
@@ -34,6 +36,10 @@ public slots:
 
     void removeSensor(Sensor* sensor);
     bool reactivateSensor(Sensor* sensor);
+
+    bool placeOnMap(Sensor* sensor);
+    void removeFromMap(Sensor* sensor);
+    QList<Sensor*> placedSensors();
 
     QVariant  selectedFloor();
     QVariant  selectedFloorPart();
@@ -68,7 +74,7 @@ private:
     void onFloorPartRemoved(int floor);
 
     std::unique_ptr<int> m_selectedFloor;
-    std::unique_ptr<int> m_selectedFloorPart;
+    std::unique_ptr<short> m_selectedFloorPart;
 
     std::shared_ptr<Database>                m_database;
     std::unique_ptr<MapImageProvider>        m_mapImageProvider;

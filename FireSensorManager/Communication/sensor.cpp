@@ -150,3 +150,38 @@ void Sensor::setPollutionThreshold(short pollutionThreshold)
     m_pollutionThreshold = pollutionThreshold;
     emit pollutionThresholdChanged();
 }
+
+int Sensor::x() const
+{
+    return m_x;
+}
+
+void Sensor::setX(int x)
+{
+    m_x = x;
+    emit xChanged();
+}
+
+int Sensor::y() const
+{
+    return m_y;
+}
+
+void Sensor::setY(int y)
+{
+    m_y = y;
+    emit yChanged();
+}
+
+MapEntry* Sensor::map()
+{
+    return m_map;
+}
+
+void Sensor::setMap(MapEntry* map)
+{
+    if (m_map)
+        emit removedFromMap();
+
+    m_map = map;
+}

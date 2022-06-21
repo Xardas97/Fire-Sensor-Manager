@@ -31,35 +31,53 @@ Item {
 
                 return "image://MapImageProvider/" + service.selectedFloor +  "/" + service.selectedFloorPart
             }
-
         }
+
         MouseArea {
             anchors.fill: parent
             onClicked: function(mouse) {
                 if (selectedSensor != null) {
+                    service.removeFromMap(selectedSensor)
                     var created = createSensorIconObject(selectedSensor, mouse.x, mouse.y)
-                    if (created)
+                    if (created) {
+                        service.placeOnMap(selectedSensor)
                         selectedSensorPlaced()
+                    }
+
                 }
-            }
-
-            function createSensorIconObject(sensor, x, y) {
-                var component = Qt.createComponent("SensorIcon.qml");
-                var icon = component.createObject(imageMap, {x: x, y: y, sensor: sensor});
-
-                if (icon === null) {
-                    console.log("Error creating object");
-                    return false
-                }
-
-                var realX = x - icon.width / 2
-                var realY = y - icon.height / 2
-                icon.x = Math.min(Math.max(realX, 0), imageMap.width - icon.width)
-                icon.y = Math.min(Math.max(realY, 0), imageMap.height - icon.height)
-
-                return true
             }
         }
+
+        Connections {
+            target: service
+            function onSelectedFloorChanged() { loadPlacedSensors() }
+            function onSelectedFloorPartChanged() { loadPlacedSensors() }
+
+            function loadPlacedSensors() {
+                var placedSensors = service.placedSensors()
+                for (var i = 0; i < placedSensors.length; ++i) {
+                    var sensor = placedSensors[i]
+                    createSensorIconObject(sensor, sensor.x, sensor.y)
+                }
+            }
+        }
+    }
+
+    function createSensorIconObject(sensor, x, y) {
+        var component = Qt.createComponent("SensorIcon.qml");
+        var icon = component.createObject(imageMap, {x: x, y: y, sensor: sensor});
+
+        if (icon === null) {
+            console.log("Error creating object");
+            return false
+        }
+
+        var realX = x - icon.width / 2
+        var realY = y - icon.height / 2
+        icon.x = Math.min(Math.max(realX, 0), imageMap.width - icon.width)
+        icon.y = Math.min(Math.max(realY, 0), imageMap.height - icon.height)
+
+        return true
     }
 
     RowLayout {

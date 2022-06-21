@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 class Sensor;
-class QPixmap;
+class MapEntry;
 
 class Database : public QObject
 {
@@ -16,8 +16,8 @@ public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
 
-    void loadMaps(std::function<void(int, const QPixmap&)> addFunc);
-    void saveMaps(const std::unordered_map<int, std::vector<QPixmap>>& maps);
+    void loadMaps(std::function<void(int, const MapEntry&)> addFunc);
+    void saveMaps(const std::unordered_map<int, std::vector<MapEntry>>& maps);
 
     auto loadSensors() -> std::vector<std::unique_ptr<Sensor>>;
     void saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors);
@@ -33,7 +33,7 @@ private:
     bool createMapsTable();
     bool createSensorsTable();
 
-    void saveMap(int floor, const QPixmap& pixmap);
+    void saveMap(int floor, const MapEntry& pixmap);
 
     void saveSensor(const Sensor& sensor);
 };

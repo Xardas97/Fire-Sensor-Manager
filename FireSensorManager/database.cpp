@@ -1,5 +1,6 @@
 #include "database.h"
 
+#include "Map/mapentry.h"
 #include "Communication/sensor.h"
 
 #include <QDebug>
@@ -101,7 +102,7 @@ bool Database::createSensorsTable()
     return true;
 }
 
-void Database::loadMaps(std::function<void(int, const QPixmap&)> addFunc)
+void Database::loadMaps(std::function<void(int, const MapEntry&)> addFunc)
 {
     std::unordered_map<int, std::vector<QPixmap>> maps;
 
@@ -123,13 +124,13 @@ void Database::loadMaps(std::function<void(int, const QPixmap&)> addFunc)
         QPixmap map;
         map.loadFromData(imageBytes);
 
-        addFunc(floor, map);
+        addFunc(floor, MapEntry{map});
     }
 
     return;
 }
 
-void Database::saveMaps(const std::unordered_map<int, std::vector<QPixmap>>& maps)
+void Database::saveMaps(const std::unordered_map<int, std::vector<MapEntry>>& maps)
 {
     qDebug() << "Deleting current database maps...";
 
@@ -154,7 +155,7 @@ void Database::saveMaps(const std::unordered_map<int, std::vector<QPixmap>>& map
     qDebug() << "Finished adding maps to database";
 }
 
-void Database::saveMap(int floor, const QPixmap& pixmap)
+void Database::saveMap(int floor, const MapEntry& map)
 {
     auto queryText = "INSERT INTO maps "
                      "(floor, image) "
@@ -163,7 +164,7 @@ void Database::saveMap(int floor, const QPixmap& pixmap)
     QByteArray inByteArray;
     QBuffer inBuffer {&inByteArray};
     inBuffer.open(QIODevice::WriteOnly);
-    pixmap.save(&inBuffer, "PNG");
+    map.pixmap().save(&inBuffer, "PNG");
 
     QSqlQuery query;
     query.prepare(queryText);

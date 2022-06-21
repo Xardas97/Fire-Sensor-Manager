@@ -11,7 +11,7 @@ MapImageProvider::MapImageProvider(std::shared_ptr<Database> database)
     : QQuickImageProvider{QQuickImageProvider::Pixmap},
       m_database(database)
 {
-    m_database->loadMaps([&](int floor, const QPixmap& pixmap) { add(floor, pixmap); });
+    m_database->loadMaps([&](int floor, const MapEntry& map) { add(floor, map); });
 }
 
 QPixmap MapImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
@@ -36,24 +36,22 @@ QPixmap MapImageProvider::requestPixmap(const QString &id, QSize *size, const QS
     return chosenImage->scaled(finalWidth, finalHeight, Qt::KeepAspectRatio);
 }
 
-void MapImageProvider::add(int floor, const QPixmap& pixmap)
+void MapImageProvider::add(int floor, const MapEntry& map)
 {
     auto floorMapsIterator = m_maps.find(floor);
     if (floorMapsIterator == m_maps.end())
     {
-        m_maps[floor] = std::vector<QPixmap>{pixmap};
+        m_maps[floor] = std::vector<MapEntry>{map};
         emit floorAdded(floor);
         return;
     }
 
-    floorMapsIterator->second.push_back(pixmap);
+    floorMapsIterator->second.push_back(map);
     emit floorPartAdded(floor);
 }
 
-QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)
+MapEntry* MapImageProvider::mapEntry(int floor, short floorPart)
 {
-    qDebug() << "Looking for image at: " << floor << "-" << floorPart;
-
     auto floorMapsIterator = m_maps.find(floor);
     if (floorMapsIterator == m_maps.end())
         return nullptr;
@@ -62,7 +60,16 @@ QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)
     if (floorMaps->size() <= (unsigned long long)floorPart)
         return nullptr;
 
-    return &((*floorMaps)[floorPart]);
+    return &(*floorMaps)[floorPart];
+}
+
+QPixmap* MapImageProvider::findPixmap(int floor, short floorPart)
+{
+    auto requestedEntry = mapEntry(floor, floorPart);
+    if (!requestedEntry)
+        return nullptr;
+
+    return &requestedEntry->pixmap();
 }
 
 bool MapImageProvider::upload(int floor, const QUrl& url)
@@ -77,7 +84,7 @@ bool MapImageProvider::upload(int floor, const QUrl& url)
         return false;
     }
 
-    add(floor, QPixmap::fromImage(image));
+    add(floor, MapEntry{QPixmap::fromImage(image)});
 
     qDebug() << "Successfully loaded the map";
     return true;

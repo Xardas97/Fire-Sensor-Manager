@@ -8,6 +8,7 @@ SOURCES += \
         Communication/sensorcommunication.cpp \
         Communication/sensordetector.cpp \
         Communication/sensorlist.cpp \
+        Map/mapentry.cpp \
         Map/mapimageprovider.cpp \
         database.cpp \
         filteredsensorlistmodel.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     Communication/sensorcommunication.h \
     Communication/sensordetector.h \
     Communication/sensorlist.h \
+    Map/mapentry.h \
     Map/mapimageprovider.h \
     database.h \
     filteredsensorlistmodel.h \

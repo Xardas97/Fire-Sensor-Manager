@@ -55,6 +55,52 @@ void Service::removeFloor(int floor)
     m_mapImageProvider->removeFloor(floor);
 }
 
+bool Service::placeOnMap(Sensor* sensor)
+{
+    auto mapEntry = m_mapImageProvider->mapEntry(*m_selectedFloor, *m_selectedFloorPart);
+    if (!mapEntry)
+        return false;
+
+    auto foundSensor = m_sensorCommunication->knownSensors().find(*sensor);
+    if (!foundSensor)
+        return false;
+
+    mapEntry->addSensor(foundSensor);
+    return true;
+}
+
+void Service::removeFromMap(Sensor* sensor)
+{
+    auto foundSensor = m_sensorCommunication->knownSensors().find(*sensor);
+    if (!foundSensor)
+        return;
+
+    auto map = foundSensor->map();
+    if (map) {
+        map->removeSensor(foundSensor);
+    }
+}
+
+QList<Sensor*> Service::placedSensors()
+{
+    QList<Sensor*> placedSensors;
+
+    if (!m_selectedFloor || !m_selectedFloorPart)
+    {
+        qWarning() << "No floor or part selected!";
+        return placedSensors;
+    }
+
+    auto mapEntry = m_mapImageProvider->mapEntry(*m_selectedFloor, *m_selectedFloorPart);
+    if (!mapEntry)
+        return placedSensors;
+
+    for (auto& sensor: mapEntry->placedSensors())
+        placedSensors.append(sensor.get());
+
+    return placedSensors;
+}
+
 QVariant Service::selectedFloor()
 {
     if (!m_selectedFloor)
@@ -85,7 +131,7 @@ void Service::setSelectedFloor(QVariant floor)
 void Service::setSelectedFloorPart(QVariant floorPart)
 {
     if (!floorPart.isNull())
-        m_selectedFloorPart = std::make_unique<int>(floorPart.toInt());
+        m_selectedFloorPart = std::make_unique<short>(floorPart.toInt());
     else
         m_selectedFloorPart = nullptr;
 

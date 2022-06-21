@@ -1,6 +1,8 @@
 #ifndef MAPIMAGEPROVIDER_H
 #define MAPIMAGEPROVIDER_H
 
+#include "mapentry.h"
+
 #include <set>
 #include <memory>
 #include <unordered_map>
@@ -18,6 +20,8 @@ public:
 
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 
+    MapEntry* mapEntry(int floor, short floorPart);
+
     bool upload(int floor, const QUrl& pixmap);
     void removeFloor(int floor);
 
@@ -31,11 +35,11 @@ signals:
     void floorPartRemoved(int floor);
 
 private:
-    void add(int floor, const QPixmap& pixmap);
+    void add(int floor, const MapEntry& map);
     QPixmap* findPixmap(int floor, short floorPart);
 
     std::shared_ptr<Database> m_database;
-    std::unordered_map<int, std::vector<QPixmap>> m_maps;
+    std::unordered_map<int, std::vector<MapEntry>> m_maps;
 };
 
 #endif // MAPIMAGEPROVIDER_H

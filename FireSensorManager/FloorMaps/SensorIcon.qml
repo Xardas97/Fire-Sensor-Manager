@@ -25,9 +25,22 @@ Rectangle {
         function onSelectedFloorPartChanged() { root.destroy() }
     }
 
+    Connections {
+        target: sensor
+        function onRemovedFromMap() { root.destroy() }
+    }
+
     SensorToolTip {
         id: sensorToolTip
         anchors.fill: root
         sensor: root.sensor
+    }
+
+    onSensorChanged: {
+        if (sensor == null)
+            return;
+
+        sensor.x = Qt.binding(function() { return x })
+        sensor.y = Qt.binding(function() { return y })
     }
 }
