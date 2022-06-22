@@ -1,10 +1,10 @@
 #include "sensorcommunication.h"
 
 #include "sensor.h"
-#include "database.h"
 #include "tcpclient.h"
 #include "tcpmessages.h"
 #include "sensordetector.h"
+#include "../database.h"
 
 #include <QTimer>
 #include <QtConcurrent>

@@ -97,7 +97,7 @@ Item {
             Layout.preferredHeight: implicitHeight * 0.75
 
             icon.color: "transparent"
-            icon.source: "qrc:/Icons/Plus.png"
+            icon.source: "qrc:/Resources/Icons/Plus.png"
             background: Rectangle {
                 color: "grey"
                 opacity: 0.5
@@ -111,7 +111,7 @@ Item {
             Layout.preferredHeight: implicitHeight * 0.75
 
             icon.color: "transparent"
-            icon.source: "qrc:/Icons/Minus.png"
+            icon.source: "qrc:/Resources/Icons/Minus.png"
             background: Rectangle {
                 color: "grey"
                 opacity: 0.5
@@ -124,7 +124,7 @@ Item {
             Layout.preferredHeight: implicitHeight * 0.75
 
             icon.color: "transparent"
-            icon.source: "qrc:/Icons/Reset.png"
+            icon.source: "qrc:/Resources/Icons/Reset.png"
             background: Rectangle {
                 color: "grey"
                 opacity: 0.5

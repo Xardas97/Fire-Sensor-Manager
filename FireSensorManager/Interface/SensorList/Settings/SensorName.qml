@@ -56,7 +56,7 @@ Item {
             bottomMargin: (root.height - height) / 2
         }
 
-        icon.source: "qrc:/Icons/Refresh.png"
+        icon.source: "qrc:/Resources/Icons/Refresh.png"
         background: Rectangle { opacity: 0 }
 
         onClicked: txtName.text = currentName

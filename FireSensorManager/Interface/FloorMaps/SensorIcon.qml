@@ -16,7 +16,7 @@ Rectangle {
 
     Image {
         id: image
-        source: "qrc:/Icons/Sensor.png"
+        source: "qrc:/Resources/Icons/Sensor.png"
     }
 
     Connections {

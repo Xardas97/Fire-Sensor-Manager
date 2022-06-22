@@ -20,7 +20,7 @@ Rectangle {
         anchors.leftMargin: 10
 
         icon.color: "transparent"
-        icon.source: "qrc:/Icons/Menu.png"
+        icon.source: "qrc:/Resources/Icons/Menu.png"
         background: Rectangle { opacity: 0 }
 
         onClicked: popupSettings.open()

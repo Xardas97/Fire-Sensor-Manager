@@ -1,6 +1,6 @@
 #include "mapimageprovider.h"
 
-#include "database.h"
+#include "../database.h"
 
 #include <QFile>
 #include <vector>

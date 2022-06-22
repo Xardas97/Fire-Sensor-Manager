@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     Service service;
 
     QQmlApplicationEngine engine;
-    const QUrl url("qrc:/main.qml");
+    const QUrl url("qrc:/Interface/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

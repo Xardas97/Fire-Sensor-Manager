@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     QQmlContext* rootContext = engine.rootContext();
     rootContext->setContextProperty("sensor", &sensor);
 
-    setupUi(app, engine, "main.qml");
+    setupUi(app, engine, "Interface/main.qml");
 
     return app.exec();
 }

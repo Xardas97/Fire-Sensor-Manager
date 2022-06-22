@@ -1,16 +1,16 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>Values/SensorStatuses.qml</file>
-        <file>Values/SmokeDetection.qml</file>
-        <file>Values/Temperature.qml</file>
-        <file>Values/Co2Concentration.qml</file>
-        <file>Values/Pollution.qml</file>
-        <file>Values/SensorName.qml</file>
-        <file>Values/SensorStatus.qml</file>
-        <file>Values/DynamicSensorValues.qml</file>
-        <file>SensorSetup.qml</file>
-        <file>RunningSensor.qml</file>
-        <file>Values/AdditionalInfoPopup.qml</file>
+        <file>Interface/main.qml</file>
+        <file>Interface/Values/SensorStatuses.qml</file>
+        <file>Interface/Values/SmokeDetection.qml</file>
+        <file>Interface/Values/Temperature.qml</file>
+        <file>Interface/Values/Co2Concentration.qml</file>
+        <file>Interface/Values/Pollution.qml</file>
+        <file>Interface/Values/SensorName.qml</file>
+        <file>Interface/Values/SensorStatus.qml</file>
+        <file>Interface/Values/DynamicSensorValues.qml</file>
+        <file>Interface/SensorSetup.qml</file>
+        <file>Interface/RunningSensor.qml</file>
+        <file>Interface/Values/AdditionalInfoPopup.qml</file>
     </qresource>
 </RCC>

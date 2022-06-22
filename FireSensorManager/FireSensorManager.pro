@@ -4,16 +4,16 @@ QT += quick \
       sql
 
 SOURCES += \
-        Communication/sensor.cpp \
-        Communication/sensorcommunication.cpp \
-        Communication/sensordetector.cpp \
-        Communication/sensorlist.cpp \
-        Map/mapentry.cpp \
-        Map/mapimageprovider.cpp \
-        database.cpp \
-        filteredsensorlistmodel.cpp \
-        main.cpp \
-        service.cpp
+        Service/Communication/sensor.cpp \
+        Service/Communication/sensorcommunication.cpp \
+        Service/Communication/sensordetector.cpp \
+        Service/Communication/sensorlist.cpp \
+        Service/Map/mapentry.cpp \
+        Service/Map/mapimageprovider.cpp \
+        Service/database.cpp \
+        Service/filteredsensorlistmodel.cpp \
+        Service/main.cpp \
+        Service/service.cpp
 
 RESOURCES += resources.qrc
 
@@ -29,15 +29,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    Communication/sensor.h \
-    Communication/sensorcommunication.h \
-    Communication/sensordetector.h \
-    Communication/sensorlist.h \
-    Map/mapentry.h \
-    Map/mapimageprovider.h \
-    database.h \
-    filteredsensorlistmodel.h \
-    service.h
+    Service/Communication/sensor.h \
+    Service/Communication/sensorcommunication.h \
+    Service/Communication/sensordetector.h \
+    Service/Communication/sensorlist.h \
+    Service/Map/mapentry.h \
+    Service/Map/mapimageprovider.h \
+    Service/database.h \
+    Service/filteredsensorlistmodel.h \
+    Service/service.h
 
 DISTFILES +=
 

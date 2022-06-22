@@ -72,7 +72,7 @@ Rectangle {
             verticalCenter: root.verticalCenter
         }
 
-        icon.source: "qrc:/Icons/SensorSettings.png"
+        icon.source: "qrc:/Resources/Icons/SensorSettings.png"
         background: Rectangle { opacity: 0 }
 
         onClicked: sensorSettingsDialog.open()
