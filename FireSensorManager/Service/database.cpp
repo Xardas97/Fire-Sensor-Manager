@@ -104,8 +104,6 @@ bool Database::createSensorsTable()
 
 void Database::loadMaps(std::function<void(int, const MapEntry&)> addFunc)
 {
-    std::unordered_map<int, std::vector<QPixmap>> maps;
-
     QSqlQuery query;
     query.prepare("SELECT * FROM maps");
 
@@ -219,37 +217,6 @@ void Database::saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors)
     }
 
     qDebug() << "Finished inserting sensors into the databse";
-}
-
-bool Database::loadSensorData(Sensor& sensor)
-{
-    QSqlQuery query;
-    query.prepare("SELECT * FROM sensors WHERE uuid = :uuid");
-    query.bindValue(":uuid", sensor.uuid());
-
-    auto success = query.exec();
-    if (!success)
-        return false;
-
-    if (query.next())
-    {
-        sensor.setTemperatureThreshold(query.value("temperature_threshold").toInt());
-        sensor.setCo2ConcentrationThreshold(query.value("co2_threshold").toInt());
-        sensor.setPollutionThreshold(query.value("pollution_threshold").toInt());
-        return true;
-    }
-
-    return false;
-}
-
-void Database::saveSensorData(const Sensor& sensor)
-{
-    QSqlQuery query;
-    query.prepare("DELETE FROM sensors WHERE uuid = :uuid");
-    query.bindValue(":uuid", sensor.uuid());
-    query.exec();
-
-    saveSensor(sensor);
 }
 
 void Database::saveSensor(const Sensor& sensor)

@@ -110,7 +110,6 @@ void SensorCommunication::removeSensor(Sensor& sensor)
     auto removed = m_knownSensors.remove(sensor);
     if (removed->map())
         removed->map()->removeSensor(removed);
-    m_database->saveSensorData(*removed);
 }
 
 bool SensorCommunication::reactivateSensor(Sensor& sensor)
@@ -141,7 +140,6 @@ void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
     {
         qDebug() << "This is a new sensor!";
         m_knownSensors.add(sensor);
-        m_database->loadSensorData(*sensor);
         return;
     }
 

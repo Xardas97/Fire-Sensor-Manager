@@ -22,9 +22,6 @@ public:
     auto loadSensors() -> std::vector<std::unique_ptr<Sensor>>;
     void saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors);
 
-    bool loadSensorData(Sensor& sensor);
-    void saveSensorData(const Sensor& sensor);
-
 private:
     bool open();
     void close();
