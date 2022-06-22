@@ -87,7 +87,6 @@ QList<Sensor*> Service::placedSensors()
 
     if (!m_selectedFloor || !m_selectedFloorPart)
     {
-        qWarning() << "No floor or part selected!";
         return placedSensors;
     }
 
@@ -120,9 +119,9 @@ QVariant Service::selectedFloorPart()
 void Service::setSelectedFloor(QVariant floor)
 {
     if (!floor.isNull())
-        m_selectedFloor = std::make_unique<int>(floor.toInt());
+        m_selectedFloor = floor.toInt();
     else
-        m_selectedFloor = nullptr;
+        m_selectedFloor.reset();
 
     emit selectedFloorChanged();
     emit availableFloorPartsChanged();
@@ -131,9 +130,9 @@ void Service::setSelectedFloor(QVariant floor)
 void Service::setSelectedFloorPart(QVariant floorPart)
 {
     if (!floorPart.isNull())
-        m_selectedFloorPart = std::make_unique<short>(floorPart.toInt());
+        m_selectedFloorPart = floorPart.toInt();
     else
-        m_selectedFloorPart = nullptr;
+        m_selectedFloorPart.reset();
 
     emit selectedFloorPartChanged();
 }

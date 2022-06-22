@@ -7,6 +7,7 @@
 #include <QList>
 #include <memory>
 #include <QObject>
+#include <optional>
 
 class Sensor;
 class Database;
@@ -73,8 +74,8 @@ private:
     void onFloorPartAdded(int floor);
     void onFloorPartRemoved(int floor);
 
-    std::unique_ptr<int> m_selectedFloor;
-    std::unique_ptr<short> m_selectedFloorPart;
+    std::optional<int> m_selectedFloor;
+    std::optional<short> m_selectedFloorPart;
 
     std::shared_ptr<Database>                m_database;
     std::unique_ptr<MapImageProvider>        m_mapImageProvider;
