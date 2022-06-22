@@ -5,6 +5,7 @@
 #include "tcpmessages.h"
 #include "sensordetector.h"
 #include "../database.h"
+#include "../Map/mapentry.h"
 
 #include <QTimer>
 #include <QtConcurrent>
@@ -107,6 +108,8 @@ SensorList& SensorCommunication::knownSensors()
 void SensorCommunication::removeSensor(Sensor& sensor)
 {
     auto removed = m_knownSensors.remove(sensor);
+    if (removed->map())
+        removed->map()->removeSensor(removed);
     m_database->saveSensorData(*removed);
 }
 
