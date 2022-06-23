@@ -38,7 +38,7 @@ Item {
             onClicked: function(mouse) {
                 if (selectedSensor != null) {
                     service.removeFromMap(selectedSensor)
-                    var created = createSensorIconObject(selectedSensor, mouse.x, mouse.y)
+                    var created = createSensorIconObjectFromMouseEvent(selectedSensor, mouse.x, mouse.y)
                     if (created) {
                         service.placeOnMap(selectedSensor)
                         selectedSensorPlaced()
@@ -69,8 +69,16 @@ Item {
 
         if (icon === null) {
             console.log("Error creating object");
-            return false
         }
+
+        return icon
+    }
+
+    function createSensorIconObjectFromMouseEvent(sensor, x, y) {
+        var icon = createSensorIconObject(sensor, x, y)
+
+        if (icon === null)
+            return false
 
         var realX = x - icon.width / 2
         var realY = y - icon.height / 2
