@@ -10,10 +10,9 @@
 #include <QStandardPaths>
 
 FloorMaps::FloorMaps(std::shared_ptr<Database> database)
-    : m_database(database)
-{
-    m_database->loadMaps([&](int floor, const MapEntry& map) { add(floor, map); });
-}
+    : m_database(database),
+      m_maps(m_database->maps())
+{ }
 
 void FloorMaps::add(int floor, const MapEntry& map)
 {

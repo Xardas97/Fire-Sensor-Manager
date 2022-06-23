@@ -8,6 +8,7 @@
 
 class Sensor;
 class MapEntry;
+class QSqlRecord;
 
 class Database : public QObject
 {
@@ -16,23 +17,31 @@ public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
 
-    void loadMaps(std::function<void(int, const MapEntry&)> addFunc);
-    void saveMaps(const std::unordered_map<int, std::vector<MapEntry>>& maps);
+    auto maps() -> std::unordered_map<int, std::vector<MapEntry>>&;
+    auto sensors() -> std::vector<std::shared_ptr<Sensor>>&;
 
-    auto loadSensors() -> std::vector<std::unique_ptr<Sensor>>;
-    void saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors);
+    void saveData();
 
 private:
     bool open();
     void close();
-    bool createTables();
 
+    bool createTables();
     bool createMapsTable();
     bool createSensorsTable();
 
-    void saveMap(int floor, const MapEntry& pixmap);
+    void loadData();
+    void loadMaps();
+    void loadMap(const QSqlRecord& record);
+    void loadSensors();
 
-    void saveSensor(const Sensor& sensor);
+    void saveMaps();
+    void saveMap(int floor, MapEntry& pixmap);
+    void saveSensors();
+    void saveSensor(Sensor& sensor);
+
+    std::vector<std::shared_ptr<Sensor>> m_sensors;
+    std::unordered_map<int, std::vector<MapEntry>> m_maps;
 };
 
 #endif // DATABASE_H

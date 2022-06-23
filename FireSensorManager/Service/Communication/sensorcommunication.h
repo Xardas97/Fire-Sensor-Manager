@@ -39,8 +39,8 @@ private:
 
     void onSensorDiscovered(std::shared_ptr<Sensor> sensor);
 
-    SensorList m_knownSensors;
     std::shared_ptr<Database>       m_database;
+    SensorList                      m_knownSensors;
     std::unique_ptr<SensorDetector> m_sensorDetector;
 
     int m_sensorUpdatesCount = 0;

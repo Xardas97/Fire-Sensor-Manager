@@ -36,7 +36,7 @@ private:
     void add(int floor, const MapEntry& map);
 
     std::shared_ptr<Database> m_database;
-    std::unordered_map<int, std::vector<MapEntry>> m_maps;
+    std::unordered_map<int, std::vector<MapEntry>>& m_maps;
 };
 
 #endif // FLOORMAPS_H

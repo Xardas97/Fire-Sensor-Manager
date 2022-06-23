@@ -3,6 +3,7 @@
 #include "Map/mapentry.h"
 #include "Communication/sensor.h"
 
+#include <vector>
 #include <QDebug>
 #include <QBuffer>
 #include <QPixmap>
@@ -17,6 +18,7 @@ Database::Database(QObject *parent)
 {
     open();
     createTables();
+    loadData();
 }
 
 bool Database::open()
@@ -46,7 +48,7 @@ bool Database::createTables()
 {
     qDebug() << "Creating missing database tables...";
 
-    auto success = createMapsTable() || createSensorsTable();
+    auto success = createMapsTable() && createSensorsTable();
     if (!success)
     {
         qWarning() << "Creating tables failed!";
@@ -102,7 +104,15 @@ bool Database::createSensorsTable()
     return true;
 }
 
-void Database::loadMaps(std::function<void(int, const MapEntry&)> addFunc)
+void Database::loadData()
+{
+    qDebug() << "Loading all data from the database...";
+    loadMaps();
+    loadSensors();
+    qDebug() << "Finished loading all data from the database";
+}
+
+void Database::loadMaps()
 {
     QSqlQuery query;
     query.prepare("SELECT * FROM maps");
@@ -110,38 +120,80 @@ void Database::loadMaps(std::function<void(int, const MapEntry&)> addFunc)
     auto success = query.exec();
     if (!success)
     {
-        qWarning() << "Failed to load map from database!";
+        qWarning() << "Failed to load maps from the database: " << query.lastError().text();
         return;
     }
 
     while (query.next())
     {
-        auto floor = query.value("floor").toInt();
-
-        auto imageBytes = query.value("image").toByteArray();
-        QPixmap map;
-        map.loadFromData(imageBytes);
-
-        addFunc(floor, MapEntry{map});
+        loadMap(query.record());
     }
-
-    return;
 }
 
-void Database::saveMaps(const std::unordered_map<int, std::vector<MapEntry>>& maps)
+void Database::loadMap(const QSqlRecord& record)
+{
+    auto floor = record.value("floor").toInt();
+
+    auto imageBytes = record.value("image").toByteArray();
+    QPixmap mapImage;
+    mapImage.loadFromData(imageBytes);
+
+    auto floorMapsIterator = m_maps.find(floor);
+    if (floorMapsIterator == m_maps.end())
+    {
+        floorMapsIterator = m_maps.emplace(std::make_pair(floor, std::vector<MapEntry>{})).first;
+    }
+
+    floorMapsIterator->second.emplace_back(mapImage);
+}
+
+void Database::loadSensors()
+{
+    QSqlQuery query;
+    auto success = query.exec("SELECT * FROM sensors");
+    if (!success)
+    {
+        qWarning() << "Failed to load sensors from the dabatase: " << query.lastError().text();
+        return;
+    }
+
+    while (query.next())
+    {
+        m_sensors.push_back({Sensor::fromSqlRecord(query.record())});
+    }
+}
+
+std::unordered_map<int, std::vector<MapEntry>>& Database::maps()
+{
+    return m_maps;
+}
+
+std::vector<std::shared_ptr<Sensor>>& Database::sensors()
+{
+    return m_sensors;
+}
+
+void Database::saveData()
+{
+    saveMaps();
+    saveSensors();
+}
+
+void Database::saveMaps()
 {
     qDebug() << "Deleting current database maps...";
 
-    auto success = QSqlQuery{}.exec("DELETE FROM maps");
+    QSqlQuery query;
+    auto success = query.exec("DELETE FROM maps");
     if (!success)
     {
-        qWarning() << "Failed to delete maps from the dabatase!";
+        qWarning() << "Failed to delete maps from the dabatase: " << query.lastError().text();
         return;
     }
 
     qDebug() << "Inserting new maps into the database...";
 
-    for (auto& floorMaps: maps)
+    for (auto& floorMaps: m_maps)
     {
         auto floor = floorMaps.first;
         for (auto& map: floorMaps.second)
@@ -153,7 +205,7 @@ void Database::saveMaps(const std::unordered_map<int, std::vector<MapEntry>>& ma
     qDebug() << "Finished adding maps to database";
 }
 
-void Database::saveMap(int floor, const MapEntry& map)
+void Database::saveMap(int floor, MapEntry& map)
 {
     auto queryText = "INSERT INTO maps "
                      "(floor, image) "
@@ -177,41 +229,21 @@ void Database::saveMap(int floor, const MapEntry& map)
     }
 }
 
-std::vector<std::unique_ptr<Sensor>> Database::loadSensors()
-{
-    std::vector<std::unique_ptr<Sensor>> sensors;
-
-    QSqlQuery query;
-    auto success = query.exec("SELECT * FROM sensors");
-    if (!success)
-    {
-        qWarning() << "Failed to load sensors from the dabatase!";
-        return sensors;
-    }
-
-    while (query.next())
-    {
-        sensors.push_back(Sensor::fromSqlRecord(query.record()));
-    }
-
-    qDebug() << "Finished loading sensors from the database";
-    return sensors;
-}
-
-void Database::saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors)
+void Database::saveSensors()
 {
     qDebug() << "Deleting current database sensors...";
 
-    auto success = QSqlQuery{}.exec("DELETE FROM sensors");
+    QSqlQuery query;
+    auto success = query.exec("DELETE FROM sensors");
     if (!success)
     {
-        qWarning() << "Failed to delete sensors from the dabatase!";
+        qWarning() << "Failed to delete sensors from the dabatase: " << query.lastError().text();
         return;
     }
 
     qDebug() << "Inserting new sensors into the database...";
 
-    for (auto& sensor: sensors)
+    for (auto& sensor: m_sensors)
     {
         saveSensor(*sensor);
     }
@@ -219,7 +251,7 @@ void Database::saveSensors(const std::vector<std::shared_ptr<Sensor>>& sensors)
     qDebug() << "Finished inserting sensors into the databse";
 }
 
-void Database::saveSensor(const Sensor& sensor)
+void Database::saveSensor(Sensor& sensor)
 {
     auto queryText = "INSERT INTO sensors "
                      "(uuid, capabilities, address, port, name, temperature_threshold, co2_threshold, pollution_threshold) "
@@ -258,6 +290,7 @@ void Database::close()
 
 Database::~Database()
 {
+    saveData();
     close();
 }
 

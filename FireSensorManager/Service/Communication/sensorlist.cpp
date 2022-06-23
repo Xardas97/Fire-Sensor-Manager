@@ -3,8 +3,9 @@
 
 #include <algorithm>
 
-SensorList::SensorList(QObject* parent)
-    : QAbstractListModel(parent)
+SensorList::SensorList(std::vector<std::shared_ptr<Sensor>>& sensors, QObject* parent)
+    : QAbstractListModel(parent),
+      m_sensors(sensors)
 { }
 
 std::shared_ptr<Sensor> SensorList::find(const Sensor& checkSensor) const

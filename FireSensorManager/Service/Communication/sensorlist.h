@@ -15,7 +15,7 @@ public:
         DataRole = Qt::UserRole
     };
 
-    explicit SensorList(QObject* parent = nullptr);
+    explicit SensorList(std::vector<std::shared_ptr<Sensor>>& sensors, QObject* parent = nullptr);
 
     auto find(const Sensor& checkSensor) const -> std::shared_ptr<Sensor>;
     void add(std::shared_ptr<Sensor> sensor);
@@ -28,7 +28,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    std::vector<std::shared_ptr<Sensor>> m_sensors;
+    std::vector<std::shared_ptr<Sensor>>& m_sensors;
     std::shared_ptr<Sensor> m_removedSensor;
 
     void onDataChanged();
