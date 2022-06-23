@@ -20,6 +20,7 @@ public:
 
     void addSensor(std::shared_ptr<Sensor> sensor);
     void removeSensor(std::shared_ptr<Sensor> sensor);
+    void removeAllSensors();
 
 private:
     int m_id;

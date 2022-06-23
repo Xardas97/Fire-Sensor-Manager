@@ -29,6 +29,16 @@ void MapEntry::removeSensor(std::shared_ptr<Sensor> sensor)
     }
 }
 
+void MapEntry::removeAllSensors()
+{
+    for (auto& sensor: m_placedSensors)
+    {
+        sensor->setMap(nullptr);
+    }
+
+    m_placedSensors.clear();
+}
+
 int MapEntry::id() const
 {
     return m_id;

@@ -65,6 +65,12 @@ void FloorMaps::removeFloor(int floor)
     if (floorMapsIterator == m_maps.end())
         return;
 
+    auto maps = floorMapsIterator->second;
+    for (auto& map: maps)
+    {
+        map.removeAllSensors();
+    }
+
     m_maps.erase(floorMapsIterator);
     emit floorRemoved(floor);
 }
