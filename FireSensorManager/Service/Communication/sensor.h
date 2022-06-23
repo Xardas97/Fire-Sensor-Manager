@@ -69,6 +69,7 @@ class Sensor : public SensorState
         void xChanged();
         void yChanged();
 
+        void mapChanged();
         void removedFromMap();
 
     private:

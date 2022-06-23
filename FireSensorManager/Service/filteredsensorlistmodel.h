@@ -7,27 +7,32 @@ class FilteredSensorListModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool replaceFilterEnabled READ replaceFilterEnabled WRITE setReplaceFilterEnabled NOTIFY replaceFilterEnabledChanged)
-    Q_PROPERTY(bool activeFilterEnabled READ activeFilterEnabled WRITE setActiveFilterEnabled NOTIFY activeFilterEnabledChanged)
+    Q_PROPERTY(bool inactiveFilterEnabled READ inactiveFilterEnabled WRITE setinActiveFilterEnabled NOTIFY inactiveFilterEnabledChanged)
+    Q_PROPERTY(bool placedFilterEnabled   READ placedFilterEnabled   WRITE setPlacedFilterEnabled   NOTIFY placedFilterEnabledChanged)
+    Q_PROPERTY(bool unplacedFilterEnabled READ unplacedFilterEnabled WRITE setUnplacedFilterEnabled NOTIFY unplacedFilterEnabledChanged)
 
 public:
     explicit FilteredSensorListModel(QObject* parent = nullptr);
 
-    bool replaceFilterEnabled() const;
-    void setReplaceFilterEnabled(bool replaceFilterEnabled);
-    bool activeFilterEnabled() const;
-    void setActiveFilterEnabled(bool activeFilterEnabled);
+    bool inactiveFilterEnabled() const;
+    void setinActiveFilterEnabled(bool inactiveFilterEnabled);
+    bool placedFilterEnabled() const;
+    void setPlacedFilterEnabled(bool placedFilterEnabled);
+    bool unplacedFilterEnabled() const;
+    void setUnplacedFilterEnabled(bool unplacedFilterEnabled);
 
 signals:
-    void replaceFilterEnabledChanged();
-    void activeFilterEnabledChanged();
+    void inactiveFilterEnabledChanged();
+    void placedFilterEnabledChanged();
+    void unplacedFilterEnabledChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const override;
 
 private:
-    bool m_replaceFilterEnabled = true;
-    bool m_activeFilterEnabled = false;
+    bool m_inactiveFilterEnabled = false;
+    bool m_placedFilterEnabled = false;
+    bool m_unplacedFilterEnabled = false;
 };
 
 #endif // FILTEREDSENSORLISTMODEL_H

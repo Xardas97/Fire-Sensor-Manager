@@ -9,49 +9,64 @@ FilteredSensorListModel::FilteredSensorListModel(QObject* parent)
     setDynamicSortFilter(true);
 }
 
-bool FilteredSensorListModel::replaceFilterEnabled() const
+bool FilteredSensorListModel::inactiveFilterEnabled() const
 {
-    return m_replaceFilterEnabled;
+    return m_inactiveFilterEnabled;
 }
 
-void FilteredSensorListModel::setReplaceFilterEnabled(bool replaceFilterEnabled)
+void FilteredSensorListModel::setinActiveFilterEnabled(bool inactiveFilterEnabled)
 {
-    if (m_replaceFilterEnabled == replaceFilterEnabled)
+    if (m_inactiveFilterEnabled == inactiveFilterEnabled)
         return;
 
-    m_replaceFilterEnabled = replaceFilterEnabled;
+    m_inactiveFilterEnabled = inactiveFilterEnabled;
 
-    emit replaceFilterEnabledChanged();
+    emit inactiveFilterEnabledChanged();
     invalidateFilter();
 }
 
-bool FilteredSensorListModel::activeFilterEnabled() const
+bool FilteredSensorListModel::placedFilterEnabled() const
 {
-    return m_activeFilterEnabled;
+    return m_placedFilterEnabled;
 }
 
-void FilteredSensorListModel::setActiveFilterEnabled(bool activeFilterEnabled)
+void FilteredSensorListModel::setPlacedFilterEnabled(bool placedFilterEnabled)
 {
-    if (m_activeFilterEnabled == activeFilterEnabled)
+    if (m_placedFilterEnabled == placedFilterEnabled)
         return;
 
-    m_activeFilterEnabled = activeFilterEnabled;
+    m_placedFilterEnabled = placedFilterEnabled;
 
-    emit activeFilterEnabledChanged();
+    emit placedFilterEnabledChanged();
+    invalidateFilter();
+}
+
+bool FilteredSensorListModel::unplacedFilterEnabled() const
+{
+    return m_unplacedFilterEnabled;
+}
+
+void FilteredSensorListModel::setUnplacedFilterEnabled(bool unplacedFilterEnabled)
+{
+    if (m_unplacedFilterEnabled == unplacedFilterEnabled)
+        return;
+
+    m_unplacedFilterEnabled = unplacedFilterEnabled;
+
+    emit unplacedFilterEnabledChanged();
     invalidateFilter();
 }
 
 bool FilteredSensorListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (!m_replaceFilterEnabled && !m_activeFilterEnabled)
+    if (!m_inactiveFilterEnabled && !m_placedFilterEnabled && !m_unplacedFilterEnabled)
         return true;
 
     const auto index = sourceModel()->index(sourceRow, 0, sourceParent);
     const auto data = index.data(SensorList::Roles::DataRole);
-    const Sensor* sensor = data.value<Sensor*>();
+    Sensor* sensor = data.value<Sensor*>();
 
-    if (sensor->isReplaced())
-        return !m_replaceFilterEnabled;
-
-    return !m_activeFilterEnabled || sensor->isActive();
+    return !(m_placedFilterEnabled && sensor->map()) &&
+           !(m_unplacedFilterEnabled && !sensor->map()) &&
+           !(m_inactiveFilterEnabled && (!sensor->isActive() || sensor->isReplaced()));
 }

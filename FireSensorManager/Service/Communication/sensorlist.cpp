@@ -6,7 +6,14 @@
 SensorList::SensorList(std::vector<std::shared_ptr<Sensor>>& sensors, QObject* parent)
     : QAbstractListModel(parent),
       m_sensors(sensors)
-{ }
+{
+    for (auto& sensor: m_sensors)
+    {
+        QObject::connect(sensor.get(), &Sensor::isReplacedChanged, this, &SensorList::onDataChanged);
+        QObject::connect(sensor.get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
+        QObject::connect(sensor.get(), &Sensor::mapChanged, this, &SensorList::onDataChanged);
+    }
+}
 
 std::shared_ptr<Sensor> SensorList::find(const Sensor& checkSensor) const
 {
@@ -28,6 +35,7 @@ void SensorList::add(std::shared_ptr<Sensor> sensor)
 
     QObject::connect(sensor.get(), &Sensor::isReplacedChanged, this, &SensorList::onDataChanged);
     QObject::connect(sensor.get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
+    QObject::connect(sensor.get(), &Sensor::mapChanged, this, &SensorList::onDataChanged);
 }
 
 std::shared_ptr<Sensor> SensorList::remove(const Sensor& removeSensor)
@@ -43,6 +51,7 @@ std::shared_ptr<Sensor> SensorList::remove(const Sensor& removeSensor)
 
     QObject::disconnect(found->get(), &Sensor::isReplacedChanged, this, &SensorList::onDataChanged);
     QObject::disconnect(found->get(), &Sensor::isActiveChanged, this, &SensorList::onDataChanged);
+    QObject::disconnect(found->get(), &Sensor::mapChanged, this, &SensorList::onDataChanged);
 
     // Holding it in a property temporarily because
     // ListView does not disconnect delegate immediatly

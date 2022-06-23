@@ -183,8 +183,12 @@ MapEntry* Sensor::map()
 
 void Sensor::setMap(MapEntry* map)
 {
+    if (m_map == map)
+        return;
+
     if (m_map)
         emit removedFromMap();
 
     m_map = map;
+    emit mapChanged();
 }

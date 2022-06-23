@@ -20,23 +20,33 @@ Rectangle {
         anchors.centerIn: parent
 
         CheckBox {
-            id: chboxReplaceFilter
+            id: chboxPlacedFilter
 
             Layout.alignment: Qt.AlignLeft
-            text: qsTr("Replaced Sensors");
+            text: qsTr("Placed Sensors");
 
-            checked: !service.knownSensorsModel.replaceFilterEnabled
-            onCheckStateChanged: service.knownSensorsModel.replaceFilterEnabled = !checked
+            checked: !service.knownSensorsModel.placedFilterEnabled
+            onCheckStateChanged: service.knownSensorsModel.placedFilterEnabled = !checked
         }
 
         CheckBox {
-            id: chboxActiveFilter
+            id: chboxUnplacedFilter
+
+            Layout.alignment: Qt.AlignLeft
+            text: qsTr("Unplaced Sensors");
+
+            checked: !service.knownSensorsModel.unplacedFilterEnabled
+            onCheckStateChanged: service.knownSensorsModel.unplacedFilterEnabled = !checked
+        }
+
+        CheckBox {
+            id: chboxinActiveFilter
 
             Layout.alignment: Qt.AlignLeft
             text: qsTr("Inactive Sensors");
 
-            checked: !service.knownSensorsModel.activeFilterEnabled
-            onCheckStateChanged: service.knownSensorsModel.activeFilterEnabled = !checked
+            checked: !service.knownSensorsModel.inactiveFilterEnabled
+            onCheckStateChanged: service.knownSensorsModel.inactiveFilterEnabled = !checked
         }
 
         ScrollView {
