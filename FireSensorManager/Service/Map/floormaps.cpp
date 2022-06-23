@@ -1,6 +1,7 @@
 #include "floormaps.h"
 
 #include "../database.h"
+#include "../Communication/sensor.h"
 
 #include <QUrl>
 #include <QFile>
@@ -13,20 +14,6 @@ FloorMaps::FloorMaps(std::shared_ptr<Database> database)
     : m_database(database),
       m_maps(m_database->maps())
 { }
-
-void FloorMaps::add(int floor, const MapEntry& map)
-{
-    auto floorMapsIterator = m_maps.find(floor);
-    if (floorMapsIterator == m_maps.end())
-    {
-        m_maps[floor] = std::vector<MapEntry>{map};
-        emit floorAdded(floor);
-        return;
-    }
-
-    floorMapsIterator->second.push_back(map);
-    emit floorPartAdded(floor);
-}
 
 MapEntry* FloorMaps::mapEntry(int floor, short floorPart)
 {
@@ -53,10 +40,26 @@ bool FloorMaps::upload(int floor, const QUrl& url)
         return false;
     }
 
-    add(floor, MapEntry{-1, QPixmap::fromImage(image)});
+    add(MapEntry{-1, floor, QPixmap::fromImage(image)});
 
     qDebug() << "Successfully loaded the map";
     return true;
+}
+
+void FloorMaps::add(const MapEntry& map)
+{
+    auto floor = map.floor();
+
+    auto floorMapsIterator = m_maps.find(floor);
+    if (floorMapsIterator == m_maps.end())
+    {
+        m_maps[floor] = std::vector<MapEntry>{map};
+        emit floorAdded(floor);
+        return;
+    }
+
+    floorMapsIterator->second.push_back(map);
+    emit floorPartAdded(floor);
 }
 
 void FloorMaps::removeFloor(int floor)
@@ -73,6 +76,31 @@ void FloorMaps::removeFloor(int floor)
 
     m_maps.erase(floorMapsIterator);
     emit floorRemoved(floor);
+}
+
+bool FloorMaps::getSensorLocation(std::shared_ptr<Sensor> sensor, int& floor, short& floorPart) const
+{
+    if (!sensor->map())
+        return false;
+
+    auto desiredMap = sensor->map();
+
+    auto floorMapsIterator = m_maps.find(desiredMap->floor());
+    if (floorMapsIterator == m_maps.end())
+        return false;
+
+    auto floorMaps = &floorMapsIterator->second;
+    auto found = std::find_if(floorMaps->cbegin(),
+                              floorMaps->cend(),
+                              [&desiredMap](const MapEntry& mapEntry){ return &mapEntry == desiredMap; });
+
+    if (found == floorMaps->cend())
+        return false;
+
+    floor = desiredMap->floor();
+    floorPart = found - floorMaps->cbegin();
+
+    return true;
 }
 
 std::set<int> FloorMaps::availableFloors() const

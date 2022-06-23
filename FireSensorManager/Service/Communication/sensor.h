@@ -10,6 +10,7 @@ class Sensor : public SensorState
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool isPlaced   READ isPlaced   NOTIFY isPlacedChanged)
     Q_PROPERTY(bool isActive   READ isActive   NOTIFY isActiveChanged)
     Q_PROPERTY(bool isReplaced READ isReplaced NOTIFY isReplacedChanged)
 
@@ -33,6 +34,7 @@ class Sensor : public SensorState
         static std::unique_ptr<Sensor> fromJson(const QJsonObject& json);
         static std::unique_ptr<Sensor> fromSqlRecord(const QSqlRecord& record);
 
+        bool isPlaced() const;
         bool isActive() const;
         bool isReplaced() const;
 
@@ -57,6 +59,7 @@ class Sensor : public SensorState
         void setMap(MapEntry* map);
 
     signals:
+        bool isPlacedChanged();
         void isActiveChanged();
         void isReplacedChanged();
 

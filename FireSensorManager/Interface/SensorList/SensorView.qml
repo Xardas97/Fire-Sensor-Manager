@@ -14,6 +14,7 @@ Rectangle {
     property bool isSelected: false
     signal selected()
     signal deselected()
+    signal requestShowSensor()
 
     property bool errorStatus: sensor.status & 1
     property bool dirtyStatus: sensor.status & 2
@@ -29,15 +30,22 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton | Qt.LeftButton
-        onClicked: function (mouse) {
+
+        pressAndHoldInterval: 500
+
+        onClicked: function(mouse) {
             if (mouse.button === Qt.LeftButton) {
                 if (isSelected) deselected()
-                else selected()
+                else if (sensor.isPlaced) requestShowSensor()
             }
             else if (mouse.button === Qt.RightButton) {
                 contextMenu.popup()
             }
+        }
 
+        onPressAndHold: function(mouse) {
+            if (mouse.button === Qt.LeftButton && !isSelected)
+                selected()
         }
     }
 

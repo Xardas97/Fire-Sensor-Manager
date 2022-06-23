@@ -54,6 +54,11 @@ std::unique_ptr<Sensor> Sensor::fromSqlRecord(const QSqlRecord& record)
     return sensor;
 }
 
+bool Sensor::isPlaced() const
+{
+    return m_map != nullptr;
+}
+
 bool Sensor::isActive() const
 {
     return m_isActive;
@@ -189,6 +194,11 @@ void Sensor::setMap(MapEntry* map)
     if (m_map)
         emit removedFromMap();
 
+    bool isPlacedValueChanged = (m_map && !map) || (!m_map && map);
+
     m_map = map;
     emit mapChanged();
+
+    if (isPlacedValueChanged)
+        emit isPlacedChanged();
 }

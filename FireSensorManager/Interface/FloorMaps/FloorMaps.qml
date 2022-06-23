@@ -10,6 +10,21 @@ Item {
     property Sensor selectedSensor
     signal selectedSensorPlaced()
 
+    function showSensor(sensor) {
+        var iconWidth = 64
+        var iconHeight = 64
+
+        var selected = service.selectFloorPartThatContains(sensor)
+        if (!selected)
+            return
+
+        var centerX = (sensor.x + iconWidth / 2) * imageMap.scale - flickable.width / 2
+        var centerY = (sensor.y + iconHeight / 2) * imageMap.scale - flickable.height / 2
+
+        flickable.contentX = (Math.min(Math.max(centerX, 0), flickable.contentWidth - flickable.width))
+        flickable.contentY = (Math.min(Math.max(centerY, 0), flickable.contentHeight - flickable.height))
+    }
+
     Flickable {
         id: flickable
         anchors.fill: parent

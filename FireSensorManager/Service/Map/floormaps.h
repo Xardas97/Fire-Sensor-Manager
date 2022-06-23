@@ -23,6 +23,8 @@ public:
     bool upload(int floor, const QUrl& pixmap);
     void removeFloor(int floor);
 
+    bool getSensorLocation(std::shared_ptr<Sensor> sensor, int& floor, short& floorPart) const;
+
     short floorSize(int floor) const;
     std::set<int> availableFloors() const;
 
@@ -33,7 +35,7 @@ signals:
     void floorPartRemoved(int floor);
 
 private:
-    void add(int floor, const MapEntry& map);
+    void add(const MapEntry& map);
 
     std::shared_ptr<Database> m_database;
     std::unordered_map<int, std::vector<MapEntry>>& m_maps;

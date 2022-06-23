@@ -5,6 +5,8 @@ import QtQuick.Controls
 import Custom.Sensors
 
 Rectangle {
+    id: root
+
     border {
         color: "black"
         width: 1
@@ -12,8 +14,10 @@ Rectangle {
 
     property Sensor selectedSensor: null
 
+    signal requestShowSensor(Sensor sensor)
+
     ColumnLayout {
-        id: root
+        id: column
 
         width: parent.width - 2
         height: parent.height - 2
@@ -50,7 +54,7 @@ Rectangle {
         }
 
         ScrollView {
-            Layout.preferredWidth: root.width
+            Layout.preferredWidth: column.width
             Layout.fillHeight: true
 
             ScrollBar.vertical.policy: ScrollBar.AsNeeded
@@ -65,19 +69,21 @@ Rectangle {
                 model: service.knownSensorsModel
                 delegate: SensorView {
                     sensor:  model.data
-                    width: root.width
-                    height: root.height / 10
+                    width: column.width
+                    height: column.height / 10
 
                     isSelected: sensor == selectedSensor
                     onSelected: selectedSensor = sensor
                     onDeselected: selectedSensor = null
+
+                    onRequestShowSensor: root.requestShowSensor(sensor)
                 }
             }
         }
 
         Item {
             // padding item
-            Layout.preferredHeight: root.height * 0.02
+            Layout.preferredHeight: column.height * 0.02
         }
 
         Button {
@@ -90,7 +96,7 @@ Rectangle {
 
         Item {
             // padding item
-            Layout.preferredHeight: root.height * 0.02
+            Layout.preferredHeight: column.height * 0.02
         }
     }
 }

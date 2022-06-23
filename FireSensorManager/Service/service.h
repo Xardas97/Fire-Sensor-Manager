@@ -47,6 +47,7 @@ public slots:
     QVariant  selectedFloorPart();
     void setSelectedFloor(QVariant floor);
     void setSelectedFloorPart(QVariant floorPart);
+    bool selectFloorPartThatContains(Sensor* sensor);
 
     QStringList availableFloors();
     QStringList availableFloorParts();

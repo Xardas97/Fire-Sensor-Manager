@@ -138,6 +138,27 @@ void Service::setSelectedFloorPart(QVariant floorPart)
     emit selectedFloorPartChanged();
 }
 
+bool Service::selectFloorPartThatContains(Sensor* sensor)
+{
+    if (!sensor->map())
+        return false;
+
+    auto foundSensor = m_sensorCommunication->knownSensors().find(*sensor);
+    if (!foundSensor)
+        return false;
+
+    int floor;
+    short floorPart;
+
+    auto found = m_floorMaps->getSensorLocation(foundSensor, floor, floorPart);
+    if (!found)
+        return false;
+
+    setSelectedFloor(floor);
+    setSelectedFloorPart(floorPart);
+    return true;
+}
+
 QStringList Service::availableFloors()
 {
     auto availableFloorsSet = m_floorMaps->availableFloors();

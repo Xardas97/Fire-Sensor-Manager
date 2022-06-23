@@ -1,8 +1,9 @@
 #include "mapentry.h"
 #include "../Communication/sensor.h"
 
-MapEntry::MapEntry(int id, QPixmap pixmap)
+MapEntry::MapEntry(int id, int floor, QPixmap pixmap)
     : m_id(id),
+      m_floor(floor),
       m_pixmap(pixmap)
 { }
 
@@ -47,6 +48,11 @@ int MapEntry::id() const
 void MapEntry::setId(int id)
 {
     m_id = id;
+}
+
+int MapEntry::floor() const
+{
+    return m_floor;
 }
 
 QPixmap& MapEntry::pixmap()

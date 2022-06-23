@@ -148,7 +148,7 @@ void Database::loadMapItsSensors(const QSqlRecord& record)
         floorMapsIterator = m_maps.emplace(std::make_pair(floor, std::vector<MapEntry>{})).first;
     }
 
-    MapEntry& entry = floorMapsIterator->second.emplace_back(id, mapImage);
+    MapEntry& entry = floorMapsIterator->second.emplace_back(id, floor, mapImage);
     loadSensorsForMap(entry);
 }
 
