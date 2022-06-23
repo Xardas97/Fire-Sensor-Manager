@@ -11,6 +11,7 @@
 
 class Sensor;
 class Database;
+class FloorMaps;
 class MapImageProvider;
 class SensorCommunication;
 
@@ -53,7 +54,7 @@ public slots:
     bool uploadMap(int floor, const QUrl& url);
     void removeFloor(int floor);
 
-    MapImageProvider*        mapImageProvider();
+    MapImageProvider*        createMapImageProvider();
     FilteredSensorListModel* knownSensorsFilterModel();
 
 signals:
@@ -78,7 +79,7 @@ private:
     std::optional<short> m_selectedFloorPart;
 
     std::shared_ptr<Database>                m_database;
-    std::unique_ptr<MapImageProvider>        m_mapImageProvider;
+    std::shared_ptr<FloorMaps>               m_floorMaps;
     std::unique_ptr<SensorCommunication>     m_sensorCommunication;
     std::unique_ptr<FilteredSensorListModel> m_knownSensorsFilterModel;
 };

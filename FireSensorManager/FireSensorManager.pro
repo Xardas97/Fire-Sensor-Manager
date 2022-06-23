@@ -8,6 +8,7 @@ SOURCES += \
         Service/Communication/sensorcommunication.cpp \
         Service/Communication/sensordetector.cpp \
         Service/Communication/sensorlist.cpp \
+        Service/Map/floormaps.cpp \
         Service/Map/mapentry.cpp \
         Service/Map/mapimageprovider.cpp \
         Service/database.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     Service/Communication/sensorcommunication.h \
     Service/Communication/sensordetector.h \
     Service/Communication/sensorlist.h \
+    Service/Map/floormaps.h \
     Service/Map/mapentry.h \
     Service/Map/mapimageprovider.h \
     Service/database.h \

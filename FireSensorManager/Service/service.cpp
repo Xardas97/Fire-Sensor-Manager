@@ -1,6 +1,7 @@
 #include "service.h"
 
 #include "database.h"
+#include "Map/floormaps.h"
 #include "Map/mapimageprovider.h"
 #include "Communication/sensorcommunication.h"
 
@@ -9,15 +10,15 @@
 Service::Service(QObject *parent)
     : QObject{parent},
       m_database(new Database()),
-      m_mapImageProvider(new MapImageProvider(m_database)),
+      m_floorMaps(new FloorMaps(m_database)),
       m_sensorCommunication(new SensorCommunication(m_database)),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
     m_knownSensorsFilterModel->setSourceModel(&m_sensorCommunication->knownSensors());
-    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorAdded, this, &Service::onFloorAdded);
-    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorRemoved, this, &Service::onFloorRemoved);
-    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorPartAdded, this, &Service::onFloorPartAdded);
-    QObject::connect(m_mapImageProvider.get(), &MapImageProvider::floorPartRemoved, this, &Service::onFloorPartRemoved);
+    QObject::connect(m_floorMaps.get(), &FloorMaps::floorAdded, this, &Service::onFloorAdded);
+    QObject::connect(m_floorMaps.get(), &FloorMaps::floorRemoved, this, &Service::onFloorRemoved);
+    QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartAdded, this, &Service::onFloorPartAdded);
+    QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartRemoved, this, &Service::onFloorPartRemoved);
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
@@ -47,17 +48,17 @@ bool Service::reactivateSensor(Sensor* sensor)
 
 bool Service::uploadMap(int floor, const QUrl& url)
 {
-    return m_mapImageProvider->upload(floor, url);
+    return m_floorMaps->upload(floor, url);
 }
 
 void Service::removeFloor(int floor)
 {
-    m_mapImageProvider->removeFloor(floor);
+    m_floorMaps->removeFloor(floor);
 }
 
 bool Service::placeOnMap(Sensor* sensor)
 {
-    auto mapEntry = m_mapImageProvider->mapEntry(*m_selectedFloor, *m_selectedFloorPart);
+    auto mapEntry = m_floorMaps->mapEntry(*m_selectedFloor, *m_selectedFloorPart);
     if (!mapEntry)
         return false;
 
@@ -90,7 +91,7 @@ QList<Sensor*> Service::placedSensors()
         return placedSensors;
     }
 
-    auto mapEntry = m_mapImageProvider->mapEntry(*m_selectedFloor, *m_selectedFloorPart);
+    auto mapEntry = m_floorMaps->mapEntry(*m_selectedFloor, *m_selectedFloorPart);
     if (!mapEntry)
         return placedSensors;
 
@@ -139,7 +140,7 @@ void Service::setSelectedFloorPart(QVariant floorPart)
 
 QStringList Service::availableFloors()
 {
-    auto availableFloorsSet = m_mapImageProvider->availableFloors();
+    auto availableFloorsSet = m_floorMaps->availableFloors();
     std::vector<int> floorsVector {availableFloorsSet.begin(), availableFloorsSet.end()};
     std::sort(floorsVector.begin(), floorsVector.end());
 
@@ -157,7 +158,7 @@ QStringList Service::availableFloorParts()
     if (!m_selectedFloor)
         return QStringList {};
 
-    auto floorSize = m_mapImageProvider->floorSize(*m_selectedFloor);
+    auto floorSize = m_floorMaps->floorSize(*m_selectedFloor);
 
     QStringList availableFloorParts;
     for (int i = 0; i < floorSize; ++i)
@@ -173,9 +174,9 @@ FilteredSensorListModel* Service::knownSensorsFilterModel()
     return m_knownSensorsFilterModel.get();
 }
 
-MapImageProvider* Service::mapImageProvider()
+MapImageProvider* Service::createMapImageProvider()
 {
-    return m_mapImageProvider.get();
+    return new MapImageProvider(m_floorMaps);
 }
 
 void Service::onFloorAdded(int floor)
