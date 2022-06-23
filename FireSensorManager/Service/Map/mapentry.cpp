@@ -1,8 +1,9 @@
 #include "mapentry.h"
 #include "../Communication/sensor.h"
 
-MapEntry::MapEntry(QPixmap pixmap)
-    : m_pixmap(pixmap)
+MapEntry::MapEntry(int id, QPixmap pixmap)
+    : m_id(id),
+      m_pixmap(pixmap)
 { }
 
 void MapEntry::addSensor(std::shared_ptr<Sensor> sensor)
@@ -26,6 +27,16 @@ void MapEntry::removeSensor(std::shared_ptr<Sensor> sensor)
         sensor->setMap(nullptr);
         m_placedSensors.erase(sensorIt);
     }
+}
+
+int MapEntry::id() const
+{
+    return m_id;
+}
+
+void MapEntry::setId(int id)
+{
+    m_id = id;
 }
 
 QPixmap& MapEntry::pixmap()

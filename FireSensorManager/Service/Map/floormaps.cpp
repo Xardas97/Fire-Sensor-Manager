@@ -53,7 +53,7 @@ bool FloorMaps::upload(int floor, const QUrl& url)
         return false;
     }
 
-    add(floor, MapEntry{QPixmap::fromImage(image)});
+    add(floor, MapEntry{-1, QPixmap::fromImage(image)});
 
     qDebug() << "Successfully loaded the map";
     return true;

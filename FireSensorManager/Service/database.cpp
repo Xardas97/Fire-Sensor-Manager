@@ -90,7 +90,10 @@ bool Database::createSensorsTable()
                      "  name                  TEXT, "
                      "  temperature_threshold INTEGER,"
                      "  co2_threshold         INTEGER,"
-                     "  pollution_threshold   INTEGER"
+                     "  pollution_threshold   INTEGER,"
+                     "  xPlacement            INTEGER,"
+                     "  yPlacement            INTEGER,"
+                     "  mapId                 INTEGER"
                      ")";
 
     QSqlQuery query;
@@ -107,12 +110,12 @@ bool Database::createSensorsTable()
 void Database::loadData()
 {
     qDebug() << "Loading all data from the database...";
-    loadMaps();
-    loadSensors();
+    loadMapsAndTheirSensors();
+    loadMaplessSensors();
     qDebug() << "Finished loading all data from the database";
 }
 
-void Database::loadMaps()
+void Database::loadMapsAndTheirSensors()
 {
     QSqlQuery query;
     query.prepare("SELECT * FROM maps");
@@ -126,12 +129,13 @@ void Database::loadMaps()
 
     while (query.next())
     {
-        loadMap(query.record());
+        loadMapItsSensors(query.record());
     }
 }
 
-void Database::loadMap(const QSqlRecord& record)
+void Database::loadMapItsSensors(const QSqlRecord& record)
 {
+    auto id = record.value("id").toInt();
     auto floor = record.value("floor").toInt();
 
     auto imageBytes = record.value("image").toByteArray();
@@ -144,16 +148,38 @@ void Database::loadMap(const QSqlRecord& record)
         floorMapsIterator = m_maps.emplace(std::make_pair(floor, std::vector<MapEntry>{})).first;
     }
 
-    floorMapsIterator->second.emplace_back(mapImage);
+    MapEntry& entry = floorMapsIterator->second.emplace_back(id, mapImage);
+    loadSensorsForMap(entry);
 }
 
-void Database::loadSensors()
+void Database::loadSensorsForMap(MapEntry& map)
 {
     QSqlQuery query;
-    auto success = query.exec("SELECT * FROM sensors");
+    query.prepare("SELECT * FROM sensors WHERE mapId = :mapId");
+    query.bindValue(":mapId", map.id());
+
+    auto success = query.exec();
     if (!success)
     {
         qWarning() << "Failed to load sensors from the dabatase: " << query.lastError().text();
+        return;
+    }
+
+    while (query.next())
+    {
+        std::shared_ptr<Sensor> sensor {Sensor::fromSqlRecord(query.record())};
+        map.addSensor(sensor);
+        m_sensors.push_back(sensor);
+    }
+}
+
+void Database::loadMaplessSensors()
+{
+    QSqlQuery query;
+    auto success = query.exec("SELECT * FROM sensors WHERE mapId IS NULL");
+    if (!success)
+    {
+        qWarning() << "Failed to load mapless sensors from the dabatase: " << query.lastError().text();
         return;
     }
 
@@ -227,6 +253,8 @@ void Database::saveMap(int floor, MapEntry& map)
         qWarning() << "Failed to insert map into the dabatase: " << query.lastError().text();
         return;
     }
+
+    map.setId(query.lastInsertId().toInt());
 }
 
 void Database::saveSensors()
@@ -254,8 +282,8 @@ void Database::saveSensors()
 void Database::saveSensor(Sensor& sensor)
 {
     auto queryText = "INSERT INTO sensors "
-                     "(uuid, capabilities, address, port, name, temperature_threshold, co2_threshold, pollution_threshold) "
-                     "VALUES (:uuid, :capabilities, :address, :port, :name, :temperature_threshold, :co2_threshold, :pollution_threshold)";
+                     "(uuid, capabilities, address, port, name, temperature_threshold, co2_threshold, pollution_threshold, xPlacement, yPlacement, mapId) "
+                     "VALUES (:uuid, :capabilities, :address, :port, :name, :temperature_threshold, :co2_threshold, :pollution_threshold, :xPlacement, :yPlacement, :mapId)";
 
     QSqlQuery query;
     query.prepare(queryText);
@@ -267,6 +295,14 @@ void Database::saveSensor(Sensor& sensor)
     query.bindValue(":temperature_threshold", sensor.temperatureThreshold());
     query.bindValue(":co2_threshold",         sensor.co2ConcentrationThreshold());
     query.bindValue(":pollution_threshold",   sensor.pollutionThreshold());
+    query.bindValue(":xPlacement",            sensor.x());
+    query.bindValue(":yPlacement",            sensor.y());
+
+    if (sensor.map())
+        query.bindValue(":mapId", sensor.map()->id());
+    else
+        query.bindValue(":mapId", QVariant{});
+
 
     auto success = query.exec();
     if (!success)

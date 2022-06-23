@@ -31,9 +31,10 @@ private:
     bool createSensorsTable();
 
     void loadData();
-    void loadMaps();
-    void loadMap(const QSqlRecord& record);
-    void loadSensors();
+    void loadMapsAndTheirSensors();
+    void loadMapItsSensors(const QSqlRecord& record);
+    void loadSensorsForMap(MapEntry& map);
+    void loadMaplessSensors();
 
     void saveMaps();
     void saveMap(int floor, MapEntry& pixmap);

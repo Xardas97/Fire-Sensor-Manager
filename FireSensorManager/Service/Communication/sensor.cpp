@@ -48,6 +48,9 @@ std::unique_ptr<Sensor> Sensor::fromSqlRecord(const QSqlRecord& record)
     sensor->setCo2ConcentrationThreshold(record.value("co2_threshold").toInt());
     sensor->setPollutionThreshold(record.value("pollution_threshold").toInt());
 
+    sensor->setX(record.value("xPlacement").toInt());
+    sensor->setY(record.value("yPlacement").toInt());
+
     return sensor;
 }
 

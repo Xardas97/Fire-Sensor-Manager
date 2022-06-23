@@ -10,8 +10,10 @@ class Sensor;
 class MapEntry
 {
 public:
-    MapEntry(QPixmap pixmap);
+    MapEntry(int id, QPixmap pixmap);
 
+    int  id() const;
+    void setId(int id);
     auto pixmap() -> QPixmap&;
     auto pixmap() const -> const QPixmap&;
     auto placedSensors() const -> const std::vector<std::shared_ptr<Sensor>>&;
@@ -20,6 +22,7 @@ public:
     void removeSensor(std::shared_ptr<Sensor> sensor);
 
 private:
+    int m_id;
     QPixmap m_pixmap;
     std::vector<std::shared_ptr<Sensor>> m_placedSensors;
 };
