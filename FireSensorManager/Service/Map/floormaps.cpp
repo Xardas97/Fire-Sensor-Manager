@@ -15,7 +15,7 @@ FloorMaps::FloorMaps(std::shared_ptr<Database> database)
       m_maps(m_database->maps())
 { }
 
-MapEntry* FloorMaps::mapEntry(int floor, short floorPart)
+std::shared_ptr<MapEntry> FloorMaps::mapEntry(int floor, short floorPart)
 {
     auto floorMapsIterator = m_maps.find(floor);
     if (floorMapsIterator == m_maps.end())
@@ -25,7 +25,7 @@ MapEntry* FloorMaps::mapEntry(int floor, short floorPart)
     if (floorMaps->size() <= (unsigned long long)floorPart)
         return nullptr;
 
-    return &(*floorMaps)[floorPart];
+    return (*floorMaps)[floorPart];
 }
 
 bool FloorMaps::upload(int floor, const QUrl& url)
@@ -40,20 +40,20 @@ bool FloorMaps::upload(int floor, const QUrl& url)
         return false;
     }
 
-    add(MapEntry{-1, floor, QPixmap::fromImage(image)});
+    add(std::make_shared<MapEntry>(-1, floor, QPixmap::fromImage(image)));
 
     qDebug() << "Successfully loaded the map";
     return true;
 }
 
-void FloorMaps::add(const MapEntry& map)
+void FloorMaps::add(std::shared_ptr<MapEntry> map)
 {
-    auto floor = map.floor();
+    auto floor = map->floor();
 
     auto floorMapsIterator = m_maps.find(floor);
     if (floorMapsIterator == m_maps.end())
     {
-        m_maps[floor] = std::vector<MapEntry>{map};
+        m_maps[floor] = std::vector<std::shared_ptr<MapEntry>>{map};
         emit floorAdded(floor);
         return;
     }
@@ -71,7 +71,7 @@ void FloorMaps::removeFloor(int floor)
     auto maps = floorMapsIterator->second;
     for (auto& map: maps)
     {
-        map.removeAllSensors();
+        map->removeAllSensors();
     }
 
     m_maps.erase(floorMapsIterator);
@@ -92,7 +92,7 @@ bool FloorMaps::getSensorLocation(std::shared_ptr<Sensor> sensor, int& floor, sh
     auto floorMaps = &floorMapsIterator->second;
     auto found = std::find_if(floorMaps->cbegin(),
                               floorMaps->cend(),
-                              [&desiredMap](const MapEntry& mapEntry){ return &mapEntry == desiredMap; });
+                              [&desiredMap](std::shared_ptr<MapEntry> mapEntry){ return mapEntry.get() == desiredMap; });
 
     if (found == floorMaps->cend())
         return false;

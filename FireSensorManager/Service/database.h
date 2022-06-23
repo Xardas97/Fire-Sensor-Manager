@@ -17,7 +17,7 @@ public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
 
-    auto maps() -> std::unordered_map<int, std::vector<MapEntry>>&;
+    auto maps() -> std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>>&;
     auto sensors() -> std::vector<std::shared_ptr<Sensor>>&;
 
     void saveData();
@@ -42,7 +42,7 @@ private:
     void saveSensor(Sensor& sensor);
 
     std::vector<std::shared_ptr<Sensor>> m_sensors;
-    std::unordered_map<int, std::vector<MapEntry>> m_maps;
+    std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>> m_maps;
 };
 
 #endif // DATABASE_H

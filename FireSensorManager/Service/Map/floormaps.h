@@ -18,7 +18,7 @@ public:
     FloorMaps(std::shared_ptr<Database> database);
     virtual ~FloorMaps();
 
-    MapEntry* mapEntry(int floor, short floorPart);
+    auto mapEntry(int floor, short floorPart) -> std::shared_ptr<MapEntry>;
 
     bool upload(int floor, const QUrl& pixmap);
     void removeFloor(int floor);
@@ -35,10 +35,10 @@ signals:
     void floorPartRemoved(int floor);
 
 private:
-    void add(const MapEntry& map);
+    void add(std::shared_ptr<MapEntry> map);
 
     std::shared_ptr<Database> m_database;
-    std::unordered_map<int, std::vector<MapEntry>>& m_maps;
+    std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>>& m_maps;
 };
 
 #endif // FLOORMAPS_H

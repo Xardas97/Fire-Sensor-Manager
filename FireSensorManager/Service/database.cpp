@@ -145,11 +145,12 @@ void Database::loadMapItsSensors(const QSqlRecord& record)
     auto floorMapsIterator = m_maps.find(floor);
     if (floorMapsIterator == m_maps.end())
     {
-        floorMapsIterator = m_maps.emplace(std::make_pair(floor, std::vector<MapEntry>{})).first;
+        floorMapsIterator = m_maps.emplace(std::make_pair(floor, std::vector<std::shared_ptr<MapEntry>>{})).first;
     }
 
-    MapEntry& entry = floorMapsIterator->second.emplace_back(id, floor, mapImage);
-    loadSensorsForMap(entry);
+    auto entry = std::make_shared<MapEntry>(id, floor, mapImage);
+    floorMapsIterator->second.push_back(entry);
+    loadSensorsForMap(*entry);
 }
 
 void Database::loadSensorsForMap(MapEntry& map)
@@ -189,7 +190,7 @@ void Database::loadMaplessSensors()
     }
 }
 
-std::unordered_map<int, std::vector<MapEntry>>& Database::maps()
+std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>>& Database::maps()
 {
     return m_maps;
 }
@@ -224,7 +225,7 @@ void Database::saveMaps()
         auto floor = floorMaps.first;
         for (auto& map: floorMaps.second)
         {
-            saveMap(floor, map);
+            saveMap(floor, *map);
         }
     }
 
