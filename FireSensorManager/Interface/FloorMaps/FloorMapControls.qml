@@ -62,5 +62,13 @@ RowLayout {
         }
 
         function onFloorPartRemoved(floor) { /* ... */ }
+
+        function onSelectedFloorChanged() {
+            comboBoxFloors.currentIndex = comboBoxFloors.indexOfValue(service.selectedFloor)
+        }
+
+        function onSelectedFloorPartChanged() {
+            comboBoxFloorParts.currentIndex = service.selectedFloorPart
+        }
     }
 }
