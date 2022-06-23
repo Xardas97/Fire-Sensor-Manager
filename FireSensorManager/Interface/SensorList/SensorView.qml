@@ -102,6 +102,12 @@ Rectangle {
             onTriggered: sensorSettingsDialog.open()
         }
         MenuItem {
+            text: qsTr("Remove from Map")
+            visible: sensor.isPlaced
+            height: visible? implicitHeight : 0
+            onTriggered: service.removeFromMap(sensor)
+        }
+        MenuItem {
             text: qsTr("Remove")
             onTriggered: service.removeSensor(sensor)
         }
