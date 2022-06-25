@@ -9,6 +9,11 @@ Dialog {
     title: qsTr("Sensor Settings")
 
     property Sensor sensor
+    property int desiredX
+    property int desiredY
+
+    height: 250
+    width: 350
 
     standardButtons: Dialog.Save | Dialog.Cancel
     Component.onCompleted:standardButton(Dialog.Save).enabled = Qt.binding(isSensorNameValueValid)
@@ -146,5 +151,20 @@ Dialog {
             root.open()
             updateFailed = false;
         }
+    }
+
+    onOpened: {
+        x = getDialogX(desiredX)
+        y = getDialogY(desiredY)
+    }
+
+    function getDialogX(desiredX) {
+        var maxDialogX = parent.Window.window.x + parent.Window.window.width - sensorSettingsDialog.width - mapToGlobal(0, 0).x - 20 * parent.scale
+        return Math.min(desiredX, maxDialogX);
+    }
+
+    function getDialogY(desiredY) {
+        var maxDialogY = parent.Window.window.y + parent.Window.window.height - sensorSettingsDialog.height - mapToGlobal(0, 0).y - 20 * parent.scale
+        return Math.min(desiredY, maxDialogY);
     }
 }

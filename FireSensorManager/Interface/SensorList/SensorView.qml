@@ -86,31 +86,10 @@ Rectangle {
         onClicked: sensorSettingsDialog.open()
     }
 
-    Menu {
+    SensorMenu {
         id: contextMenu
-        width: root.width * 0.75
-
-        MenuItem {
-            id: menuItemReactivate
-            text: qsTr("Try to Reactivate")
-            visible: !sensor.isActive && !sensor.isReplaced
-            height: visible? implicitHeight : 0
-            onTriggered: service.reactivateSensor(sensor)
-        }
-        MenuItem {
-            text: qsTr("Settings")
-            onTriggered: sensorSettingsDialog.open()
-        }
-        MenuItem {
-            text: qsTr("Remove from Map")
-            visible: sensor.isPlaced
-            height: visible? implicitHeight : 0
-            onTriggered: service.removeFromMap(sensor)
-        }
-        MenuItem {
-            text: qsTr("Remove")
-            onTriggered: service.removeSensor(sensor)
-        }
+        sensor: root.sensor
+        onSettingsRequested: sensorSettingsDialog.open()
     }
 
     SensorToolTip {
@@ -121,18 +100,9 @@ Rectangle {
 
     SensorSettingsDialog {
         id: sensorSettingsDialog
-        height: 250
-        width: 350
-        x: btnSettings.x + btnSettings.width / 2
-        y: btnSettings.y + btnSettings.height / 2
         sensor: root.sensor
-
-        onOpened: y = getDialogY(btnSettings.y + btnSettings.height)
-    }
-
-    function getDialogY(desiredY) {
-        var maxDialogY = root.Window.window.y + root.Window.window.height - sensorSettingsDialog.height - mapToGlobal(0, 0).y - 20
-        return Math.min(desiredY, maxDialogY);
+        desiredX: btnSettings.x + btnSettings.width / 2
+        desiredY: btnSettings.y + btnSettings.height / 2
     }
 
     Rectangle {

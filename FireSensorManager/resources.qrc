@@ -26,5 +26,6 @@
         <file>Resources/Icons/Sensor.png</file>
         <file>Resources/Icons/Alert.png</file>
         <file>Interface/FailedToStart.qml</file>
+        <file>Interface/SensorList/SensorMenu.qml</file>
     </qresource>
 </RCC>

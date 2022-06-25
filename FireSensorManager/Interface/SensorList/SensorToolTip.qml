@@ -23,10 +23,18 @@ MouseArea {
             id: columnText
             anchors.centerIn: parent
 
-            Label {
-                id: lblName
-                text: sensor.name
-                font.underline: true
+            Row {
+                Label {
+                    id: lblName
+                    text: sensor.name
+                    font.underline: true
+                }
+
+                Label {
+                    id: lblInactive
+                    text: qsTr(" (inactive)")
+                    visible: !sensor.isActive || sensor.isReplaced
+                }
             }
 
             Label {

@@ -1,8 +1,10 @@
 import QtQuick
+import QtQuick.Controls
 
 import Custom.Sensors
 
 import "../SensorList"
+import "../SensorList/Settings"
 
 Rectangle {
     id: root
@@ -23,6 +25,12 @@ Rectangle {
         id: dragArea
         anchors.fill: root
 
+        acceptedButtons: Qt.RightButton | Qt.LeftButton
+        onClicked: function(mouse) {
+            if (mouse.button === Qt.RightButton)
+                contextMenu.popup()
+        }
+
         drag.target: root
         drag.axis: Drag.XAndYAxis
 
@@ -38,6 +46,19 @@ Rectangle {
         sensor: root.sensor
 
         toolTipTurnedOff: dragArea.drag.active
+    }
+
+    SensorSettingsDialog {
+        id: sensorSettingsDialog
+        sensor: root.sensor
+        desiredX: root.width / 2
+        desiredY: root.height / 2
+    }
+
+    SensorMenu {
+        id: contextMenu
+        sensor: root.sensor
+        onSettingsRequested: sensorSettingsDialog.open()
     }
 
     onSensorChanged: {
