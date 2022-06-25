@@ -25,5 +25,6 @@
         <file>Interface/FloorMaps/SensorIcon.qml</file>
         <file>Resources/Icons/Sensor.png</file>
         <file>Resources/Icons/Alert.png</file>
+        <file>Interface/FailedToStart.qml</file>
     </qresource>
 </RCC>

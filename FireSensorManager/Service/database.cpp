@@ -16,8 +16,14 @@
 Database::Database(QObject *parent)
     : QObject{parent}
 {
-    open();
-    createTables();
+    auto databaseOpened = open();
+    if (!databaseOpened)
+        throw FailedToUseDatabaseException();
+
+    auto tablesCreated = createTables();
+    if (!tablesCreated)
+        throw FailedToUseDatabaseException();
+
     loadData();
 }
 

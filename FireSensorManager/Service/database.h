@@ -10,6 +10,8 @@ class Sensor;
 class MapEntry;
 class QSqlRecord;
 
+class FailedToUseDatabaseException : public std::exception {};
+
 class Database : public QObject
 {
     Q_OBJECT
