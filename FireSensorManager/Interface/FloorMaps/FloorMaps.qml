@@ -65,13 +65,13 @@ Item {
 
         Connections {
             target: service
-            function onSelectedFloorChanged() { loadPlacedSensors() }
-            function onSelectedFloorPartChanged() { loadPlacedSensors() }
+            function onSelectedFloorChanged() { loadCurrentMapSensors() }
+            function onSelectedFloorPartChanged() { loadCurrentMapSensors() }
 
-            function loadPlacedSensors() {
-                var placedSensors = service.placedSensors()
-                for (var i = 0; i < placedSensors.length; ++i) {
-                    var sensor = placedSensors[i]
+            function loadCurrentMapSensors() {
+                var currentMapSensors = service.currentMapSensors()
+                for (var i = 0; i < currentMapSensors.length; ++i) {
+                    var sensor = currentMapSensors[i]
                     createSensorIconObject(sensor, sensor.x, sensor.y)
                 }
             }

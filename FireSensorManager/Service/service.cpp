@@ -19,6 +19,8 @@ Service::Service(QObject *parent)
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorRemoved, this, &Service::onFloorRemoved);
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartAdded, this, &Service::onFloorPartAdded);
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartRemoved, this, &Service::onFloorPartRemoved);
+
+    QObject::connect(&m_sensorCommunication->knownSensors(), &SensorList::alarmedSensorsChanged, this, &Service::alarmedPlacedSensorsChanged);
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
@@ -67,6 +69,10 @@ bool Service::placeOnMap(Sensor* sensor)
         return false;
 
     mapEntry->addSensor(foundSensor);
+
+    if (foundSensor->alarmOn())
+        emit alarmedPlacedSensorsChanged();
+
     return true;
 }
 
@@ -80,9 +86,12 @@ void Service::removeFromMap(Sensor* sensor)
     if (map) {
         map->removeSensor(foundSensor);
     }
+
+    if (foundSensor->alarmOn())
+        emit alarmedPlacedSensorsChanged();
 }
 
-QList<Sensor*> Service::placedSensors()
+QList<Sensor*> Service::currentMapSensors()
 {
     QList<Sensor*> placedSensors;
 
@@ -99,6 +108,19 @@ QList<Sensor*> Service::placedSensors()
         placedSensors.append(sensor.get());
 
     return placedSensors;
+}
+
+QList<Sensor*> Service::alarmedPlacedSensors()
+{
+    QList<Sensor*> alarmedSensors;
+
+    for (auto& sensor: m_sensorCommunication->knownSensors().sensors())
+    {
+        if (sensor->alarmOn() && sensor->map())
+            alarmedSensors.append(sensor.get());
+    }
+
+    return alarmedSensors;
 }
 
 QVariant Service::selectedFloor()

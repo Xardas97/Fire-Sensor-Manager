@@ -27,9 +27,15 @@ public:
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
+signals:
+    void alarmedSensorsChanged();
+
 private:
     std::vector<std::shared_ptr<Sensor>>& m_sensors;
     std::shared_ptr<Sensor> m_removedSensor;
+
+    void connectSignals(std::shared_ptr<Sensor> sensor);
+    void disconnectSignals(std::shared_ptr<Sensor> sensor);
 
     void onDataChanged();
 };
