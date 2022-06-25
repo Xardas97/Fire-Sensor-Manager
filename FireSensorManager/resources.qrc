@@ -27,5 +27,6 @@
         <file>Resources/Icons/Alert.png</file>
         <file>Interface/FailedToStart.qml</file>
         <file>Interface/SensorList/SensorMenu.qml</file>
+        <file>Interface/FloorMaps/ZoomControls.qml</file>
     </qresource>
 </RCC>

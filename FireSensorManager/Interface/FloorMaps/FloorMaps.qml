@@ -103,55 +103,14 @@ Item {
         return true
     }
 
-    RowLayout {
+    ZoomControls {
         anchors {
             top: root.top
             right: root.right
             margins: 10
         }
-        spacing: 0
 
         visible: imageMap.source != ""
-
-        Button {
-            onClicked: imageMap.scale += 0.2
-
-            Layout.preferredWidth: implicitWidth * 0.75
-            Layout.preferredHeight: implicitHeight * 0.75
-
-            icon.color: "transparent"
-            icon.source: "qrc:/Resources/Icons/Plus.png"
-            background: Rectangle {
-                color: "grey"
-                opacity: 0.5
-            }
-        }
-        Button {
-            enabled: imageMap.scale >= 0.4
-            onClicked: imageMap.scale -= 0.2
-
-            Layout.preferredWidth: implicitWidth * 0.75
-            Layout.preferredHeight: implicitHeight * 0.75
-
-            icon.color: "transparent"
-            icon.source: "qrc:/Resources/Icons/Minus.png"
-            background: Rectangle {
-                color: "grey"
-                opacity: 0.5
-            }
-        }
-        Button {
-            onClicked: imageMap.scale = 1
-
-            Layout.preferredWidth: implicitWidth * 0.75
-            Layout.preferredHeight: implicitHeight * 0.75
-
-            icon.color: "transparent"
-            icon.source: "qrc:/Resources/Icons/Reset.png"
-            background: Rectangle {
-                color: "grey"
-                opacity: 0.5
-            }
-        }
+        itemToScale: imageMap
     }
 }
