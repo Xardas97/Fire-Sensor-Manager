@@ -123,9 +123,16 @@ Rectangle {
         id: sensorSettingsDialog
         height: 250
         width: 350
-        x: btnSettings.x
-        y: btnSettings.y
+        x: btnSettings.x + btnSettings.width / 2
+        y: btnSettings.y + btnSettings.height / 2
         sensor: root.sensor
+
+        onOpened: y = getDialogY(btnSettings.y + btnSettings.height)
+    }
+
+    function getDialogY(desiredY) {
+        var maxDialogY = root.Window.window.y + root.Window.window.height - sensorSettingsDialog.height - mapToGlobal(0, 0).y - 20
+        return Math.min(desiredY, maxDialogY);
     }
 
     Rectangle {
