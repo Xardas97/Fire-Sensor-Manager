@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 
+import Custom.Sensors
+
 import "../Settings"
 import "../FloorMaps"
 
@@ -9,6 +11,7 @@ Rectangle {
 
     signal settingsFlowEntered
     signal settingsFlowLeft
+    signal requestShowSensor(Sensor sensor)
 
     color: "grey"
 
@@ -32,6 +35,31 @@ Rectangle {
 
         onSettingsFlowEntered: root.settingsFlowEntered()
         onSettingsFlowLeft: root.settingsFlowLeft()
+    }
+
+    Button {
+        id: btnAlarm
+
+        anchors.verticalCenter: root.verticalCenter
+        anchors.right: floorMapControls.left
+        anchors.rightMargin: 10
+
+        visible: service.alarmedPlacedSensors.length > 0
+
+        icon.color: "transparent"
+        icon.source: "qrc:/Resources/Icons/Alert.png"
+        background: Rectangle { opacity: 0 }
+
+        onClicked: root.requestShowSensor(getNextSensorToShow())
+
+        property int nextSensorToShowIndex: 0
+        function getNextSensorToShow() {
+            var alarmedPlacedSensors = service.alarmedPlacedSensors
+            if (nextSensorToShowIndex >= alarmedPlacedSensors.length)
+                nextSensorToShowIndex = 0
+
+            return alarmedPlacedSensors[nextSensorToShowIndex++]
+        }
     }
 
     FloorMapControls {

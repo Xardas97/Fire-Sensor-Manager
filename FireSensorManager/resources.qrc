@@ -24,5 +24,6 @@
         <file>Resources/Icons/Reset.png</file>
         <file>Interface/FloorMaps/SensorIcon.qml</file>
         <file>Resources/Icons/Sensor.png</file>
+        <file>Resources/Icons/Alert.png</file>
     </qresource>
 </RCC>

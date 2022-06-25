@@ -27,6 +27,10 @@ Window {
 
             onSettingsFlowEntered: columnWindow.opacity = 0.3
             onSettingsFlowLeft: columnWindow.opacity = 1
+
+            onRequestShowSensor: function (sensor) {
+                floorMaps.showSensor(sensor)
+            }
         }
 
         RowLayout {
