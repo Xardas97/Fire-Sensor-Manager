@@ -10,10 +10,11 @@ MouseArea {
     acceptedButtons: Qt.NoButton
 
     property Sensor sensor
+    property bool toolTipTurnedOff: false
 
     ToolTip {
         delay: 1000
-        visible: root.containsMouse
+        visible: root.containsMouse && !toolTipTurnedOff
 
         width: columnText.width * 1.2
         height: columnText.height * 1.2
