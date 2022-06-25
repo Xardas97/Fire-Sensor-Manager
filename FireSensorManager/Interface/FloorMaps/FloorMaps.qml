@@ -41,7 +41,7 @@ Item {
             source: imageSource()
 
             function imageSource() {
-                if (service.selectedFloor == null || service.selectedFloorPart == null)
+                if (!service.floorPartExists(service.selectedFloor, service.selectedFloorPart))
                     return ""
 
                 return "image://MapImageProvider/" + service.selectedFloor +  "/" + service.selectedFloorPart
@@ -57,7 +57,6 @@ Item {
                             service.placeOnMap(selectedSensor)
                             selectedSensorPlaced()
                         }
-
                     }
                 }
             }

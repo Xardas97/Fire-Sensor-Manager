@@ -181,6 +181,14 @@ bool Service::selectFloorPartThatContains(Sensor* sensor)
     return true;
 }
 
+bool Service::floorPartExists(QVariant floor, QVariant floorPart)
+{
+    if (floor.isNull() || floorPart.isNull())
+        return false;
+
+    return m_floorMaps->floorSize(floor.toInt()) > floorPart.toInt();
+}
+
 QStringList Service::availableFloors()
 {
     auto availableFloorsSet = m_floorMaps->availableFloors();

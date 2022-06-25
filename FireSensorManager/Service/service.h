@@ -24,6 +24,7 @@ class Service : public QObject
 
     Q_PROPERTY(QVariant selectedFloor     READ selectedFloor     WRITE setSelectedFloor     NOTIFY selectedFloorChanged)
     Q_PROPERTY(QVariant selectedFloorPart READ selectedFloorPart WRITE setSelectedFloorPart NOTIFY selectedFloorPartChanged)
+
     Q_PROPERTY(QStringList availableFloors     READ availableFloors     NOTIFY availableFloorsChanged)
     Q_PROPERTY(QStringList availableFloorParts READ availableFloorParts NOTIFY availableFloorPartsChanged)
 
@@ -46,11 +47,12 @@ public slots:
 
     QList<Sensor*> alarmedPlacedSensors();
 
-    QVariant  selectedFloor();
-    QVariant  selectedFloorPart();
+    QVariant selectedFloor();
+    QVariant selectedFloorPart();
     void setSelectedFloor(QVariant floor);
     void setSelectedFloorPart(QVariant floorPart);
     bool selectFloorPartThatContains(Sensor* sensor);
+    bool floorPartExists(QVariant floor, QVariant floorPart);
 
     QStringList availableFloors();
     QStringList availableFloorParts();
