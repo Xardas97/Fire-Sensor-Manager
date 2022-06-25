@@ -46,19 +46,19 @@ Item {
 
                 return "image://MapImageProvider/" + service.selectedFloor +  "/" + service.selectedFloorPart
             }
-        }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: function(mouse) {
-                if (selectedSensor != null) {
-                    service.removeFromMap(selectedSensor)
-                    var created = createSensorIconObjectFromMouseEvent(selectedSensor, mouse.x, mouse.y)
-                    if (created) {
-                        service.placeOnMap(selectedSensor)
-                        selectedSensorPlaced()
+            MouseArea {
+                anchors.fill: parent
+                onClicked: function(mouse) {
+                    if (selectedSensor != null) {
+                        service.removeFromMap(selectedSensor)
+                        var created = createSensorIconObjectFromMouseEvent(selectedSensor, mouse.x, mouse.y)
+                        if (created) {
+                            service.placeOnMap(selectedSensor)
+                            selectedSensorPlaced()
+                        }
+
                     }
-
                 }
             }
         }
