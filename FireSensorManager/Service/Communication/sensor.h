@@ -78,6 +78,8 @@ class Sensor : public SensorState
     private:
         Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress address, quint16 port);
 
+        void recalculateAlarmState();
+
         bool m_isActive;
         bool m_isReplaced;
         short m_communicationFailedCount;
@@ -86,9 +88,10 @@ class Sensor : public SensorState
         int m_co2ConcentrationThreshold;
         short m_pollutionThreshold;
 
-        int m_x;
-        int m_y;
-        MapEntry* m_map = nullptr;
+        bool m_isAlarmed;
+
+        MapEntry* m_map;
+        int m_x, m_y;
 };
 
 #endif // SENSOR_H

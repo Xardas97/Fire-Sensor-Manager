@@ -9,20 +9,24 @@ Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress
       m_communicationFailedCount(0),
       m_temperatureThreshold(default_temperature_threshold),
       m_co2ConcentrationThreshold(default_co2_concentration_threshold),
-      m_pollutionThreshold(default_pollution_threshold)
+      m_pollutionThreshold(default_pollution_threshold),
+      m_isAlarmed(false),
+      m_map(nullptr),
+      m_x(0),
+      m_y(0)
 {
     setTemperature(0);
     setCo2Concentration(0);
     setPollution(0);
 
-    QObject::connect(this, &SensorState::temperatureChanged, this, &Sensor::alarmStateChanged);
-    QObject::connect(this, &SensorState::smokeDetectedChanged, this, &Sensor::alarmStateChanged);
-    QObject::connect(this, &SensorState::co2ConcentrationChanged, this, &Sensor::alarmStateChanged);
-    QObject::connect(this, &SensorState::pollutionChanged, this, &Sensor::alarmStateChanged);
+    QObject::connect(this, &SensorState::temperatureChanged, this, &Sensor::recalculateAlarmState);
+    QObject::connect(this, &SensorState::smokeDetectedChanged, this, &Sensor::recalculateAlarmState);
+    QObject::connect(this, &SensorState::co2ConcentrationChanged, this, &Sensor::recalculateAlarmState);
+    QObject::connect(this, &SensorState::pollutionChanged, this, &Sensor::recalculateAlarmState);
 
-    QObject::connect(this, &Sensor::temperatureThresholdChanged, this, &Sensor::alarmStateChanged);
-    QObject::connect(this, &Sensor::co2ConcentrationThresholdChanged, this, &Sensor::alarmStateChanged);
-    QObject::connect(this, &Sensor::pollutionThresholdChanged, this, &Sensor::alarmStateChanged);
+    QObject::connect(this, &Sensor::temperatureThresholdChanged, this, &Sensor::recalculateAlarmState);
+    QObject::connect(this, &Sensor::co2ConcentrationThresholdChanged, this, &Sensor::recalculateAlarmState);
+    QObject::connect(this, &Sensor::pollutionThresholdChanged, this, &Sensor::recalculateAlarmState);
 }
 
 std::unique_ptr<Sensor> Sensor::fromJson(const QJsonObject& json)
@@ -100,21 +104,29 @@ void Sensor::reportCommunicationFailure()
 
 bool Sensor::alarmOn() const
 {
-    bool alarmOn = false;
+    return m_isAlarmed;
+}
+
+void Sensor::recalculateAlarmState()
+{
+    bool newAlarmState = false;
 
     if (capabilities().testFlag(Capability::Temperature))
-        alarmOn |= temperature() > m_temperatureThreshold;
+        newAlarmState |= temperature() > m_temperatureThreshold;
 
     if (capabilities().testFlag(Capability::Smoke))
-        alarmOn |= smokeDetected();
+        newAlarmState |= smokeDetected();
 
     if (capabilities().testFlag(Capability::CO2Concentration))
-        alarmOn |= co2Concentration() > m_co2ConcentrationThreshold;
+        newAlarmState |= co2Concentration() > m_co2ConcentrationThreshold;
 
     if (capabilities().testFlag(Capability::Pollution))
-        alarmOn |= pollution() > m_pollutionThreshold;
+        newAlarmState |= pollution() > m_pollutionThreshold;
 
-    return alarmOn;
+    if (m_isAlarmed != newAlarmState) {
+        m_isAlarmed = newAlarmState;
+        emit alarmStateChanged();
+    }
 }
 
 short Sensor::temperatureThreshold() const
