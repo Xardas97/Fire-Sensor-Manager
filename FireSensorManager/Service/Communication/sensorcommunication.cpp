@@ -64,7 +64,6 @@ bool SensorCommunication::updateData(Sensor& sensor)
     auto sameSensor = sensor.updateData(response["data"].toObject());
     if (!sameSensor)
     {
-        qDebug() << "New sensor on this IP address, setting replaced!";
         sensor.setIsReplaced(true);
         return false;
     }
