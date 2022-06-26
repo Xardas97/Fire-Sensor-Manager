@@ -1,10 +1,12 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import Custom.Sensors
 
 import "../Settings"
 import "../FloorMaps"
+import "UserControls"
 
 Rectangle {
     id: root
@@ -37,21 +39,33 @@ Rectangle {
         onSettingsFlowLeft: root.settingsFlowLeft()
     }
 
-    WarningIcons {
-        anchors.verticalCenter: root.verticalCenter
-        anchors.right: floorMapControls.left
-        anchors.rightMargin: 10
-
-        onRequestShowSensor: function(sensor) {
-            root.requestShowSensor(sensor)
-        }
-    }
-
-    FloorMapControls {
-        id: floorMapControls
-
+    RowLayout {
         anchors.verticalCenter: root.verticalCenter
         anchors.right: root.right
         anchors.rightMargin: 10
+
+        WarningIcons {
+            id: warningIcons
+            Layout.alignment: Qt.AlignVCenter
+
+            onRequestShowSensor: function(sensor) {
+                root.requestShowSensor(sensor)
+            }
+        }
+
+        FloorMapControls {
+            id: floorMapControls
+            Layout.alignment: Qt.AlignVCenter
+        }
+
+        LoggedInControls {
+            Layout.alignment: Qt.AlignVCenter
+            visible: service.isLoggedIn
+        }
+
+        LoggedOutControls {
+            Layout.alignment: Qt.AlignVCenter
+            visible: !service.isLoggedIn
+        }
     }
 }

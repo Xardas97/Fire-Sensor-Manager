@@ -30,5 +30,10 @@
         <file>Interface/FloorMaps/ZoomControls.qml</file>
         <file>Resources/Icons/Error.png</file>
         <file>Interface/TopLine/WarningIcons.qml</file>
+        <file>Interface/TopLine/UserControls/LoggedOutControls.qml</file>
+        <file>Resources/Icons/Admin.png</file>
+        <file>Resources/Icons/Moderator.png</file>
+        <file>Resources/Icons/User.png</file>
+        <file>Interface/TopLine/UserControls/LoggedInControls.qml</file>
     </qresource>
 </RCC>
