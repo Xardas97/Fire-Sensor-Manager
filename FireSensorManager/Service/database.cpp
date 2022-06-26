@@ -12,6 +12,7 @@
 #include <QSqlRecord>
 #include <QSqlDatabase>
 #include <QStandardPaths>
+#include <QCryptographicHash>
 
 Database::Database(QObject *parent)
     : QObject{parent}
@@ -22,6 +23,10 @@ Database::Database(QObject *parent)
 
     auto tablesCreated = createTables();
     if (!tablesCreated)
+        throw FailedToUseDatabaseException();
+
+    auto adminUserCreated = createDefaultAdminUser();
+    if (!adminUserCreated)
         throw FailedToUseDatabaseException();
 
     loadData();
@@ -54,7 +59,7 @@ bool Database::createTables()
 {
     qDebug() << "Creating missing database tables...";
 
-    auto success = createMapsTable() && createSensorsTable();
+    auto success = createMapsTable() && createSensorsTable() && createUsersTable();
     if (!success)
     {
         qWarning() << "Creating tables failed!";
@@ -79,6 +84,26 @@ bool Database::createMapsTable()
     if (!res)
     {
         qWarning() << "Creating maps table failed: " << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool Database::createUsersTable()
+{
+    auto queryText = "CREATE TABLE IF NOT EXISTS users "
+                     "("
+                     "  username       TEXT PRIMARY KEY,"
+                     "  passphraseHash BLOB,"
+                     "  permissions    INTEGER"
+                     ")";
+
+    QSqlQuery query;
+    auto res = query.exec(queryText);
+    if (!res)
+    {
+        qWarning() << "Creating users table failed: " << query.lastError().text();
         return false;
     }
 
@@ -111,6 +136,26 @@ bool Database::createSensorsTable()
     }
 
     return true;
+}
+
+bool Database::createDefaultAdminUser()
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM users WHERE username = :username");
+    query.bindValue(":username", "admin");
+
+    auto success = query.exec();
+    if (!success)
+    {
+        qWarning() << "Failed to load the user from the dabatase: " << query.lastError().text();
+        return false;
+    }
+
+    if (query.next())
+        return true;
+
+    qDebug() << "Creating default admin user...";
+    return addUser("admin", "admin123!@#", Permissions::Admin);
 }
 
 void Database::loadData()
@@ -204,6 +249,123 @@ std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>>& Database::maps(
 std::vector<std::shared_ptr<Sensor>>& Database::sensors()
 {
     return m_sensors;
+}
+
+bool Database::authenticateUser(QString username, QString passphrase, Permissions& permissions)
+{
+    qDebug() << "Trying to authenticate with user " << username;
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM users WHERE username = :username");
+    query.bindValue(":username", username);
+
+    auto success = query.exec();
+    if (!success)
+    {
+        qWarning() << "Failed to load the user from the dabatase: " << query.lastError().text();
+        return false;
+    }
+
+    if (query.next())
+    {
+        auto passphraseHash = hashPassphrase(passphrase);
+        auto realPassphraseHash = query.value("passphraseHash").toByteArray();
+
+        if (passphraseHash != realPassphraseHash) {
+            qDebug() << "Passphrase is wrong, authentication failed!";
+            return false;
+        }
+
+        qDebug() << "Authentication with " << username << "was successfull";
+        permissions = (Permissions)query.value("permissions").toInt();
+        return true;
+    }
+
+    qDebug() << "User " << username << " not found";
+    return false;
+}
+
+bool Database::addUser(QString username, QString passphrase, Permissions permissions)
+{
+    auto passphraseHash = hashPassphrase(passphrase);
+
+    auto queryText = "INSERT INTO users "
+                     "(username, passphraseHash, permissions) "
+                     "VALUES (:username, :passphraseHash, :permissions)";
+
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":username", username);
+    query.bindValue(":passphraseHash", passphraseHash);
+    query.bindValue(":permissions", permissions);
+
+    auto success = query.exec();
+    if (!success) {
+        qDebug() << "Failed to add the new user: " << username << ", " << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool Database::updateUserPermissions(QString username, Permissions permissions)
+{
+    auto queryText = "UPDATE users "
+                     "set permissions = :permissions "
+                     "WHERE username = :username";
+
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":username", username);
+    query.bindValue(":permissions", permissions);
+
+    auto success = query.exec();
+    if (!success) {
+        qDebug() << "Failed to update the user " << username << ", with new permissions: " << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool Database::updateUserPassphrase(QString username, QString passphrase)
+{
+    auto passphraseHash = hashPassphrase(passphrase);
+
+    auto queryText = "UPDATE users "
+                     "set passphraseHash = :passphraseHash "
+                     "WHERE username = :username";
+
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":username", username);
+    query.bindValue(":passphraseHash", passphraseHash);
+
+    auto success = query.exec();
+    if (!success) {
+        qDebug() << "Failed to update the user " << username << ", with the new passphrase: " << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool Database::removeUser(QString username)
+{
+    auto queryText = "DELETE FROM users "
+                     "WHERE username = :username";
+
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":username", username);
+
+    auto success = query.exec();
+    if (!success) {
+        qDebug() << "Failed to delete the user " << username << ", " << query.lastError().text();
+        return false;
+    }
+
+    return true;
 }
 
 void Database::saveData()
@@ -317,6 +479,13 @@ void Database::saveSensor(Sensor& sensor)
         qWarning() << "Failed to insert new sensors into the dabatase: " << query.lastError().text();
         return;
     }
+}
+
+QByteArray Database::hashPassphrase(const QString& passphrase)
+{
+    QCryptographicHash hasher {QCryptographicHash::Sha3_224};
+    hasher.addData(passphrase.toLocal8Bit());
+    return hasher.result();
 }
 
 void Database::close()

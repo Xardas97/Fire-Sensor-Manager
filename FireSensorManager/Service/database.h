@@ -11,6 +11,7 @@ class MapEntry;
 class QSqlRecord;
 
 class FailedToUseDatabaseException : public std::exception {};
+enum Permissions : unsigned short { None = 0, Moderator = 1, Admin = 2 };
 
 class Database : public QObject
 {
@@ -22,6 +23,12 @@ public:
     auto maps() -> std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>>&;
     auto sensors() -> std::vector<std::shared_ptr<Sensor>>&;
 
+    bool authenticateUser(QString username, QString passphrase, Permissions& permissions);
+    bool addUser(QString username, QString passphrase, Permissions permissions);
+    bool updateUserPermissions(QString username, Permissions permissions);
+    bool updateUserPassphrase(QString username, QString passphrase);
+    bool removeUser(QString username);
+
     void saveData();
 
 private:
@@ -30,7 +37,10 @@ private:
 
     bool createTables();
     bool createMapsTable();
+    bool createUsersTable();
     bool createSensorsTable();
+
+    bool createDefaultAdminUser();
 
     void loadData();
     void loadMapsAndTheirSensors();
@@ -42,6 +52,8 @@ private:
     void saveMap(int floor, MapEntry& pixmap);
     void saveSensors();
     void saveSensor(Sensor& sensor);
+
+    QByteArray hashPassphrase(const QString& passphrase);
 
     std::vector<std::shared_ptr<Sensor>> m_sensors;
     std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>> m_maps;
