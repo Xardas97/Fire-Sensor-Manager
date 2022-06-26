@@ -21,10 +21,10 @@ Item {
         color: "black"
     }
 
-    TextArea {
+    TextField {
         id: txtName
 
-        width: root.width * 0.62
+        width: root.width * 0.60
 
         anchors {
             left: lblName.right

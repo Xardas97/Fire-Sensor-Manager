@@ -24,7 +24,7 @@ Item {
         color: "black"
     }
 
-    TextArea {
+    TextField {
         id: txtName
 
         width: root.width * 0.51
