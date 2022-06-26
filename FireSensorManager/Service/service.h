@@ -14,6 +14,7 @@ class Database;
 class FloorMaps;
 class MapImageProvider;
 class SensorCommunication;
+enum Permissions : unsigned short;
 
 class Service : public QObject
 {
@@ -29,9 +30,31 @@ class Service : public QObject
     Q_PROPERTY(QStringList availableFloors     READ availableFloors     NOTIFY availableFloorsChanged)
     Q_PROPERTY(QStringList availableFloorParts READ availableFloorParts NOTIFY availableFloorPartsChanged)
 
+    Q_PROPERTY(bool    isLoggedIn          READ isLoggedIn          NOTIFY loggedUserChanged)
+    Q_PROPERTY(QString loggedUsername      READ loggedUsername      NOTIFY loggedUserChanged)
+    Q_PROPERTY(bool    hasModPermissions   READ hasModPermissions   NOTIFY loggedUserChanged)
+    Q_PROPERTY(bool    hasAdminPermissions READ hasAdminPermissions NOTIFY loggedUserChanged)
+
 public:
     explicit Service(QObject *parent = nullptr);
     ~Service();
+
+    QList<Sensor*> alarmedPlacedSensors();
+    QList<Sensor*> placedSensorsWithStatus();
+
+    QVariant selectedFloor();
+    QVariant selectedFloorPart();
+
+    QStringList availableFloors();
+    QStringList availableFloorParts();
+
+    bool    isLoggedIn() const;
+    QString loggedUsername() const;
+    bool    hasModPermissions() const;
+    bool    hasAdminPermissions() const;
+
+    MapImageProvider*        createMapImageProvider();
+    FilteredSensorListModel* knownSensorsFilterModel();
 
 public slots:
     void discoverSensor(const QString& address, quint16 port);
@@ -46,25 +69,23 @@ public slots:
     void removeFromMap(Sensor* sensor);
     QList<Sensor*> currentMapSensors();
 
-    QList<Sensor*> alarmedPlacedSensors();
-    QList<Sensor*> placedSensorsWithStatus();
 
-
-    QVariant selectedFloor();
-    QVariant selectedFloorPart();
     void setSelectedFloor(QVariant floor);
     void setSelectedFloorPart(QVariant floorPart);
     bool selectFloorPartThatContains(Sensor* sensor);
     bool floorPartExists(QVariant floor, QVariant floorPart);
 
-    QStringList availableFloors();
-    QStringList availableFloorParts();
-
     bool uploadMap(int floor, const QUrl& url);
     void removeFloor(int floor);
 
-    MapImageProvider*        createMapImageProvider();
-    FilteredSensorListModel* knownSensorsFilterModel();
+
+    bool logIn(QString username, QString passphrase);
+    void logOut();
+
+    bool addUser(QString username, QString passphrase, Permissions permissions);
+    bool updateUserPassphrase(QString username, QString passphrase);
+    bool updateUserPermissions(QString username, Permissions permissions);
+    bool removeUser(QString username);
 
 signals:
     void floorAdded(int floor);
@@ -81,6 +102,8 @@ signals:
     void availableFloorsChanged();
     void availableFloorPartsChanged();
 
+    void loggedUserChanged();
+
 private:
     void onFloorAdded(int floor);
     void onFloorRemoved(int floor);
@@ -89,6 +112,9 @@ private:
 
     std::optional<int> m_selectedFloor;
     std::optional<short> m_selectedFloorPart;
+
+    std::optional<QString> m_loggedUsername;
+    Permissions            m_permissions;
 
     std::shared_ptr<Database>                m_database;
     std::shared_ptr<FloorMaps>               m_floorMaps;
