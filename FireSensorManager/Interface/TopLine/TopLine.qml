@@ -37,28 +37,13 @@ Rectangle {
         onSettingsFlowLeft: root.settingsFlowLeft()
     }
 
-    Button {
-        id: btnAlarm
-
+    WarningIcons {
         anchors.verticalCenter: root.verticalCenter
         anchors.right: floorMapControls.left
         anchors.rightMargin: 10
 
-        visible: service.alarmedPlacedSensors.length > 0
-
-        icon.color: "transparent"
-        icon.source: "qrc:/Resources/Icons/Alert.png"
-        background: Rectangle { opacity: 0 }
-
-        onClicked: root.requestShowSensor(getNextSensorToShow())
-
-        property int nextSensorToShowIndex: 0
-        function getNextSensorToShow() {
-            var alarmedPlacedSensors = service.alarmedPlacedSensors
-            if (nextSensorToShowIndex >= alarmedPlacedSensors.length)
-                nextSensorToShowIndex = 0
-
-            return alarmedPlacedSensors[nextSensorToShowIndex++]
+        onRequestShowSensor: function(sensor) {
+            root.requestShowSensor(sensor)
         }
     }
 

@@ -29,6 +29,7 @@ public:
 
 signals:
     void alarmedSensorsChanged();
+    void sensorsWithStatusChanged();
 
 private:
     std::vector<std::shared_ptr<Sensor>>& m_sensors;

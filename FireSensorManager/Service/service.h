@@ -20,7 +20,8 @@ class Service : public QObject
     Q_OBJECT
 
     Q_PROPERTY(FilteredSensorListModel* knownSensorsModel READ knownSensorsFilterModel CONSTANT)
-    Q_PROPERTY(QList<Sensor*> alarmedPlacedSensors READ alarmedPlacedSensors NOTIFY alarmedPlacedSensorsChanged)
+    Q_PROPERTY(QList<Sensor*> alarmedPlacedSensors    READ alarmedPlacedSensors    NOTIFY alarmedPlacedSensorsChanged)
+    Q_PROPERTY(QList<Sensor*> placedSensorsWithStatus READ placedSensorsWithStatus NOTIFY placedSensorsWithStatusChanged)
 
     Q_PROPERTY(QVariant selectedFloor     READ selectedFloor     WRITE setSelectedFloor     NOTIFY selectedFloorChanged)
     Q_PROPERTY(QVariant selectedFloorPart READ selectedFloorPart WRITE setSelectedFloorPart NOTIFY selectedFloorPartChanged)
@@ -46,6 +47,8 @@ public slots:
     QList<Sensor*> currentMapSensors();
 
     QList<Sensor*> alarmedPlacedSensors();
+    QList<Sensor*> placedSensorsWithStatus();
+
 
     QVariant selectedFloor();
     QVariant selectedFloorPart();
@@ -70,6 +73,7 @@ signals:
     void floorPartRemoved(int floor);
 
     void alarmedPlacedSensorsChanged();
+    void placedSensorsWithStatusChanged();
 
     void selectedFloorChanged();
     void selectedFloorPartChanged();

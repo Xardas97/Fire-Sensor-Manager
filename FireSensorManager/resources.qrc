@@ -24,9 +24,11 @@
         <file>Resources/Icons/Reset.png</file>
         <file>Interface/FloorMaps/SensorIcon.qml</file>
         <file>Resources/Icons/Sensor.png</file>
-        <file>Resources/Icons/Alert.png</file>
+        <file>Resources/Icons/Alarm.png</file>
         <file>Interface/FailedToStart.qml</file>
         <file>Interface/SensorList/SensorMenu.qml</file>
         <file>Interface/FloorMaps/ZoomControls.qml</file>
+        <file>Resources/Icons/Error.png</file>
+        <file>Interface/TopLine/WarningIcons.qml</file>
     </qresource>
 </RCC>
