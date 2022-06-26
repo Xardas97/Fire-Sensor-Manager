@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
         return app.exec();
     }
-    catch (FailedToUseDatabaseException ex)
+    catch (FailedToUseDatabaseException& ex)
     {
         qWarning() << "Failed to use the database!";
 
