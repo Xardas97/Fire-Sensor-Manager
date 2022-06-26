@@ -18,6 +18,10 @@ RowLayout {
         icon.source: "qrc:/Resources/Icons/Alarm.png"
         background: Rectangle { opacity: 0 }
 
+        ToolTip.delay: 500
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("A sensor is reporting alarming signal values")
+
         onClicked: root.requestShowSensor(getNextSensorToShow())
 
         property int nextSensorToShowIndex: 0
@@ -39,6 +43,10 @@ RowLayout {
         icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Error.png"
         background: Rectangle { opacity: 0 }
+
+        ToolTip.delay: 500
+        ToolTip.visible: hovered
+        ToolTip.text: qsTr("A sensor requires attention")
 
         onClicked: root.requestShowSensor(getNextSensorToShow())
 
