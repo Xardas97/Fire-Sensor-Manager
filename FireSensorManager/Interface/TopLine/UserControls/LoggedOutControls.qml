@@ -7,10 +7,7 @@ RowLayout {
 
     Button {
         id: btnLogIn
-        visible: !service.isLoggedIn
-
         text: qsTr("Log in")
-
         onClicked: popupLogin.open()
     }
 
@@ -50,7 +47,7 @@ RowLayout {
 
                 onClicked: activate()
                 function activate() {
-                    var success = service.logIn(txtUsername.text, txtPassphrase.text)
+                    var success = service.users.logIn(txtUsername.text, txtPassphrase.text)
                     if (!success) {
                         txtPassphrase.text = ""
                         lblLoginError.visible = true

@@ -60,12 +60,12 @@ Rectangle {
 
         LoggedInControls {
             Layout.alignment: Qt.AlignVCenter
-            visible: service.isLoggedIn
+            visible: service.users.isLoggedIn
         }
 
         LoggedOutControls {
             Layout.alignment: Qt.AlignVCenter
-            visible: !service.isLoggedIn
+            visible: !service.users.isLoggedIn
         }
     }
 }

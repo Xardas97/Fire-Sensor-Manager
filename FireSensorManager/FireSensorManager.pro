@@ -14,7 +14,8 @@ SOURCES += \
         Service/database.cpp \
         Service/filteredsensorlistmodel.cpp \
         Service/main.cpp \
-        Service/service.cpp
+        Service/service.cpp \
+        Service/usersmodel.cpp
 
 RESOURCES += resources.qrc
 
@@ -39,7 +40,8 @@ HEADERS += \
     Service/Map/mapimageprovider.h \
     Service/database.h \
     Service/filteredsensorlistmodel.h \
-    Service/service.h
+    Service/service.h \
+    Service/usersmodel.h
 
 DISTFILES +=
 

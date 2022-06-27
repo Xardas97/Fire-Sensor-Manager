@@ -7,8 +7,7 @@ RowLayout {
 
     Label {
         id: txtUsername
-        visible: service.isLoggedIn
-        text: service.loggedUsername
+        text: service.users.loggedUsername
     }
 
     Button {
@@ -21,10 +20,10 @@ RowLayout {
     }
 
     function getUserIcon() {
-        if (service.hasAdminPermissions)
+        if (service.users.hasAdminPermissions)
             return "qrc:/Resources/Icons/Admin.png"
 
-        if (service.hasModPermissions)
+        if (service.users.hasModPermissions)
             return "qrc:/Resources/Icons/Moderator.png"
 
         return "qrc:/Resources/Icons/User.png"
@@ -43,7 +42,7 @@ RowLayout {
         }
         MenuItem {
             text: qsTr("Log out")
-            onTriggered: service.logOut()
+            onTriggered: service.users.logOut()
         }
     }
 
@@ -111,7 +110,7 @@ RowLayout {
                         return
                     }
 
-                    var success = service.updateUserPassphrase(service.loggedUsername, txtOldPassphrase.text, txtNewPassphrase.text)
+                    var success = service.users.updateUserPassphrase(service.users.loggedUsername, txtOldPassphrase.text, txtNewPassphrase.text)
                     if (!success) {
                         layout.resetState()
                         lblAuthError.visible = true;

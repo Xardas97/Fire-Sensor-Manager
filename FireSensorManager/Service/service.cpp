@@ -1,6 +1,7 @@
 #include "service.h"
 
 #include "database.h"
+#include "usersmodel.h"
 #include "Map/floormaps.h"
 #include "Map/mapimageprovider.h"
 #include "Communication/sensorcommunication.h"
@@ -8,9 +9,10 @@
 #include <QHostAddress>
 
 Service::Service(QObject *parent)
-    : QObject{parent}, m_permissions(Permissions::None),
+    : QObject{parent},
       m_database(new Database()),
       m_floorMaps(new FloorMaps(m_database)),
+      m_usersModel(new UsersModel(m_database)),
       m_sensorCommunication(new SensorCommunication(m_database)),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
@@ -240,6 +242,11 @@ QStringList Service::availableFloorParts()
     return availableFloorParts;
 }
 
+UsersModel* Service::usersModel()
+{
+    return m_usersModel.get();
+}
+
 FilteredSensorListModel* Service::knownSensorsFilterModel()
 {
     return m_knownSensorsFilterModel.get();
@@ -272,76 +279,6 @@ void Service::onFloorPartRemoved(int floor)
 {
     emit availableFloorPartsChanged();
     emit floorPartRemoved(floor);
-}
-
-bool Service::isLoggedIn() const
-{
-    return m_loggedUsername.has_value();
-}
-
-QString Service::loggedUsername() const
-{
-    if (!m_loggedUsername.has_value())
-        return QString{};
-
-    return *m_loggedUsername;
-}
-
-bool Service::hasModPermissions() const
-{
-    return m_permissions == Permissions::Admin ||
-           m_permissions == Permissions::Moderator;
-}
-
-bool Service::hasAdminPermissions() const
-{
-    return m_permissions == Permissions::Admin;
-}
-
-bool Service::logIn(QString username, QString passphrase)
-{
-    auto authenticated = m_database->authenticateUser(username, passphrase, m_permissions);
-    if (!authenticated)
-        return false;
-
-    m_loggedUsername = username;
-    emit loggedUserChanged();
-    return true;
-}
-
-void Service::logOut()
-{
-    qDebug() << "Logging out...";
-
-    m_loggedUsername.reset();
-    m_permissions = Permissions::None;
-
-    emit loggedUserChanged();
-}
-
-bool Service::addUser(QString username, QString passphrase, Permissions permissions)
-{
-    return m_database->addUser(username, passphrase, permissions);
-}
-
-bool Service::updateUserPermissions(QString username, Permissions permissions)
-{
-    return m_database->updateUserPermissions(username, permissions);
-}
-
-bool Service::updateUserPassphrase(QString username, QString oldPassphrase, QString newPassphrase)
-{
-    Permissions temp;
-    auto authenticated = m_database->authenticateUser(username, oldPassphrase, temp);
-    if (!authenticated)
-        return false;
-
-    return m_database->updateUserPassphrase(username, newPassphrase);
-}
-
-bool Service::removeUser(QString username)
-{
-    return m_database->removeUser(username);
 }
 
 Service::~Service() = default;
