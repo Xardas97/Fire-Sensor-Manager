@@ -21,6 +21,9 @@ RowLayout {
         y: btnLogIn.y + btnLogIn.height / 2
 
         ColumnLayout {
+            Keys.onEnterPressed: btnLogin.activate()
+            Keys.onReturnPressed: btnLogin.activate()
+
             Label {
                 id: lblLoginError
                 text: qsTr("Wrong credentials!")
@@ -39,14 +42,17 @@ RowLayout {
             }
 
             Button {
+                id: btnLogin
                 text: qsTr("Login")
 
                 Layout.fillWidth: true
                 enabled: txtUsername.length > 0 && txtPassphrase.length > 0
 
-                onClicked: {
+                onClicked: activate()
+                function activate() {
                     var success = service.logIn(txtUsername.text, txtPassphrase.text)
                     if (!success) {
+                        txtPassphrase.text = ""
                         lblLoginError.visible = true
                         return
                     }
@@ -60,6 +66,8 @@ RowLayout {
             txtUsername.text = ""
             txtPassphrase.text = ""
             lblLoginError.visible = false
+
+            txtUsername.forceActiveFocus()
         }
     }
 }

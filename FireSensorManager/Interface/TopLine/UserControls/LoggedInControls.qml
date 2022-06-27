@@ -54,6 +54,10 @@ RowLayout {
         y: btnUserIcon.y + btnUserIcon.height / 2
 
         ColumnLayout {
+            id: layout
+            Keys.onEnterPressed: btnChangePassphrase.activate()
+            Keys.onReturnPressed: btnChangePassphrase.activate()
+
             Label {
                 id: lblAuthError
                 text: qsTr("Wrong credentials!")
@@ -93,21 +97,23 @@ RowLayout {
             }
 
             Button {
+                id: btnChangePassphrase
                 text: qsTr("Change Passphrase")
 
                 Layout.fillWidth: true
                 enabled: txtOldPassphrase.length > 0 && txtNewPassphrase.length > 0 && txtNewPassphrase2.length > 0
 
-                onClicked: {
+                onClicked: activate()
+                function activate() {
                     if (txtNewPassphrase.text != txtNewPassphrase2.text) {
+                        layout.resetState()
                         lblNewPassphrasesError.visible = true
-                        lblAuthError.visible = false;
                         return
                     }
 
                     var success = service.updateUserPassphrase(service.loggedUsername, txtOldPassphrase.text, txtNewPassphrase.text)
                     if (!success) {
-                        lblNewPassphrasesError.visible = false
+                        layout.resetState()
                         lblAuthError.visible = true;
                         return
                     }
@@ -115,15 +121,21 @@ RowLayout {
                     popupChangePassphrase.close()
                 }
             }
+
+            function resetState() {
+                txtOldPassphrase.text = ""
+                txtNewPassphrase.text = ""
+                txtNewPassphrase2.text = ""
+
+                lblAuthError.visible = false
+                lblNewPassphrasesError.visible = false
+
+                txtOldPassphrase.forceActiveFocus()
+            }
         }
 
         onOpened: {
-            txtOldPassphrase.text = ""
-            txtNewPassphrase.text = ""
-            txtNewPassphrase2.text = ""
-
-            lblAuthError.visible = false
-            lblNewPassphrasesError.visible = false
+            layout.resetState()
         }
     }
 }
