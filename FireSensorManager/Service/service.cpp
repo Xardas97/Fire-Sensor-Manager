@@ -329,9 +329,14 @@ bool Service::updateUserPermissions(QString username, Permissions permissions)
     return m_database->updateUserPermissions(username, permissions);
 }
 
-bool Service::updateUserPassphrase(QString username, QString passphrase)
+bool Service::updateUserPassphrase(QString username, QString oldPassphrase, QString newPassphrase)
 {
-    return m_database->updateUserPassphrase(username, passphrase);
+    Permissions temp;
+    auto authenticated = m_database->authenticateUser(username, oldPassphrase, temp);
+    if (!authenticated)
+        return false;
+
+    return m_database->updateUserPassphrase(username, newPassphrase);
 }
 
 bool Service::removeUser(QString username)

@@ -83,7 +83,7 @@ public slots:
     void logOut();
 
     bool addUser(QString username, QString passphrase, Permissions permissions);
-    bool updateUserPassphrase(QString username, QString passphrase);
+    bool updateUserPassphrase(QString username, QString oldPassphrase, QString newPassphrase);
     bool updateUserPermissions(QString username, Permissions permissions);
     bool removeUser(QString username);
 
