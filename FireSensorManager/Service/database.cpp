@@ -251,6 +251,25 @@ std::vector<std::shared_ptr<Sensor>>& Database::sensors()
     return m_sensors;
 }
 
+std::vector<User> Database::users()
+{
+    std::vector<User> users;
+
+    QSqlQuery query;
+    auto success = query.exec("SELECT username, permissions FROM users WHERE permissions != 2");
+    if (!success) {
+        qWarning() << "Failed to load users from the database: " << query.lastError().text();
+        return users;
+    }
+
+    while (query.next())
+    {
+        users.emplace_back(query.value("username").toString(), (Permissions)query.value("permissions").toInt());
+    }
+
+    return users;
+}
+
 bool Database::authenticateUser(QString username, QString passphrase, Permissions& permissions)
 {
     qDebug() << "Trying to authenticate with user " << username;

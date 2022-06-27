@@ -13,6 +13,12 @@ class QSqlRecord;
 class FailedToUseDatabaseException : public std::exception {};
 enum Permissions : unsigned short { None = 0, Moderator = 1, Admin = 2 };
 
+struct User {
+    User(QString username, Permissions permissions) : username(username), permissions(permissions) {}
+    QString username;
+    Permissions permissions;
+};
+
 class Database : public QObject
 {
     Q_OBJECT
@@ -22,6 +28,7 @@ public:
 
     auto maps() -> std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>>&;
     auto sensors() -> std::vector<std::shared_ptr<Sensor>>&;
+    auto users() -> std::vector<User>;
 
     bool authenticateUser(QString username, QString passphrase, Permissions& permissions);
     bool addUser(QString username, QString passphrase, Permissions permissions);

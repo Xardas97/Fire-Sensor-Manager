@@ -7,7 +7,7 @@
 #include <vector>
 #include <QAbstractListModel>
 
-class UsersModel : public QObject {
+class UsersModel : public QAbstractListModel {
     Q_OBJECT
 
     Q_PROPERTY(bool    isLoggedIn          READ isLoggedIn          NOTIFY loggedUserChanged)
@@ -16,7 +16,16 @@ class UsersModel : public QObject {
     Q_PROPERTY(bool    hasAdminPermissions READ hasAdminPermissions NOTIFY loggedUserChanged)
 
 public:
+    enum Roles {
+        UsernameRole = Qt::UserRole,
+        PermissionsRole
+    };
+
     explicit UsersModel(std::shared_ptr<Database> database, QObject* parent = nullptr);
+
+    int rowCount(const QModelIndex& parent) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    QHash<int, QByteArray> roleNames() const override;
 
     bool    isLoggedIn() const;
     QString loggedUsername() const;
@@ -36,9 +45,12 @@ signals:
     void loggedUserChanged();
 
 private:
+    auto find(const QString& username) -> std::vector<User>::iterator;
+
     std::optional<QString> m_loggedUsername;
     Permissions            m_permissions;
 
+    std::vector<User> m_users;
     std::shared_ptr<Database> m_database;
 
 };
