@@ -47,6 +47,8 @@ RowLayout {
 
                 onClicked: activate()
                 function activate() {
+                    if (!enabled) return
+
                     var success = service.users.logIn(txtUsername.text, txtPassphrase.text)
                     if (!success) {
                         txtPassphrase.text = ""

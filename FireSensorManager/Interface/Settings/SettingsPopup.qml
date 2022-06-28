@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import "MapSetup"
+import "UserManagement"
 
 Popup {
     id: root
@@ -57,12 +58,15 @@ Popup {
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
 
-            enabled: false
+            enabled: service.users.hasAdminPermissions
 
             font.pixelSize: columnSettings.fontSize
             text: qsTr("User Management")
 
-            onClicked: console.log("User Management settings requested")
+            onClicked:  {
+                root.close()
+                dialogUserManagement.open()
+            }
         }
 
         Item {
@@ -84,6 +88,15 @@ Popup {
 
     MapSetup {
         id: dialogMapSetup
+        parent: Overlay.overlay
+
+        anchors.centerIn: parent
+        onOpened: settingsFlowEntered()
+        onClosed: settingsFlowLeft()
+    }
+
+    UserManagement {
+        id: dialogUserManagement
         parent: Overlay.overlay
 
         anchors.centerIn: parent

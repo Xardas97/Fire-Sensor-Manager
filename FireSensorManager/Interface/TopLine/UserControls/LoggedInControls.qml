@@ -104,6 +104,8 @@ RowLayout {
 
                 onClicked: activate()
                 function activate() {
+                    if (!enabled) return
+
                     if (txtNewPassphrase.text != txtNewPassphrase2.text) {
                         layout.resetState()
                         lblNewPassphrasesError.visible = true

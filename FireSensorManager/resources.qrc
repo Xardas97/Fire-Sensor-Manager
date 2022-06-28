@@ -35,5 +35,9 @@
         <file>Resources/Icons/Moderator.png</file>
         <file>Resources/Icons/User.png</file>
         <file>Interface/TopLine/UserControls/LoggedInControls.qml</file>
+        <file>Interface/Settings/UserManagement/UserManagement.qml</file>
+        <file>Interface/Settings/UserManagement/AddUserPopup.qml</file>
+        <file>Resources/Icons/Remove.png</file>
+        <file>Interface/Settings/UserManagement/UserView.qml</file>
     </qresource>
 </RCC>
