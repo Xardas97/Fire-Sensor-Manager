@@ -9,6 +9,8 @@ import "../SensorList/Settings"
 Rectangle {
     id: root
 
+    property bool draggingEnabled: service.users.isLoggedIn
+
     width: image.width
     height: image.height
 
@@ -31,7 +33,7 @@ Rectangle {
                 contextMenu.popup()
         }
 
-        drag.target: root
+        drag.target: draggingEnabled? root : undefined
         drag.axis: Drag.XAndYAxis
 
         drag.minimumX: 0

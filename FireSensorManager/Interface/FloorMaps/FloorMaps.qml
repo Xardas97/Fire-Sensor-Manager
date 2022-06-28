@@ -50,13 +50,17 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: function(mouse) {
-                    if (selectedSensor != null) {
-                        service.removeFromMap(selectedSensor)
-                        var created = createSensorIconObjectFromMouseEvent(selectedSensor, mouse.x, mouse.y)
-                        if (created) {
-                            service.placeOnMap(selectedSensor)
-                            selectedSensorPlaced()
-                        }
+                    if (selectedSensor == null)
+                        return
+
+                    if (!service.users.isLoggedIn)
+                        return
+
+                    service.removeFromMap(selectedSensor)
+                    var created = createSensorIconObjectFromMouseEvent(selectedSensor, mouse.x, mouse.y)
+                    if (created) {
+                        service.placeOnMap(selectedSensor)
+                        selectedSensorPlaced()
                     }
                 }
             }

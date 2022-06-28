@@ -33,6 +33,8 @@ Popup {
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
 
+            enabled: service.users.hasModPermissions
+
             font.pixelSize: columnSettings.fontSize
             text: qsTr("Map Setup")
 

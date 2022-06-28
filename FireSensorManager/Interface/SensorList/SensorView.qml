@@ -83,6 +83,7 @@ Rectangle {
         icon.source: "qrc:/Resources/Icons/SensorSettings.png"
         background: Rectangle { opacity: 0 }
 
+        enabled: service.users.hasModPermissions
         onClicked: sensorSettingsDialog.open()
     }
 
