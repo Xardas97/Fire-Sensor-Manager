@@ -11,17 +11,36 @@ Rectangle {
 
     property bool draggingEnabled: service.users.isLoggedIn
 
-    width: image.width
-    height: image.height
+    width: rowContent.width
+    height: rowContent.height
 
     color: "transparent"
 
     property Sensor sensor
 
-    Image {
-        id: image
-        source: "qrc:/Resources/Icons/Sensor.png"
+    Column {
+        id: rowContent
+
+        Label {
+            id: lblName
+            width: image.width * 1.2
+
+            text: sensor.name
+            elide: Text.ElideRight
+
+            font.bold: true
+            font.pointSize: 11
+
+            horizontalAlignment: Qt.AlignHCenter
+        }
+
+        Image {
+            id: image
+            source: "qrc:/Resources/Icons/Sensor.png"
+            anchors.horizontalCenter: lblName.horizontalCenter
+        }
     }
+
 
     MouseArea {
         id: dragArea
