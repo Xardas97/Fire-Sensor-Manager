@@ -9,6 +9,8 @@ import "../SensorList/Settings"
 Rectangle {
     id: root
 
+    signal pressed()
+    signal released()
     property bool draggingEnabled: service.users.isLoggedIn
 
     width: rowContent.width
@@ -52,13 +54,18 @@ Rectangle {
                 contextMenu.popup()
         }
 
-        drag.target: draggingEnabled? root : undefined
-        drag.axis: Drag.XAndYAxis
+        drag {
+            target: draggingEnabled? root : undefined
+            axis: Drag.XAndYAxis
 
-        drag.minimumX: 0
-        drag.minimumY: 0
-        drag.maximumX: root.parent.width - root.width
-        drag.maximumY: root.parent.height - root.height
+            minimumX: 0
+            minimumY: 0
+            maximumX: root.parent.width - root.width
+            maximumY: root.parent.height - root.height
+        }
+
+        onPressed: root.pressed()
+        onReleased: root.released()
     }
 
     SensorToolTip {

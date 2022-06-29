@@ -89,6 +89,10 @@ Item {
             console.log("Error creating object");
         }
 
+        // workaround for https://bugreports.qt.io/browse/QTBUG-77629
+        icon.onPressed.connect(function () { flickable.interactive = false })
+        icon.onReleased.connect(function () { flickable.interactive = true })
+
         return icon
     }
 
