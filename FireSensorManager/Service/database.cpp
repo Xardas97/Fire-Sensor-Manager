@@ -3,6 +3,7 @@
 #include "Map/mapentry.h"
 #include "Communication/sensor.h"
 
+#include <QDir>
 #include <vector>
 #include <QDebug>
 #include <QBuffer>
@@ -37,6 +38,9 @@ bool Database::open()
     auto path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     auto databaseName = "/database.db";
     auto fullPath = path + databaseName;
+
+    if (!QDir{path}.exists())
+        QDir().mkdir(path);
 
     qDebug() << "Opening database at: " << fullPath;
 
