@@ -3,8 +3,8 @@ import QtQuick.Controls
 
 import Custom.Sensors
 
-import "../SensorList"
-import "../SensorList/Settings"
+import "../../SensorList"
+import "../../SensorList/Settings"
 
 Rectangle {
     id: root

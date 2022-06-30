@@ -65,6 +65,8 @@ public slots:
     void setSelectedFloor(QVariant floor);
     void setSelectedFloorPart(QVariant floorPart);
     bool selectFloorPartThatContains(Sensor* sensor);
+
+    bool selectedFloorPartExists();
     bool floorPartExists(QVariant floor, QVariant floorPart);
 
     bool uploadMap(int floor, const QUrl& url);

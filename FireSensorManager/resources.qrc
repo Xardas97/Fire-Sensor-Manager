@@ -12,7 +12,7 @@
         <file>Interface/SensorList/Settings/Temperature.qml</file>
         <file>Resources/Icons/Refresh.png</file>
         <file>Interface/TopLine/TopLine.qml</file>
-        <file>Interface/FloorMaps/FloorMaps.qml</file>
+        <file>Interface/FloorMaps/FloorPartView/FloorPartView.qml</file>
         <file>Interface/FloorMaps/FloorMapControls.qml</file>
         <file>Resources/Icons/Menu.png</file>
         <file>Interface/Settings/SettingsPopup.qml</file>
@@ -22,12 +22,12 @@
         <file>Resources/Icons/Minus.png</file>
         <file>Resources/Icons/Plus.png</file>
         <file>Resources/Icons/Reset.png</file>
-        <file>Interface/FloorMaps/SensorIcon.qml</file>
+        <file>Interface/FloorMaps/FloorPartView/SensorIcon.qml</file>
         <file>Resources/Icons/Sensor.png</file>
         <file>Resources/Icons/Alarm.png</file>
         <file>Interface/FailedToStart.qml</file>
         <file>Interface/SensorList/SensorMenu.qml</file>
-        <file>Interface/FloorMaps/ZoomControls.qml</file>
+        <file>Interface/FloorMaps/FloorPartView/ZoomControls.qml</file>
         <file>Resources/Icons/Error.png</file>
         <file>Interface/TopLine/WarningIcons.qml</file>
         <file>Interface/TopLine/UserControls/LoggedOutControls.qml</file>
@@ -39,5 +39,6 @@
         <file>Interface/Settings/UserManagement/AddUserPopup.qml</file>
         <file>Resources/Icons/Remove.png</file>
         <file>Interface/Settings/UserManagement/UserView.qml</file>
+        <file>Interface/FloorMaps/FloorMaps.qml</file>
     </qresource>
 </RCC>
