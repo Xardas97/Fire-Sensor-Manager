@@ -25,6 +25,8 @@ Window {
             Layout.fillWidth: true
             Layout.preferredHeight: root.height / 20
 
+            currentFloorView: floorMaps.currentFloorView
+
             onSettingsFlowEntered: columnWindow.opacity = 0.3
             onSettingsFlowLeft: columnWindow.opacity = 1
 

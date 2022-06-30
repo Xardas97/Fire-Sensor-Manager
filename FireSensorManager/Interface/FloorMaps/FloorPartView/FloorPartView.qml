@@ -9,6 +9,7 @@ Item {
 
     property Sensor selectedSensor
     signal selectedSensorPlaced()
+    signal showFloorView()
 
     function showSensor(sensor) {
         var iconWidth = 64
@@ -125,5 +126,22 @@ Item {
 
         visible: imageMap.source != ""
         itemToScale: imageMap
+    }
+
+    Button {
+        anchors {
+            right: root.right
+            bottom: root.bottom
+            margins: 10
+        }
+
+        icon.color: "transparent"
+        icon.source: "qrc:/Resources/Icons/Back.png"
+        background: Rectangle {
+            color: "grey"
+            opacity: 0.5
+        }
+
+        onClicked: root.showFloorView()
     }
 }

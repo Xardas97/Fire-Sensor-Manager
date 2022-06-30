@@ -27,6 +27,7 @@ class Service : public QObject
 
     Q_PROPERTY(QVariant selectedFloor     READ selectedFloor     WRITE setSelectedFloor     NOTIFY selectedFloorChanged)
     Q_PROPERTY(QVariant selectedFloorPart READ selectedFloorPart WRITE setSelectedFloorPart NOTIFY selectedFloorPartChanged)
+    Q_PROPERTY(QVariant selectedFloorSize READ selectedFloorSize NOTIFY availableFloorPartsChanged)
 
     Q_PROPERTY(QStringList availableFloors     READ availableFloors     NOTIFY availableFloorsChanged)
     Q_PROPERTY(QStringList availableFloorParts READ availableFloorParts NOTIFY availableFloorPartsChanged)
@@ -40,6 +41,7 @@ public:
 
     QVariant selectedFloor();
     QVariant selectedFloorPart();
+    QVariant selectedFloorSize();
 
     QStringList availableFloors();
     QStringList availableFloorParts();

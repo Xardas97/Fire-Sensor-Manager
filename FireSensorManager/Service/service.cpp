@@ -211,6 +211,14 @@ bool Service::selectedFloorPartExists()
     return m_floorMaps->floorSize(*m_selectedFloor) > *m_selectedFloorPart;
 }
 
+QVariant Service::selectedFloorSize()
+{
+    if (!m_selectedFloor)
+        return QVariant{};
+
+    return m_floorMaps->floorSize(*m_selectedFloor);
+}
+
 bool Service::floorPartExists(QVariant floor, QVariant floorPart)
 {
     if (floor.isNull() || floorPart.isNull())

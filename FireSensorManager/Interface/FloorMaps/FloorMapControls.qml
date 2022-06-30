@@ -5,6 +5,8 @@ import QtQuick.Controls
 RowLayout {
     id: root
 
+    property int currentFloorView
+
     Label {
         id: lblFloors
 
@@ -36,6 +38,8 @@ RowLayout {
     ComboBox {
         id: comboBoxFloorParts
         model: service.availableFloorParts
+
+        visible: currentFloorView === FloorMaps.FloorView.FloorPart
 
         font.pointSize: 13
 

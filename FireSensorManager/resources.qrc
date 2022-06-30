@@ -40,5 +40,7 @@
         <file>Resources/Icons/Remove.png</file>
         <file>Interface/Settings/UserManagement/UserView.qml</file>
         <file>Interface/FloorMaps/FloorMaps.qml</file>
+        <file>Interface/FloorMaps/FloorView.qml</file>
+        <file>Resources/Icons/Back.png</file>
     </qresource>
 </RCC>

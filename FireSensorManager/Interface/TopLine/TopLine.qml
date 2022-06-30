@@ -11,6 +11,8 @@ import "UserControls"
 Rectangle {
     id: root
 
+    property int currentFloorView
+
     signal settingsFlowEntered
     signal settingsFlowLeft
     signal requestShowSensor(Sensor sensor)
@@ -56,6 +58,7 @@ Rectangle {
         FloorMapControls {
             id: floorMapControls
             Layout.alignment: Qt.AlignVCenter
+            currentFloorView: root.currentFloorView
         }
 
         LoggedInControls {
