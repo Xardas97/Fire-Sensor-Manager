@@ -13,7 +13,7 @@ Item {
     signal selectedSensorPlaced()
 
     enum FloorView { FloorPart, Floor, Building }
-    property int currentFloorView: FloorMaps.FloorView.Floor
+    property int currentFloorView: FloorMaps.FloorView.Building
 
     function showSensor(sensor) {
         currentFloorView = FloorMaps.FloorView.FloorPart
@@ -28,7 +28,8 @@ Item {
 
         selectedSensor: root.selectedSensor
         onSelectedSensorPlaced: root.selectedSensorPlaced()
-        onShowFloorView: currentFloorView = FloorMaps.FloorView.Floor
+
+        onShowPreviousView: currentFloorView = FloorMaps.FloorView.Floor
     }
 
     FloorView {
@@ -37,6 +38,16 @@ Item {
         visible: currentFloorView === FloorMaps.FloorView.Floor
         anchors.fill: parent
 
+        onShowPreviousView: currentFloorView = FloorMaps.FloorView.Building
         onShowFloorPartView: currentFloorView = FloorMaps.FloorView.FloorPart
+    }
+
+    BuildingView {
+        id: buildingView
+
+        visible: currentFloorView === FloorMaps.FloorView.Building
+        anchors.fill: parent
+
+        onShowFloorView: currentFloorView = FloorMaps.FloorView.Floor
     }
 }

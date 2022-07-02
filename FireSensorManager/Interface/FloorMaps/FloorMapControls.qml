@@ -7,44 +7,51 @@ RowLayout {
 
     property int currentFloorView
 
-    Label {
-        id: lblFloors
+    RowLayout {
+        id: layoutFloors
+        visible: currentFloorView === FloorMaps.FloorView.Floor || currentFloorView === FloorMaps.FloorView.FloorPart
 
-        text: qsTr("Floor:")
-        font.pointSize: 13
-        color: "white"
-    }
+        Label {
+            id: lblFloors
 
-    ComboBox {
-        id: comboBoxFloors
-        model: service.availableFloors
+            text: qsTr("Floor:")
+            font.pointSize: 13
+            color: "white"
+        }
 
-        font.pointSize: 13
+        ComboBox {
+            id: comboBoxFloors
+            model: service.availableFloors
 
-        onCurrentValueChanged: {
-            comboBoxFloorParts.currentIndex = 0
-            service.selectedFloor = currentValue !== undefined ? currentValue : null
+            font.pointSize: 13
+
+            onCurrentValueChanged: {
+                comboBoxFloorParts.currentIndex = 0
+                service.selectedFloor = currentValue !== undefined ? currentValue : null
+            }
         }
     }
 
-    Label {
-        id: lblFloorParts
-
-        text: qsTr("Floor part:")
-        font.pointSize: 13
-        color: "white"
-    }
-
-    ComboBox {
-        id: comboBoxFloorParts
-        model: service.availableFloorParts
-
+    RowLayout {
+        id: layoutFloorParts
         visible: currentFloorView === FloorMaps.FloorView.FloorPart
 
-        font.pointSize: 13
+        Label {
+            id: lblFloorParts
 
-        onCurrentValueChanged: {
-            service.selectedFloorPart = currentValue !== undefined ? currentValue : null
+            text: qsTr("Floor part:")
+            font.pointSize: 13
+            color: "white"
+        }
+
+        ComboBox {
+            id: comboBoxFloorParts
+            model: service.availableFloorParts
+            font.pointSize: 13
+
+            onCurrentValueChanged: {
+                service.selectedFloorPart = currentValue !== undefined ? currentValue : null
+            }
         }
     }
 

@@ -9,7 +9,8 @@ Item {
 
     property Sensor selectedSensor
     signal selectedSensorPlaced()
-    signal showFloorView()
+
+    signal showPreviousView()
 
     function showSensor(sensor) {
         var iconWidth = 64
@@ -142,6 +143,6 @@ Item {
             opacity: 0.5
         }
 
-        onClicked: root.showFloorView()
+        onClicked: root.showPreviousView()
     }
 }
