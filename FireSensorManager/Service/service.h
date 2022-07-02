@@ -68,6 +68,7 @@ public slots:
     void setSelectedFloorPart(QVariant floorPart);
     bool selectFloorPartThatContains(Sensor* sensor);
 
+    bool floorExists(QVariant floor);
     bool selectedFloorPartExists();
     bool floorPartExists(QVariant floor, QVariant floorPart);
 

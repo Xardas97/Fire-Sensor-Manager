@@ -29,7 +29,14 @@ Item {
         selectedSensor: root.selectedSensor
         onSelectedSensorPlaced: root.selectedSensorPlaced()
 
-        onShowPreviousView: currentFloorView = FloorMaps.FloorView.Floor
+        onShowPreviousView: {
+            if (service.selectedFloorSize === 1) {
+                currentFloorView = FloorMaps.FloorView.Building
+                return
+            }
+
+            currentFloorView = FloorMaps.FloorView.Floor
+        }
     }
 
     FloorView {
@@ -46,8 +53,19 @@ Item {
         id: buildingView
 
         visible: currentFloorView === FloorMaps.FloorView.Building
-        anchors.fill: parent
 
-        onShowFloorView: currentFloorView = FloorMaps.FloorView.Floor
+        anchors.centerIn: parent
+        height: root.height
+        width: root.width / 2
+
+        onShowFloorView: {
+            if (service.selectedFloorSize === 1) {
+                service.selectedFloorPart = 0
+                currentFloorView = FloorMaps.FloorView.FloorPart
+                return
+            }
+
+            currentFloorView = FloorMaps.FloorView.Floor
+        }
     }
 }

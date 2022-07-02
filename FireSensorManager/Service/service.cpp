@@ -203,6 +203,14 @@ bool Service::selectFloorPartThatContains(Sensor* sensor)
     return true;
 }
 
+bool Service::floorExists(QVariant floor)
+{
+    if (floor.isNull())
+        return false;
+
+    return m_floorMaps->floorSize(floor.toInt()) > 0;
+}
+
 bool Service::selectedFloorPartExists()
 {
     if (!m_selectedFloor.has_value() || !m_selectedFloorPart.has_value())
