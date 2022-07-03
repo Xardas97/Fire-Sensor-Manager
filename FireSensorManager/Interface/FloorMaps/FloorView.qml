@@ -23,8 +23,11 @@ Item {
             property int buttonWidth: grid.width / grid.columns - grid.columnSpacing * grid.columns
 
             Button {
+                id: btn
                 Layout.preferredWidth: repeaterIcons.buttonWidth
                 Layout.preferredHeight: repeaterIcons.buttonHeight
+
+                property bool isAlarmed: service.warningTracker.isAlarmed(service.selectedFloor, index)
 
                 icon {
                     width: repeaterIcons.buttonWidth
@@ -34,9 +37,10 @@ Item {
                     source: getIconSource()
                 }
 
-                Component.onCompleted: {
-                    if (Qt.platform.os === "windows")
-                        background.opacity = 0
+                background: Rectangle {
+                    color: "transparent"
+                    border.width: btn.isAlarmed ? 2     : 0
+                    border.color: btn.isAlarmed ? "red" : "black"
                 }
 
                 onClicked: {
@@ -49,6 +53,11 @@ Item {
                         return ""
 
                     return "image://MapImageProvider/" + service.selectedFloor +  "/" + index
+                }
+
+                Connections {
+                    target: service.warningTracker
+                    function onAlarmedSensorsChanged() { isAlarmed = service.warningTracker.isAlarmed(service.selectedFloor, index) }
                 }
             }
         }

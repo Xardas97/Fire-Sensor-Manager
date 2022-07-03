@@ -15,7 +15,7 @@ Service::Service(QObject *parent)
       m_floorMaps(new FloorMaps(m_database)),
       m_usersModel(new UsersModel(m_database)),
       m_sensorCommunication(new SensorCommunication(m_database)),
-      m_warningTracker(new WarningTracker(m_sensorCommunication->knownSensors())),
+      m_warningTracker(new WarningTracker(m_floorMaps, m_sensorCommunication->knownSensors())),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
     m_knownSensorsFilterModel->setSourceModel(m_sensorCommunication->knownSensors().get());

@@ -36,6 +36,7 @@ Flickable {
                     Layout.preferredHeight: root.height / 7
 
                     property int floor: repeater.lowestFloor(service.availableFloors) - index
+                    property bool isAlarmed: service.warningTracker.isAlarmed(floor)
 
                     enabled: service.floorExists(floor)
 
@@ -49,13 +50,19 @@ Flickable {
                     }
 
                     background: Rectangle {
-                        border.width: 1
+                        border.width: btn.isAlarmed ? 2     : 1
+                        border.color: btn.isAlarmed ? "red" : "black"
                         color: parent.enabled ? "lightgrey" : "transparent"
                     }
 
                     onClicked: {
                         service.selectedFloor = floor
                         root.showFloorView()
+                    }
+
+                    Connections {
+                        target: service.warningTracker
+                        function onAlarmedSensorsChanged() { isAlarmed = service.warningTracker.isAlarmed(floor) }
                     }
                 }
 
