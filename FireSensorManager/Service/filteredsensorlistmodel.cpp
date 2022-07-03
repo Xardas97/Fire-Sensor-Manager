@@ -9,19 +9,19 @@ FilteredSensorListModel::FilteredSensorListModel(QObject* parent)
     setDynamicSortFilter(true);
 }
 
-bool FilteredSensorListModel::inactiveFilterEnabled() const
+bool FilteredSensorListModel::activeFilterEnabled() const
 {
-    return m_inactiveFilterEnabled;
+    return m_activeFilterEnabled;
 }
 
-void FilteredSensorListModel::setinActiveFilterEnabled(bool inactiveFilterEnabled)
+void FilteredSensorListModel::setactiveFilterEnabled(bool activeFilterEnabled)
 {
-    if (m_inactiveFilterEnabled == inactiveFilterEnabled)
+    if (m_activeFilterEnabled == activeFilterEnabled)
         return;
 
-    m_inactiveFilterEnabled = inactiveFilterEnabled;
+    m_activeFilterEnabled = activeFilterEnabled;
 
-    emit inactiveFilterEnabledChanged();
+    emit activeFilterEnabledChanged();
     invalidateFilter();
 }
 
@@ -59,14 +59,14 @@ void FilteredSensorListModel::setUnplacedFilterEnabled(bool unplacedFilterEnable
 
 bool FilteredSensorListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (!m_inactiveFilterEnabled && !m_placedFilterEnabled && !m_unplacedFilterEnabled)
+    if (!m_activeFilterEnabled && !m_placedFilterEnabled && !m_unplacedFilterEnabled)
         return true;
 
     const auto index = sourceModel()->index(sourceRow, 0, sourceParent);
     const auto data = index.data(SensorList::Roles::DataRole);
     Sensor* sensor = data.value<Sensor*>();
 
-    return !(m_placedFilterEnabled && sensor->map()) &&
-           !(m_unplacedFilterEnabled && !sensor->map()) &&
-           !(m_inactiveFilterEnabled && (!sensor->isActive() || sensor->isReplaced()));
+    return !(m_placedFilterEnabled && !sensor->map()) &&
+           !(m_unplacedFilterEnabled && sensor->map()) &&
+           !(m_activeFilterEnabled && (!sensor->isActive() || sensor->isReplaced()));
 }

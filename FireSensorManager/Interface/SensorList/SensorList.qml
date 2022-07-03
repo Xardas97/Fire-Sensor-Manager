@@ -23,37 +23,55 @@ Rectangle {
         height: parent.height - 2
         anchors.centerIn: parent
 
-        CheckBox {
-            id: chboxPlacedFilter
+        ColumnLayout {
+            id: layoutFilters
 
-            Layout.alignment: Qt.AlignLeft
-            text: qsTr("Placed Sensors");
+            Label {
+                text: qsTr("Filters:")
+            }
 
-            checked: !service.knownSensorsModel.placedFilterEnabled
-            onCheckStateChanged: service.knownSensorsModel.placedFilterEnabled = !checked
-        }
+            RowLayout {
+                id: layoutPlacementFilters
+                Layout.alignment: Qt.AlignLeft
 
-        CheckBox {
-            id: chboxUnplacedFilter
+                CheckBox {
+                    id: chboxPlacedFilter
 
-            Layout.alignment: Qt.AlignLeft
-            text: qsTr("Unplaced Sensors");
+                    text: qsTr("Placed");
 
-            checked: !service.knownSensorsModel.unplacedFilterEnabled
-            onCheckStateChanged: service.knownSensorsModel.unplacedFilterEnabled = !checked
-        }
+                    checked: service.knownSensorsModel.placedFilterEnabled
+                    onCheckStateChanged: {
+                        service.knownSensorsModel.placedFilterEnabled = checked
+                        if (checked) chboxUnplacedFilter.checked = false
+                    }
+                }
 
-        CheckBox {
-            id: chboxinActiveFilter
+                CheckBox {
+                    id: chboxUnplacedFilter
 
-            Layout.alignment: Qt.AlignLeft
-            text: qsTr("Inactive Sensors");
+                    text: qsTr("Unplaced");
 
-            checked: !service.knownSensorsModel.inactiveFilterEnabled
-            onCheckStateChanged: service.knownSensorsModel.inactiveFilterEnabled = !checked
+                    checked: service.knownSensorsModel.unplacedFilterEnabled
+                    onCheckStateChanged: {
+                        service.knownSensorsModel.unplacedFilterEnabled = checked
+                        if (checked) chboxPlacedFilter.checked = false
+                    }
+                }
+            }
+
+            CheckBox {
+                id: chboxActiveFilter
+
+                Layout.alignment: Qt.AlignLeft
+                text: qsTr("Active");
+
+                checked: service.knownSensorsModel.activeFilterEnabled
+                onCheckStateChanged: service.knownSensorsModel.activeFilterEnabled = checked
+            }
         }
 
         ScrollView {
+            id: scrollSensors
             Layout.preferredWidth: column.width
             Layout.fillHeight: true
 
@@ -82,7 +100,7 @@ Rectangle {
         }
 
         Item {
-            // padding item
+            id: itemPadding
             Layout.preferredHeight: column.height * 0.02
         }
 
@@ -95,7 +113,7 @@ Rectangle {
         }
 
         Item {
-            // padding item
+            id: itemPadding2
             Layout.preferredHeight: column.height * 0.02
         }
     }
