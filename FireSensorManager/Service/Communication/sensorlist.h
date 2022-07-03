@@ -28,8 +28,9 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
 signals:
-    void alarmedSensorsChanged();
-    void sensorsWithStatusChanged();
+    void sensorAlarmChanged(Sensor* sensor);
+    void sensorStatusChanged(Sensor* sensor);
+    void sensorPlacementChanged(Sensor* sensor);
 
 private:
     std::vector<std::shared_ptr<Sensor>>& m_sensors;
@@ -39,6 +40,9 @@ private:
     void disconnectSignals(std::shared_ptr<Sensor> sensor);
 
     void onDataChanged();
+    void onAlarmChanged();
+    void onStatusChanged();
+    void onPlacementChanged();
 };
 
 #endif // SENSORLIST_H

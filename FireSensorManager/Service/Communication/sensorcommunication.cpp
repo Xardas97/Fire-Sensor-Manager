@@ -12,7 +12,7 @@
 
 SensorCommunication::SensorCommunication(std::shared_ptr<Database> database)
     : m_database(database),
-      m_knownSensors(m_database->sensors()),
+      m_knownSensors(new SensorList(m_database->sensors())),
       m_sensorDetector(new SensorDetector())
 {
     QObject::connect(m_sensorDetector.get(), &SensorDetector::onSensorDiscovered, this, &SensorCommunication::onSensorDiscovered);
@@ -27,7 +27,7 @@ void SensorCommunication::updateSensors()
     if (updateInactiveSensors)
         qDebug() << "Updating inactive sensors...";
 
-    for (auto& sensor: m_knownSensors.sensors())
+    for (auto& sensor: m_knownSensors->sensors())
     {
         if (sensor->isReplaced())
             continue;
@@ -95,14 +95,14 @@ bool SensorCommunication::updateName(Sensor& sensor, const QString& name)
     return true;
 }
 
-SensorList& SensorCommunication::knownSensors()
+std::shared_ptr<SensorList> SensorCommunication::knownSensors()
 {
     return m_knownSensors;
 }
 
 void SensorCommunication::removeSensor(Sensor& sensor)
 {
-    auto removed = m_knownSensors.remove(sensor);
+    auto removed = m_knownSensors->remove(sensor);
     if (removed->map())
         removed->map()->removeSensor(removed);
 }
@@ -130,11 +130,11 @@ void SensorCommunication::onSensorDiscovered(std::shared_ptr<Sensor> sensor)
 {
     qDebug() << "Discovered sensor: " << *sensor;
 
-    auto found = m_knownSensors.find(*sensor);
+    auto found = m_knownSensors->find(*sensor);
     if (found == nullptr)
     {
         qDebug() << "This is a new sensor!";
-        m_knownSensors.add(sensor);
+        m_knownSensors->add(sensor);
         return;
     }
 

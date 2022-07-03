@@ -2,6 +2,7 @@
 #define SERVICE_H
 
 #include "usersmodel.h"
+#include "warningtracker.h"
 #include "Communication/sensor.h"
 #include "filteredsensorlistmodel.h"
 
@@ -21,9 +22,8 @@ class Service : public QObject
     Q_OBJECT
 
     Q_PROPERTY(UsersModel* users READ usersModel CONSTANT)
+    Q_PROPERTY(WarningTracker* warningTracker READ warningTracker CONSTANT)
     Q_PROPERTY(FilteredSensorListModel* knownSensorsModel READ knownSensorsFilterModel CONSTANT)
-    Q_PROPERTY(QList<Sensor*> alarmedPlacedSensors    READ alarmedPlacedSensors    NOTIFY alarmedPlacedSensorsChanged)
-    Q_PROPERTY(QList<Sensor*> placedSensorsWithStatus READ placedSensorsWithStatus NOTIFY placedSensorsWithStatusChanged)
 
     Q_PROPERTY(QVariant selectedFloor     READ selectedFloor     WRITE setSelectedFloor     NOTIFY selectedFloorChanged)
     Q_PROPERTY(QVariant selectedFloorPart READ selectedFloorPart WRITE setSelectedFloorPart NOTIFY selectedFloorPartChanged)
@@ -36,9 +36,6 @@ public:
     explicit Service(QObject *parent = nullptr);
     ~Service();
 
-    QList<Sensor*> alarmedPlacedSensors();
-    QList<Sensor*> placedSensorsWithStatus();
-
     QVariant selectedFloor();
     QVariant selectedFloorPart();
     QVariant selectedFloorSize();
@@ -47,6 +44,7 @@ public:
     QStringList availableFloorParts();
 
     UsersModel*              usersModel();
+    WarningTracker*          warningTracker();
     MapImageProvider*        createMapImageProvider();
     FilteredSensorListModel* knownSensorsFilterModel();
 
@@ -81,9 +79,6 @@ signals:
     void floorPartAdded(int floor);
     void floorPartRemoved(int floor);
 
-    void alarmedPlacedSensorsChanged();
-    void placedSensorsWithStatusChanged();
-
     void selectedFloorChanged();
     void selectedFloorPartChanged();
 
@@ -103,6 +98,7 @@ private:
     std::shared_ptr<FloorMaps>               m_floorMaps;
     std::unique_ptr<UsersModel>              m_usersModel;
     std::unique_ptr<SensorCommunication>     m_sensorCommunication;
+    std::unique_ptr<WarningTracker>          m_warningTracker;
     std::unique_ptr<FilteredSensorListModel> m_knownSensorsFilterModel;
 };
 

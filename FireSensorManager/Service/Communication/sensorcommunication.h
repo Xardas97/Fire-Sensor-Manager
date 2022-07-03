@@ -26,7 +26,7 @@ public:
     bool updateData(Sensor& sensor);
     bool updateName(Sensor& sensor, const QString& name);
 
-    SensorList& knownSensors();
+    std::shared_ptr<SensorList> knownSensors();
 
     void removeSensor(Sensor& sensor);
     bool reactivateSensor(Sensor &sensor);
@@ -40,7 +40,7 @@ private:
     void onSensorDiscovered(std::shared_ptr<Sensor> sensor);
 
     std::shared_ptr<Database>       m_database;
-    SensorList                      m_knownSensors;
+    std::shared_ptr<SensorList>     m_knownSensors;
     std::unique_ptr<SensorDetector> m_sensorDetector;
 
     int m_sensorUpdatesCount = 0;

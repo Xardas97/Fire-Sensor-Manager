@@ -34,10 +34,13 @@ void SensorList::add(std::shared_ptr<Sensor> sensor)
     connectSignals(sensor);
 
     if (sensor->alarmOn())
-        emit alarmedSensorsChanged();
+        emit sensorAlarmChanged(sensor.get());
 
     if (sensor->status() > 0)
-        emit sensorsWithStatusChanged();
+        emit sensorStatusChanged(sensor.get());
+
+    if (sensor->map())
+        emit sensorPlacementChanged(sensor.get());
 }
 
 std::shared_ptr<Sensor> SensorList::remove(const Sensor& removeSensor)
@@ -49,23 +52,26 @@ std::shared_ptr<Sensor> SensorList::remove(const Sensor& removeSensor)
     if (found == m_sensors.cend())
         return nullptr;
 
-    auto row = found - m_sensors.cbegin();
-
-    disconnectSignals(*found);
-
     // Holding it in a property temporarily because
     // ListView does not disconnect delegate immediatly
     m_removedSensor = *found;
 
+    disconnectSignals(m_removedSensor);
+
+    if (m_removedSensor->alarmOn())
+        emit sensorAlarmChanged(m_removedSensor.get());
+
+    if (m_removedSensor->status() > 0)
+        emit sensorStatusChanged(m_removedSensor.get());
+
+    if (m_removedSensor->map())
+        emit sensorPlacementChanged(m_removedSensor.get());
+
+    auto row = found - m_sensors.cbegin();
+
     beginRemoveRows(QModelIndex(), row, row);
     m_sensors.erase(found);
     endRemoveRows();
-
-    if (m_removedSensor->alarmOn())
-        emit alarmedSensorsChanged();
-
-    if (m_removedSensor->status() > 0)
-        emit sensorsWithStatusChanged();
 
     return m_removedSensor;
 }
@@ -76,8 +82,9 @@ void SensorList::connectSignals(std::shared_ptr<Sensor> sensor)
     QObject::connect(sensor.get(), &Sensor::isActiveChanged,   this, &SensorList::onDataChanged);
     QObject::connect(sensor.get(), &Sensor::mapChanged,        this, &SensorList::onDataChanged);
 
-    QObject::connect(sensor.get(), &Sensor::alarmStateChanged, this, &SensorList::alarmedSensorsChanged);
-    QObject::connect(sensor.get(), &Sensor::statusChanged,     this, &SensorList::sensorsWithStatusChanged);
+    QObject::connect(sensor.get(), &Sensor::alarmStateChanged, this, &SensorList::onAlarmChanged);
+    QObject::connect(sensor.get(), &Sensor::statusChanged,     this, &SensorList::onStatusChanged);
+    QObject::connect(sensor.get(), &Sensor::mapChanged,        this, &SensorList::onPlacementChanged);
 }
 
 void SensorList::disconnectSignals(std::shared_ptr<Sensor> sensor)
@@ -86,8 +93,24 @@ void SensorList::disconnectSignals(std::shared_ptr<Sensor> sensor)
     QObject::disconnect(sensor.get(), &Sensor::isActiveChanged,   this, &SensorList::onDataChanged);
     QObject::disconnect(sensor.get(), &Sensor::mapChanged,        this, &SensorList::onDataChanged);
 
-    QObject::disconnect(sensor.get(), &Sensor::alarmStateChanged, this, &SensorList::alarmedSensorsChanged);
-    QObject::disconnect(sensor.get(), &Sensor::statusChanged,     this, &SensorList::sensorsWithStatusChanged);
+    QObject::disconnect(sensor.get(), &Sensor::alarmStateChanged, this, &SensorList::onAlarmChanged);
+    QObject::disconnect(sensor.get(), &Sensor::statusChanged,     this, &SensorList::onStatusChanged);
+    QObject::disconnect(sensor.get(), &Sensor::mapChanged,        this, &SensorList::onPlacementChanged);
+}
+
+void SensorList::onPlacementChanged()
+{
+    emit sensorPlacementChanged(static_cast<Sensor*>(QObject::sender()));
+}
+
+void SensorList::onAlarmChanged()
+{
+    emit sensorAlarmChanged(static_cast<Sensor*>(QObject::sender()));
+}
+
+void SensorList::onStatusChanged()
+{
+    emit sensorStatusChanged(static_cast<Sensor*>(QObject::sender()));
 }
 
 void SensorList::onDataChanged()

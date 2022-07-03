@@ -12,7 +12,7 @@ RowLayout {
     Button {
         id: btnAlarmStatus
 
-        visible: service.alarmedPlacedSensors.length > 0
+        visible: service.warningTracker.alarmedSensors.length > 0
 
         icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Alarm.png"
@@ -26,11 +26,11 @@ RowLayout {
 
         property int nextSensorToShowIndex: 0
         function getNextSensorToShow() {
-            var alarmedPlacedSensors = service.alarmedPlacedSensors
-            if (nextSensorToShowIndex >= alarmedPlacedSensors.length)
+            var alarmedSensors = service.warningTracker.alarmedSensors
+            if (nextSensorToShowIndex >= alarmedSensors.length)
                 nextSensorToShowIndex = 0
 
-            return alarmedPlacedSensors[nextSensorToShowIndex++]
+            return alarmedSensors[nextSensorToShowIndex++]
         }
     }
 
@@ -38,7 +38,7 @@ RowLayout {
     Button {
         id: btnErrorStatus
 
-        visible: service.placedSensorsWithStatus.length > 0
+        visible: service.warningTracker.warningSensors.length > 0
 
         icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Error.png"
@@ -52,11 +52,11 @@ RowLayout {
 
         property int nextSensorToShowIndex: 0
         function getNextSensorToShow() {
-            var placedSensorsWithStatus = service.placedSensorsWithStatus
-            if (nextSensorToShowIndex >= placedSensorsWithStatus.length)
+            var warningSensors = service.warningTracker.warningSensors
+            if (nextSensorToShowIndex >= warningSensors.length)
                 nextSensorToShowIndex = 0
 
-            return placedSensorsWithStatus[nextSensorToShowIndex++]
+            return warningSensors[nextSensorToShowIndex++]
         }
     }
 }

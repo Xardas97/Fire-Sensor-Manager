@@ -2,6 +2,7 @@
 
 #include "database.h"
 #include "usersmodel.h"
+#include "warningtracker.h"
 #include "Map/floormaps.h"
 #include "Map/mapimageprovider.h"
 #include "Communication/sensorcommunication.h"
@@ -14,16 +15,14 @@ Service::Service(QObject *parent)
       m_floorMaps(new FloorMaps(m_database)),
       m_usersModel(new UsersModel(m_database)),
       m_sensorCommunication(new SensorCommunication(m_database)),
+      m_warningTracker(new WarningTracker(m_sensorCommunication->knownSensors())),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
 {
-    m_knownSensorsFilterModel->setSourceModel(&m_sensorCommunication->knownSensors());
+    m_knownSensorsFilterModel->setSourceModel(m_sensorCommunication->knownSensors().get());
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorAdded, this, &Service::onFloorAdded);
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorRemoved, this, &Service::onFloorRemoved);
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartAdded, this, &Service::onFloorPartAdded);
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartRemoved, this, &Service::onFloorPartRemoved);
-
-    QObject::connect(&m_sensorCommunication->knownSensors(), &SensorList::alarmedSensorsChanged, this, &Service::alarmedPlacedSensorsChanged);
-    QObject::connect(&m_sensorCommunication->knownSensors(), &SensorList::sensorsWithStatusChanged, this, &Service::placedSensorsWithStatusChanged);
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
@@ -67,24 +66,18 @@ bool Service::placeOnMap(Sensor* sensor)
     if (!mapEntry)
         return false;
 
-    auto foundSensor = m_sensorCommunication->knownSensors().find(*sensor);
+    auto foundSensor = m_sensorCommunication->knownSensors()->find(*sensor);
     if (!foundSensor)
         return false;
 
     mapEntry->addSensor(foundSensor);
-
-    if (foundSensor->alarmOn())
-        emit alarmedPlacedSensorsChanged();
-
-    if (foundSensor->status() > 0)
-        emit placedSensorsWithStatusChanged();
 
     return true;
 }
 
 void Service::removeFromMap(Sensor* sensor)
 {
-    auto foundSensor = m_sensorCommunication->knownSensors().find(*sensor);
+    auto foundSensor = m_sensorCommunication->knownSensors()->find(*sensor);
     if (!foundSensor)
         return;
 
@@ -92,12 +85,6 @@ void Service::removeFromMap(Sensor* sensor)
     if (map) {
         map->removeSensor(foundSensor);
     }
-
-    if (foundSensor->alarmOn())
-        emit alarmedPlacedSensorsChanged();
-
-    if (foundSensor->status() > 0)
-        emit placedSensorsWithStatusChanged();
 }
 
 QList<Sensor*> Service::currentMapSensors()
@@ -117,32 +104,6 @@ QList<Sensor*> Service::currentMapSensors()
         placedSensors.append(sensor.get());
 
     return placedSensors;
-}
-
-QList<Sensor*> Service::alarmedPlacedSensors()
-{
-    QList<Sensor*> alarmedSensors;
-
-    for (auto& sensor: m_sensorCommunication->knownSensors().sensors())
-    {
-        if (sensor->alarmOn() && sensor->map())
-            alarmedSensors.append(sensor.get());
-    }
-
-    return alarmedSensors;
-}
-
-QList<Sensor*> Service::placedSensorsWithStatus()
-{
-    QList<Sensor*> alarmedSensors;
-
-    for (auto& sensor: m_sensorCommunication->knownSensors().sensors())
-    {
-        if (sensor->status() > 0 && sensor->map())
-            alarmedSensors.append(sensor.get());
-    }
-
-    return alarmedSensors;
 }
 
 QVariant Service::selectedFloor()
@@ -187,7 +148,7 @@ bool Service::selectFloorPartThatContains(Sensor* sensor)
     if (!sensor->map())
         return false;
 
-    auto foundSensor = m_sensorCommunication->knownSensors().find(*sensor);
+    auto foundSensor = m_sensorCommunication->knownSensors()->find(*sensor);
     if (!foundSensor)
         return false;
 
@@ -269,6 +230,11 @@ QStringList Service::availableFloorParts()
 UsersModel* Service::usersModel()
 {
     return m_usersModel.get();
+}
+
+WarningTracker* Service::warningTracker()
+{
+    return m_warningTracker.get();
 }
 
 FilteredSensorListModel* Service::knownSensorsFilterModel()

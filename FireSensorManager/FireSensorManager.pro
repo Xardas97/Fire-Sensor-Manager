@@ -15,7 +15,8 @@ SOURCES += \
         Service/filteredsensorlistmodel.cpp \
         Service/main.cpp \
         Service/service.cpp \
-        Service/usersmodel.cpp
+        Service/usersmodel.cpp \
+        Service/warningtracker.cpp
 
 RESOURCES += resources.qrc
 
@@ -41,7 +42,8 @@ HEADERS += \
     Service/database.h \
     Service/filteredsensorlistmodel.h \
     Service/service.h \
-    Service/usersmodel.h
+    Service/usersmodel.h \
+    Service/warningtracker.h
 
 DISTFILES +=
 
