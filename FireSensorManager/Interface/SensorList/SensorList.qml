@@ -68,6 +68,16 @@ Rectangle {
                 checked: service.knownSensorsModel.activeFilterEnabled
                 onCheckStateChanged: service.knownSensorsModel.activeFilterEnabled = checked
             }
+
+            CheckBox {
+                id: chboxAlarmFilter
+
+                Layout.alignment: Qt.AlignLeft
+                text: qsTr("Alarmed");
+
+                checked: service.knownSensorsModel.alarmedFilterEnabled
+                onCheckStateChanged: service.knownSensorsModel.alarmedFilterEnabled = checked
+            }
         }
 
         ScrollView {

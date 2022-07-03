@@ -57,9 +57,25 @@ void FilteredSensorListModel::setUnplacedFilterEnabled(bool unplacedFilterEnable
     invalidateFilter();
 }
 
+bool FilteredSensorListModel::alarmedFilterEnabled() const
+{
+    return m_alarmedFilterEnabled;
+}
+
+void FilteredSensorListModel::setAlarmedFilterEnabled(bool alarmedFilterEnabled)
+{
+    if (m_alarmedFilterEnabled == alarmedFilterEnabled)
+        return;
+
+    m_alarmedFilterEnabled = alarmedFilterEnabled;
+
+    emit alarmedFilterEnabledChanged();
+    invalidateFilter();
+}
+
 bool FilteredSensorListModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    if (!m_activeFilterEnabled && !m_placedFilterEnabled && !m_unplacedFilterEnabled)
+    if (!m_activeFilterEnabled && !m_placedFilterEnabled && !m_unplacedFilterEnabled && !m_alarmedFilterEnabled)
         return true;
 
     const auto index = sourceModel()->index(sourceRow, 0, sourceParent);
@@ -68,5 +84,6 @@ bool FilteredSensorListModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 
     return !(m_placedFilterEnabled && !sensor->map()) &&
            !(m_unplacedFilterEnabled && sensor->map()) &&
-           !(m_activeFilterEnabled && (!sensor->isActive() || sensor->isReplaced()));
+           !(m_activeFilterEnabled && (!sensor->isActive() || sensor->isReplaced())) &&
+           !(m_alarmedFilterEnabled && !sensor->alarmOn());
 }
