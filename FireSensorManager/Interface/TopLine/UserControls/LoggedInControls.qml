@@ -5,6 +5,8 @@ import QtQuick.Controls
 RowLayout {
     id: root
 
+    property int fontSize: 13
+
     Label {
         id: txtUsername
         text: service.users.loggedUsername
@@ -31,17 +33,18 @@ RowLayout {
 
     Menu {
         id: menuUser
-        width: 140
 
-        x: btnUserIcon.x + btnUserIcon.width / 2 - width
+        x: btnUserIcon.x + btnUserIcon.width - width
         y: btnUserIcon.y + btnUserIcon.height / 2
 
         MenuItem {
             text: qsTr("Change passphrase")
+            font.pointSize: root.fontSize
             onTriggered: popupChangePassphrase.open()
         }
         MenuItem {
             text: qsTr("Log out")
+            font.pointSize: root.fontSize
             onTriggered: service.users.logOut()
         }
     }
@@ -49,7 +52,7 @@ RowLayout {
     Popup {
         id: popupChangePassphrase
 
-        x: btnUserIcon.x + btnUserIcon.width / 2 - width
+        x: btnUserIcon.x + btnUserIcon.width - width
         y: btnUserIcon.y + btnUserIcon.height / 2
 
         ColumnLayout {
@@ -60,11 +63,13 @@ RowLayout {
             Label {
                 id: lblAuthError
                 text: qsTr("Wrong credentials!")
+                font.pointSize: root.fontSize
                 color: "red"
             }
             Label {
                 id: lblNewPassphrasesError
                 text: qsTr("Passphrases don't match!")
+                font.pointSize: root.fontSize
                 color: "red"
             }
 
@@ -74,6 +79,7 @@ RowLayout {
                 Layout.preferredWidth: lblNewPassphrasesError.width
 
                 placeholderText: qsTr("Old Passphrase")
+                font.pointSize: root.fontSize
                 echoMode: TextInput.Password
             }
 
@@ -83,6 +89,7 @@ RowLayout {
                 Layout.preferredWidth: lblNewPassphrasesError.width
 
                 placeholderText: qsTr("New Passphrase")
+                font.pointSize: root.fontSize
                 echoMode: TextInput.Password
             }
 
@@ -92,12 +99,14 @@ RowLayout {
                 Layout.preferredWidth: lblNewPassphrasesError.width
 
                 placeholderText: qsTr("Repeat Passphrase")
+                font.pointSize: root.fontSize
                 echoMode: TextInput.Password
             }
 
             Button {
                 id: btnChangePassphrase
                 text: qsTr("Change Passphrase")
+                font.pointSize: root.fontSize
 
                 Layout.fillWidth: true
                 enabled: txtOldPassphrase.length > 0 && txtNewPassphrase.length > 0 && txtNewPassphrase2.length > 0

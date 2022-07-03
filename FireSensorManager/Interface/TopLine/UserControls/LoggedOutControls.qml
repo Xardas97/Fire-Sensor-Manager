@@ -5,6 +5,8 @@ import QtQuick.Controls
 RowLayout {
     id: root
 
+    property int fontSize: 13
+
     Button {
         id: btnLogIn
         text: qsTr("Log in")
@@ -14,7 +16,7 @@ RowLayout {
     Popup {
         id: popupLogin
 
-        x: btnLogIn.x + btnLogIn.width / 2 - width
+        x: btnLogIn.x + btnLogIn.width - width
         y: btnLogIn.y + btnLogIn.height / 2
 
         ColumnLayout {
@@ -24,25 +26,31 @@ RowLayout {
             Label {
                 id: lblLoginError
                 text: qsTr("Wrong credentials!")
+                font.pointSize: root.fontSize
                 color: "red"
             }
 
             TextField {
                 id: txtUsername
                 placeholderText: qsTr("username")
+                font.pointSize: root.fontSize
+                Layout.preferredWidth: lblLoginError.width
             }
 
             TextField {
                 id: txtPassphrase
                 placeholderText: qsTr("passphrase")
+                font.pointSize: root.fontSize
                 echoMode: TextInput.Password
+                Layout.preferredWidth: lblLoginError.width
             }
 
             Button {
                 id: btnLogin
                 text: qsTr("Login")
+                font.pointSize: root.fontSize
 
-                Layout.fillWidth: true
+                Layout.preferredWidth: lblLoginError.width
                 enabled: txtUsername.length > 0 && txtPassphrase.length > 0
 
                 onClicked: activate()
