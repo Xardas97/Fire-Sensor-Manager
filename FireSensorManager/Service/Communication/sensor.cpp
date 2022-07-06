@@ -15,7 +15,7 @@ Sensor::Sensor(QUuid uuid, QString name, Capabilities capabilities, QHostAddress
       m_x(0),
       m_y(0)
 {
-    setTemperature(0);
+    setTemperature(-20);
     setCo2Concentration(0);
     setPollution(0);
 
