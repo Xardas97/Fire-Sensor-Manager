@@ -1,13 +1,17 @@
 #include "alarmmanager.h"
 
+#include "database.h"
+
 #include <QFile>
 #include <QAudioOutput>
 
-AlarmManager::AlarmManager()
-    : m_player{new QMediaPlayer()}
+AlarmManager::AlarmManager(std::shared_ptr<Database> database)
+    : m_player{new QMediaPlayer()},
+      m_database{database}
 {
-    m_chosenVolume = 0.25;
-    m_chosenAlarm = Alarm::Classic;
+    auto values = m_database->loadAlarmData();
+    m_chosenAlarm = (Alarm)std::get<0>(values);
+    m_chosenVolume = std::get<1>(values);
 }
 
 void AlarmManager::play()
@@ -115,4 +119,9 @@ float AlarmManager::volume()
 void AlarmManager::setVolume(float volume)
 {
     m_chosenVolume = volume;
+}
+
+AlarmManager::~AlarmManager()
+{
+    m_database->saveAlarmData(m_chosenAlarm, m_chosenVolume);
 }

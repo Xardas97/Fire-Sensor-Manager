@@ -7,13 +7,16 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 
+class Database;
+
 enum Alarm { Classic, DigitalClock, Buzzer, Facility, Vintage };
 
 class AlarmManager : public QObject
 {
     Q_OBJECT
 public:
-    AlarmManager();
+    AlarmManager(std::shared_ptr<Database> database);
+    ~AlarmManager();
 
 public slots:
     void play();
@@ -38,6 +41,8 @@ private:
     std::unique_ptr<QBuffer> m_alarm;
     std::unique_ptr<QAudioOutput> m_output;
     std::unique_ptr<QMediaPlayer> m_player;
+
+    std::shared_ptr<Database> m_database;
 };
 
 #endif // ALARMMANAGER_H

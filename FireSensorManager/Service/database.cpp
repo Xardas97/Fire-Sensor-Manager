@@ -63,7 +63,7 @@ bool Database::createTables()
 {
     qDebug() << "Creating missing database tables...";
 
-    auto success = createMapsTable() && createSensorsTable() && createUsersTable();
+    auto success = createMapsTable() && createSensorsTable() && createUsersTable() && createAlarmsTable();
     if (!success)
     {
         qWarning() << "Creating tables failed!";
@@ -108,6 +108,22 @@ bool Database::createUsersTable()
     if (!res)
     {
         qWarning() << "Creating users table failed: " << query.lastError().text();
+        return false;
+    }
+
+    return true;
+}
+
+bool Database::createAlarmsTable()
+{
+    auto queryText = "CREATE TABLE IF NOT EXISTS alarms "
+                     "(alarm INTEGER, volume REAL)";
+
+    QSqlQuery query;
+    auto res = query.exec(queryText);
+    if (!res)
+    {
+        qWarning() << "Creating alarms table failed: " << query.lastError().text();
         return false;
     }
 
@@ -509,6 +525,45 @@ QByteArray Database::hashPassphrase(const QString& passphrase)
     QCryptographicHash hasher {QCryptographicHash::Sha3_224};
     hasher.addData(passphrase.toLocal8Bit());
     return hasher.result();
+}
+
+std::tuple<int, float> Database::loadAlarmData()
+{
+    QSqlQuery query;
+    query.prepare("SELECT * FROM alarms");
+
+    auto success = query.exec();
+    if (!success)
+    {
+        qWarning() << "Failed to load alarm data from the dabatase: " << query.lastError().text();
+        return {0, 0.5};
+    }
+
+    if (!query.next())
+        return {0, 0.5};
+
+    auto alarm = query.value("alarm").toInt();
+    auto volume = query.value("volume").toFloat();
+    return {alarm, volume};
+}
+
+void Database::saveAlarmData(int alarm, float volume)
+{
+    qDebug() << "Saving alarm data!!";
+
+    QSqlQuery{}.exec("DELETE FROM alarms");
+
+    auto queryText = "INSERT INTO alarms "
+                     "(alarm, volume) "
+                     "VALUES (:alarm, :volume)";
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":alarm", alarm);
+    query.bindValue(":volume", volume);
+
+    auto success = query.exec();
+    if (!success)
+        qWarning() << "Failed to update the alarm data: " << query.lastError().text();
 }
 
 void Database::close()

@@ -1,6 +1,7 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include <tuple>
 #include <vector>
 #include <QObject>
 #include <functional>
@@ -38,6 +39,9 @@ public:
 
     void saveData();
 
+    auto loadAlarmData() -> std::tuple<int, float>;
+    void saveAlarmData(int alarm, float volume);
+
 private:
     bool open();
     void close();
@@ -45,6 +49,7 @@ private:
     bool createTables();
     bool createMapsTable();
     bool createUsersTable();
+    bool createAlarmsTable();
     bool createSensorsTable();
 
     bool createDefaultAdminUser();
