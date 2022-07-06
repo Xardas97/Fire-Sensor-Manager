@@ -1,7 +1,8 @@
 QT += quick \
       network \
       concurrent \
-      sql
+      sql \
+      multimedia
 
 SOURCES += \
         Service/Communication/sensor.cpp \
@@ -11,6 +12,7 @@ SOURCES += \
         Service/Map/floormaps.cpp \
         Service/Map/mapentry.cpp \
         Service/Map/mapimageprovider.cpp \
+        Service/alarmmanager.cpp \
         Service/database.cpp \
         Service/filteredsensorlistmodel.cpp \
         Service/main.cpp \
@@ -39,6 +41,7 @@ HEADERS += \
     Service/Map/floormaps.h \
     Service/Map/mapentry.h \
     Service/Map/mapimageprovider.h \
+    Service/alarmmanager.h \
     Service/database.h \
     Service/filteredsensorlistmodel.h \
     Service/service.h \

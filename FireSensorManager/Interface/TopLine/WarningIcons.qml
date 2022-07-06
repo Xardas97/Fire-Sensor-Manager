@@ -22,7 +22,10 @@ RowLayout {
         ToolTip.visible: hovered
         ToolTip.text: qsTr("A sensor is reporting alarming signal values")
 
-        onClicked: root.requestShowSensor(getNextSensorToShow())
+        onClicked: {
+            service.alarmManager.stop()
+            root.requestShowSensor(getNextSensorToShow())
+        }
 
         property int nextSensorToShowIndex: 0
         function getNextSensorToShow() {
@@ -32,11 +35,18 @@ RowLayout {
 
             return alarmedSensors[nextSensorToShowIndex++]
         }
+
+        onVisibleChanged: {
+            if (visible)
+                service.alarmManager.play()
+            else
+                service.alarmManager.stop()
+        }
     }
 
 
     Button {
-        id: btnErrorStatus
+        id: btnWarningStatus
 
         visible: service.warningTracker.warningSensors.length > 0
 

@@ -2,6 +2,7 @@
 #define SERVICE_H
 
 #include "usersmodel.h"
+#include "alarmmanager.h"
 #include "warningtracker.h"
 #include "Communication/sensor.h"
 #include "filteredsensorlistmodel.h"
@@ -22,6 +23,7 @@ class Service : public QObject
     Q_OBJECT
 
     Q_PROPERTY(UsersModel* users READ usersModel CONSTANT)
+    Q_PROPERTY(AlarmManager* alarmManager READ alarmManager CONSTANT)
     Q_PROPERTY(WarningTracker* warningTracker READ warningTracker CONSTANT)
     Q_PROPERTY(FilteredSensorListModel* knownSensorsModel READ knownSensorsFilterModel CONSTANT)
 
@@ -44,6 +46,7 @@ public:
     QStringList availableFloorParts();
 
     UsersModel*              usersModel();
+    AlarmManager*            alarmManager();
     WarningTracker*          warningTracker();
     MapImageProvider*        createMapImageProvider();
     FilteredSensorListModel* knownSensorsFilterModel();
@@ -97,6 +100,7 @@ private:
     std::shared_ptr<Database>                m_database;
     std::shared_ptr<FloorMaps>               m_floorMaps;
     std::unique_ptr<UsersModel>              m_usersModel;
+    std::unique_ptr<AlarmManager>            m_alarmManager;
     std::unique_ptr<SensorCommunication>     m_sensorCommunication;
     std::unique_ptr<WarningTracker>          m_warningTracker;
     std::unique_ptr<FilteredSensorListModel> m_knownSensorsFilterModel;

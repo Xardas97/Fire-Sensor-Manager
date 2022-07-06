@@ -43,5 +43,6 @@
         <file>Interface/FloorMaps/FloorView.qml</file>
         <file>Resources/Icons/Back.png</file>
         <file>Interface/FloorMaps/BuildingView.qml</file>
+        <file>Resources/Sounds/ClassicAlarm.wav</file>
     </qresource>
 </RCC>

@@ -14,6 +14,7 @@ Service::Service(QObject *parent)
       m_database(new Database()),
       m_floorMaps(new FloorMaps(m_database)),
       m_usersModel(new UsersModel(m_database)),
+      m_alarmManager(new AlarmManager()),
       m_sensorCommunication(new SensorCommunication(m_database)),
       m_warningTracker(new WarningTracker(m_floorMaps, m_sensorCommunication->knownSensors())),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
@@ -230,6 +231,11 @@ QStringList Service::availableFloorParts()
 UsersModel* Service::usersModel()
 {
     return m_usersModel.get();
+}
+
+AlarmManager* Service::alarmManager()
+{
+    return m_alarmManager.get();
 }
 
 WarningTracker* Service::warningTracker()
