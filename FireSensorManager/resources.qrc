@@ -44,5 +44,9 @@
         <file>Resources/Icons/Back.png</file>
         <file>Interface/FloorMaps/BuildingView.qml</file>
         <file>Resources/Sounds/ClassicAlarm.wav</file>
+        <file>Resources/Sounds/BuzzerAlarm.wav</file>
+        <file>Resources/Sounds/DigitalClockAlarm.wav</file>
+        <file>Resources/Sounds/FacilityAlarm.wav</file>
+        <file>Resources/Sounds/VintageAlarm.wav</file>
     </qresource>
 </RCC>
