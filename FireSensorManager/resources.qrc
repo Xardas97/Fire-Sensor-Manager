@@ -48,5 +48,8 @@
         <file>Resources/Sounds/DigitalClockAlarm.wav</file>
         <file>Resources/Sounds/FacilityAlarm.wav</file>
         <file>Resources/Sounds/VintageAlarm.wav</file>
+        <file>Interface/Settings/Signalization/Signalization.qml</file>
+        <file>Interface/Settings/Signalization/AlarmPicker.qml</file>
+        <file>Interface/Settings/Signalization/VolumePicker.qml</file>
     </qresource>
 </RCC>

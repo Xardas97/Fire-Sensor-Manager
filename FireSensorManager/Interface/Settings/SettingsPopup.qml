@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import "MapSetup"
+import "Signalization"
 import "UserManagement"
 
 Popup {
@@ -30,6 +31,8 @@ Popup {
         spacing: 10
 
         Button {
+            id: btnMapSetup
+
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
 
@@ -45,18 +48,25 @@ Popup {
         }
 
         Button {
+            id: btnSignalization
+
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
 
-            enabled: false
+            enabled: service.users.hasModPermissions
 
             font.pixelSize: columnSettings.fontSize
             text: qsTr("Signalization")
 
-            onClicked: console.log("Signalization settings requested")
+            onClicked: {
+                root.close()
+                dialogSignalization.open()
+            }
         }
 
         Button {
+            id: btnUserManagement
+
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
 
@@ -90,6 +100,15 @@ Popup {
 
     MapSetup {
         id: dialogMapSetup
+        parent: Overlay.overlay
+
+        anchors.centerIn: parent
+        onOpened: settingsFlowEntered()
+        onClosed: settingsFlowLeft()
+    }
+
+    Signalization {
+        id: dialogSignalization
         parent: Overlay.overlay
 
         anchors.centerIn: parent
