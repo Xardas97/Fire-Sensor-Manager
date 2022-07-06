@@ -12,13 +12,13 @@ SOURCES += \
         Service/Map/floormaps.cpp \
         Service/Map/mapentry.cpp \
         Service/Map/mapimageprovider.cpp \
-        Service/alarmmanager.cpp \
+        Service/Alarm/alarmmanager.cpp \
         Service/database.cpp \
-        Service/filteredsensorlistmodel.cpp \
+        Service/Models/filteredsensorlistmodel.cpp \
         Service/main.cpp \
         Service/service.cpp \
-        Service/usersmodel.cpp \
-        Service/warningtracker.cpp
+        Service/Models/usersmodel.cpp \
+        Service/Alarm/warningtracker.cpp
 
 RESOURCES += resources.qrc
 
@@ -41,12 +41,12 @@ HEADERS += \
     Service/Map/floormaps.h \
     Service/Map/mapentry.h \
     Service/Map/mapimageprovider.h \
-    Service/alarmmanager.h \
+    Service/Alarm/alarmmanager.h \
     Service/database.h \
-    Service/filteredsensorlistmodel.h \
+    Service/Models/filteredsensorlistmodel.h \
     Service/service.h \
-    Service/usersmodel.h \
-    Service/warningtracker.h
+    Service/Models/usersmodel.h \
+    Service/Alarm/warningtracker.h
 
 DISTFILES +=
 

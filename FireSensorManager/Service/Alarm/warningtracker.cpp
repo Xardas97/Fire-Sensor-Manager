@@ -1,8 +1,8 @@
 #include "warningtracker.h"
 
-#include "Map/mapentry.h"
-#include "Map/floormaps.h"
-#include "Communication/sensorlist.h"
+#include "../Map/mapentry.h"
+#include "../Map/floormaps.h"
+#include "../Communication/sensorlist.h"
 
 WarningTracker::WarningTracker(std::shared_ptr<FloorMaps> floorMaps, std::shared_ptr<SensorList> knownSensors, QObject *parent)
     : QObject{parent},

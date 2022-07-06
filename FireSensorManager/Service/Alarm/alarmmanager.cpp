@@ -1,6 +1,6 @@
 #include "alarmmanager.h"
 
-#include "database.h"
+#include "../database.h"
 
 #include <QFile>
 #include <QAudioOutput>

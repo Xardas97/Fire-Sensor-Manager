@@ -1,11 +1,11 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include "usersmodel.h"
-#include "alarmmanager.h"
-#include "warningtracker.h"
+#include "Models/usersmodel.h"
+#include "Alarm/alarmmanager.h"
+#include "Alarm/warningtracker.h"
 #include "Communication/sensor.h"
-#include "filteredsensorlistmodel.h"
+#include "Models/filteredsensorlistmodel.h"
 
 #include <QList>
 #include <memory>

@@ -1,8 +1,6 @@
 #include "service.h"
 
 #include "database.h"
-#include "usersmodel.h"
-#include "warningtracker.h"
 #include "Map/floormaps.h"
 #include "Map/mapimageprovider.h"
 #include "Communication/sensorcommunication.h"

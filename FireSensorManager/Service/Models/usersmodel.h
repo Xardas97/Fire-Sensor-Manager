@@ -1,7 +1,7 @@
 #ifndef USERSMODEL_H
 #define USERSMODEL_H
 
-#include "database.h"
+#include "../database.h"
 
 #include <memory>
 #include <vector>

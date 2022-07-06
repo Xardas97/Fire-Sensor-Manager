@@ -1,7 +1,7 @@
 #ifndef WARNINGTRACKER_H
 #define WARNINGTRACKER_H
 
-#include "Communication/sensor.h"
+#include "../Communication/sensor.h"
 
 #include <memory>
 #include <QObject>
