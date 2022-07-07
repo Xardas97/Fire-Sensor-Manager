@@ -12,8 +12,7 @@ Dialog {
     property int desiredX
     property int desiredY
 
-    height: 250
-    width: 350
+    width: 400
 
     standardButtons: Dialog.Save | Dialog.Cancel
     Component.onCompleted:standardButton(Dialog.Save).enabled = Qt.binding(isSensorNameValueValid)
@@ -28,7 +27,6 @@ Dialog {
             id: sensorName
 
             Layout.fillWidth: true
-            Layout.preferredHeight: layout.height * 0.15
             Layout.alignment: Qt.AlignCenter
         }
 
@@ -38,7 +36,6 @@ Dialog {
             visible: false
 
             Layout.fillWidth: true
-            Layout.preferredHeight: layout.height * 0.05
 
             text: qsTr("Failed to update the sensor name")
             color: "red"
@@ -50,7 +47,7 @@ Dialog {
             visible: !lblFailedUpdate.visible
 
             Layout.fillWidth: true
-            Layout.preferredHeight: layout.height * 0.05
+            Layout.preferredHeight: lblFailedUpdate.implicitHeight
         }
 
         Label {
@@ -59,7 +56,6 @@ Dialog {
             visible: temperature.visible | co2Concentration.visible | pollution.visible
 
             Layout.fillWidth: true
-            Layout.preferredHeight: layout.height * 0.15
 
             verticalAlignment: Text.AlignBottom
 
@@ -75,8 +71,7 @@ Dialog {
             sensor: root.sensor
 
             Layout.fillWidth: true
-            Layout.preferredHeight: layout.height * 0.15
-            Layout.alignment: Qt.AlignCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Co2Concentration {
@@ -87,8 +82,7 @@ Dialog {
             sensor: root.sensor
 
             Layout.fillWidth: true
-            Layout.preferredHeight: layout.height * 0.15
-            Layout.alignment: Qt.AlignCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Pollution {
@@ -99,15 +93,34 @@ Dialog {
             sensor: root.sensor
 
             Layout.fillWidth: true
-            Layout.preferredHeight: layout.height * 0.15
-            Layout.alignment: Qt.AlignCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
         Item {
-            id: itemPadding
+            id: itemTemperaturePadding
+
+            visible: !temperature.visible
 
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            Layout.preferredHeight: temperature.implicitHeight
+        }
+
+        Item {
+            id: itemCo2ConcentrationPadding
+
+            visible: !co2Concentration.visible
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: co2Concentration.implicitHeight
+        }
+
+        Item {
+            id: itemPollutionPadding
+
+            visible: !pollution.visible
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: pollution.implicitHeight
         }
     }
 
@@ -159,12 +172,12 @@ Dialog {
     }
 
     function getDialogX(desiredX) {
-        var maxDialogX = parent.Window.window.x + parent.Window.window.width - sensorSettingsDialog.width - mapToGlobal(0, 0).x - 20 * parent.scale
+        var maxDialogX = parent.Window.window.x + parent.Window.window.width - root.width - mapToGlobal(0, 0).x - 20 * parent.scale
         return Math.min(desiredX, maxDialogX);
     }
 
     function getDialogY(desiredY) {
-        var maxDialogY = parent.Window.window.y + parent.Window.window.height - sensorSettingsDialog.height - mapToGlobal(0, 0).y - 20 * parent.scale
+        var maxDialogY = parent.Window.window.y + parent.Window.window.height - root.height - mapToGlobal(0, 0).y - 20 * parent.scale
         return Math.min(desiredY, maxDialogY);
     }
 }

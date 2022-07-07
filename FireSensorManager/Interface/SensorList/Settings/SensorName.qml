@@ -3,7 +3,7 @@ import QtQuick.Controls
 
 import Custom.Sensors
 
-Item {
+Row {
     id: root
 
     property string currentName
@@ -11,29 +11,27 @@ Item {
 
     onCurrentNameChanged: txtName.text = currentName
 
+    spacing: 20
+
     Label {
         id: lblName
 
-        height: root.height
-        width: root.width * 0.35
+        width: (root.width - 2 * root.spacing) * 0.35
 
+        anchors.verticalCenter: root.verticalCenter
         horizontalAlignment: "AlignRight"
-        verticalAlignment: "AlignVCenter"
 
         text: qsTr("Sensor Name:")
-        color: "black"
     }
 
     TextField {
         id: txtName
 
-        width: root.width * 0.51
+        width: (root.width - 2 * root.spacing) * 0.55
 
         anchors {
-            left: lblName.right
-            leftMargin: root.width * 0.03
-            top: root.top
             topMargin: (root.height - height) / 2
+            verticalCenter: root.verticalCenter
         }
 
         horizontalAlignment: "AlignLeft"
@@ -42,17 +40,11 @@ Item {
     Button {
         id: btnSettings
 
-        height: root.height
-        width: root.width * 0.10
+        width: (root.width - 2 * root.spacing) * 0.10
 
         anchors {
-            left: txtName.right
-            leftMargin: root.width * 0.01
-
-            top: root.top
+            verticalCenter: root.verticalCenter
             topMargin: (root.height - height) / 2
-
-            bottom: root.bottom
             bottomMargin: (root.height - height) / 2
         }
 
