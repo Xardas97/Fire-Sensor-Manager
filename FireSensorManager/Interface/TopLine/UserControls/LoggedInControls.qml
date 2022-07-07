@@ -144,7 +144,7 @@ RowLayout {
             }
         }
 
-        onOpened: {
+        onAboutToShow: {
             layout.resetState()
         }
     }

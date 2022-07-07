@@ -91,7 +91,7 @@ Popup {
         }
     }
 
-    onOpened: {
+    onAboutToShow: {
         layout.resetFields(true);
         txtUsername.forceActiveFocus()
     }

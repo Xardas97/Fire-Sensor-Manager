@@ -16,7 +16,6 @@ RowLayout {
 
             text: qsTr("Floor:")
             font.pointSize: 13
-            color: "white"
         }
 
         ComboBox {
@@ -41,7 +40,6 @@ RowLayout {
 
             text: qsTr("Floor part:")
             font.pointSize: 13
-            color: "white"
         }
 
         ComboBox {

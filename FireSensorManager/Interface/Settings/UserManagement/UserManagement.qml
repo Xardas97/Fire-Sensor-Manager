@@ -7,7 +7,7 @@ Dialog {
     title: qsTr("User Management")
 
     width: 280
-    height: 300
+    height: 450
 
     standardButtons: Dialog.Close
 
@@ -55,6 +55,8 @@ Dialog {
 
         Button {
             Layout.alignment: Qt.AlignHCenter
+
+            anchors.topMargin: layout.spacing * 2
 
             text: qsTr("Add User")
             onClicked: popupAddUser.open()

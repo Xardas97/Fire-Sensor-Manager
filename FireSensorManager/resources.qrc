@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
         <file>Interface/main.qml</file>
         <file>Interface/SensorList/SensorView.qml</file>
         <file>Interface/SensorList/SensorList.qml</file>

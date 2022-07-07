@@ -69,7 +69,7 @@ RowLayout {
             }
         }
 
-        onOpened: {
+        onAboutToShow: {
             txtUsername.text = ""
             txtPassphrase.text = ""
             lblLoginError.visible = false

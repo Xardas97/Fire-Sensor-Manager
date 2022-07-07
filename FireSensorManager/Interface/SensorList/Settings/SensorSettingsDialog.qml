@@ -166,7 +166,7 @@ Dialog {
         }
     }
 
-    onOpened: {
+    onAboutToShow: {
         x = getDialogX(desiredX)
         y = getDialogY(desiredY)
     }

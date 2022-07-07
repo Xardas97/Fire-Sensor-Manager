@@ -6,7 +6,7 @@ import Custom.Sensors
 import "../../SensorList"
 import "../../SensorList/Settings"
 
-Rectangle {
+Item {
     id: root
 
     signal pressed()
@@ -15,8 +15,6 @@ Rectangle {
 
     width: rowContent.width
     height: rowContent.height
-
-    color: "transparent"
 
     property Sensor sensor
 
@@ -27,6 +25,7 @@ Rectangle {
             id: lblName
             width: image.width * 1.2
 
+            color: "black"
             text: sensor.name
             elide: Text.ElideRight
 

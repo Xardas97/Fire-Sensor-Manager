@@ -5,6 +5,10 @@ import QtQuick.Controls
 Pane {
     id: root
 
+    background: Rectangle {
+        color: "transparent"
+    }
+
     function stopPlaying() {
         if (service.warningTracker.alarmedSensors.length === 0)
                   service.alarmManager.stop()
@@ -28,9 +32,7 @@ Pane {
 
             CheckBox {
                 text: getAlarmName(index);
-
                 property int alarm: index
-
                 Component.onCompleted: checked = service.alarmManager.alarm() === alarm
             }
         }

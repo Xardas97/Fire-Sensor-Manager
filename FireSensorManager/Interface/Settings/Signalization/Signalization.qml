@@ -12,10 +12,12 @@ Dialog {
 
         AlarmPicker {
             id: alarmPicker
+            Layout.fillWidth: true
         }
 
         VolumePicker {
             id: volumePicker
+            Layout.fillWidth: true
         }
     }
 

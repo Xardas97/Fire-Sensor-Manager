@@ -7,6 +7,7 @@ import Custom.Sensors
 Rectangle {
     id: root
 
+    color: "transparent"
     border {
         color: "black"
         width: 1

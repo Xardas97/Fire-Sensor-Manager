@@ -6,7 +6,7 @@ import "TopLine"
 import "FloorMaps"
 import "SensorList"
 
-Window {
+ApplicationWindow {
     id: root
 
     title: qsTr("FireSensorManager")

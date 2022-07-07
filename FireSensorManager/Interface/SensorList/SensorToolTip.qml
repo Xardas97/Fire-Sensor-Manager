@@ -23,6 +23,9 @@ MouseArea {
             id: columnText
             anchors.centerIn: parent
 
+            // used to get default text color
+            Label { id: lbl; width: 0; height: 0 }
+
             Row {
                 Label {
                     id: lblName
@@ -74,7 +77,7 @@ MouseArea {
 
                 Label {
                     text: sensor.temperature + "/" + sensor.temperatureThreshold
-                    color: sensor.temperature > sensor.temperatureThreshold ? "red" : "black"
+                    color: sensor.temperature > sensor.temperatureThreshold ? "red" : lbl.color
                 }
             }
 
@@ -88,7 +91,7 @@ MouseArea {
 
                 Label {
                     text: sensor.smokeDetected ? qsTr("Yes") : qsTr("No")
-                    color: sensor.smokeDetected ? "red" : "black"
+                    color: sensor.smokeDetected ? "red" : lbl.color
                 }
             }
 
@@ -102,7 +105,7 @@ MouseArea {
 
                 Label {
                     text: sensor.co2Concentration + "/" + sensor.co2ConcentrationThreshold
-                    color: sensor.co2Concentration > sensor.co2ConcentrationThreshold ? "red" : "black"
+                    color: sensor.co2Concentration > sensor.co2ConcentrationThreshold ? "red" : lbl.color
                 }
             }
 
@@ -116,7 +119,7 @@ MouseArea {
 
                 Label {
                     text: sensor.pollution + "/" + sensor.pollutionThreshold
-                    color: sensor.pollution > sensor.pollutionThreshold ? "red" : "black"
+                    color: sensor.pollution > sensor.pollutionThreshold ? "red" : lbl.color
                 }
             }
         }

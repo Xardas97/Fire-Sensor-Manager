@@ -20,6 +20,7 @@ Rectangle {
     property bool dirtyStatus: sensor.status & 2
     property bool maintenanceRequiredStatus: sensor.status & 4
 
+    color: "transparent"
     border {
         color: isSelected? "red" : "black"
         width: isSelected? 2 : 1
@@ -68,7 +69,9 @@ Rectangle {
         font.pointSize: 15
 
         text: sensor.name
-        color: sensor.alarmOn ? "red" : (root.errorStatus || root.dirtyStatus | root.maintenanceRequiredStatus) ? "purple" : "black"
+        // used to get default text color
+        Label { id: lbl; width: 0; height: 0 }
+        color: sensor.alarmOn ? "red" : (root.errorStatus || root.dirtyStatus | root.maintenanceRequiredStatus) ? "purple" : lbl.color
     }
 
     Button {
@@ -107,25 +110,23 @@ Rectangle {
     }
 
     Rectangle {
-        id : rectInactive
-
-        width: root.width
-        height: root.height
-        anchors.centerIn: root
-
-        color: "grey"
-        opacity: sensor.isActive || sensor.isReplaced ? 0 : 0.25
+        id : rectBackground
+        anchors.fill: parent
+        color: internal.getBGColor()
+        opacity: 0.25
     }
 
-    Rectangle {
-        id : rectReplaced
+    QtObject {
+        id: internal
+        function getBGColor() {
+            if (root.sensor.isReplaced)
+                return "red"
 
-        width: root.width
-        height: root.height
-        anchors.centerIn: root
+            if (root.sensor.isActive)
+                return "grey"
 
-        color: "red"
-        opacity: sensor.isReplaced ? 0.25 : 0
+            return "transparent"
+        }
     }
 }
 
