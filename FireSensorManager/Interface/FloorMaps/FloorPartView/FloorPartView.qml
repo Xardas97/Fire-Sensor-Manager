@@ -140,7 +140,7 @@ Item {
         icon.source: "qrc:/Resources/Icons/Back.png"
         background: Rectangle {
             color: "grey"
-            opacity: 0.5
+            opacity: parent.hovered ? 0.5 : 0.25
         }
 
         onClicked: root.showPreviousView()

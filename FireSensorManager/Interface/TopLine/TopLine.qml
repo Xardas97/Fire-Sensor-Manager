@@ -4,6 +4,7 @@ import QtQuick.Controls
 
 import Custom.Sensors
 
+import "../Controls"
 import "../Settings"
 import "../FloorMaps"
 import "UserControls"
@@ -19,16 +20,14 @@ Rectangle {
 
     color: "grey"
 
-    Button {
+    IconButton {
         id: btnSettingsMenu
 
         anchors.verticalCenter: root.verticalCenter
         anchors.left: root.left
         anchors.leftMargin: 10
 
-        icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Menu.png"
-        background: Rectangle { opacity: 0 }
 
         onClicked: popupSettings.open()
     }

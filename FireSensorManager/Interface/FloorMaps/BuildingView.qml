@@ -53,6 +53,7 @@ Flickable {
                         border.width: btn.isAlarmed ? 2     : 1
                         border.color: btn.isAlarmed ? "red" : "black"
                         color: parent.enabled ? "lightgrey" : "transparent"
+                        opacity: hovered ? 1 : 0.5
                     }
 
                     onClicked: {

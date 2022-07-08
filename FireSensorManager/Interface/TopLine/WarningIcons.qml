@@ -4,19 +4,20 @@ import QtQuick.Controls
 
 import Custom.Sensors
 
+import "../Controls"
+
 RowLayout {
     id: root
 
     signal requestShowSensor(Sensor sensor)
 
-    Button {
+    IconButton {
         id: btnAlarmStatus
 
         visible: service.warningTracker.alarmedSensors.length > 0
 
         icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Alarm.png"
-        background: Rectangle { opacity: 0 }
 
         ToolTip.delay: 500
         ToolTip.visible: hovered
@@ -45,14 +46,13 @@ RowLayout {
     }
 
 
-    Button {
+    IconButton {
         id: btnWarningStatus
 
         visible: service.warningTracker.warningSensors.length > 0
 
         icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Error.png"
-        background: Rectangle { opacity: 0 }
 
         ToolTip.delay: 500
         ToolTip.visible: hovered

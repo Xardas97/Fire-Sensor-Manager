@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import "../../Controls"
+
 RowLayout {
     id: root
 
@@ -12,12 +14,10 @@ RowLayout {
         text: service.users.loggedUsername
     }
 
-    Button {
+    IconButton {
         id: btnUserIcon
-
+        icon.color: "transparent"
         icon.source: getUserIcon()
-        background: Rectangle { opacity: 0 }
-
         onClicked: menuUser.open()
     }
 

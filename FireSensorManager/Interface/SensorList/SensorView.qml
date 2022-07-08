@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Custom.Sensors
 
 import "Settings"
+import "../Controls"
 
 Rectangle {
     id: root
@@ -74,7 +75,7 @@ Rectangle {
         color: sensor.alarmOn ? "red" : (root.errorStatus || root.dirtyStatus | root.maintenanceRequiredStatus) ? "purple" : lbl.color
     }
 
-    Button {
+    IconButton {
         id: btnSettings
 
         anchors {
@@ -84,7 +85,6 @@ Rectangle {
         }
 
         icon.source: "qrc:/Resources/Icons/SensorSettings.png"
-        background: Rectangle { opacity: 0 }
 
         enabled: service.users.hasModPermissions
         onClicked: sensorSettingsDialog.open()

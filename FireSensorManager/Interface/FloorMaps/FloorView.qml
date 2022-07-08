@@ -38,7 +38,7 @@ Item {
                 }
 
                 background: Rectangle {
-                    color: "transparent"
+                    color: hovered ? "grey" : "transparent"
                     border.width: btn.isAlarmed ? 2     : 0
                     border.color: btn.isAlarmed ? "red" : "black"
                 }
@@ -81,7 +81,7 @@ Item {
         icon.source: "qrc:/Resources/Icons/Back.png"
         background: Rectangle {
             color: "grey"
-            opacity: 0.5
+            opacity: parent.hovered ? 0.5 : 0.25
         }
 
         onClicked: root.showPreviousView()

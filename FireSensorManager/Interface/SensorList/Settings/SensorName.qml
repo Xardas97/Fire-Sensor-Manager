@@ -3,6 +3,8 @@ import QtQuick.Controls
 
 import Custom.Sensors
 
+import "../../Controls"
+
 Row {
     id: root
 
@@ -37,7 +39,7 @@ Row {
         horizontalAlignment: "AlignLeft"
     }
 
-    Button {
+    IconButton {
         id: btnSettings
 
         width: (root.width - 2 * root.spacing) * 0.10
@@ -49,7 +51,6 @@ Row {
         }
 
         icon.source: "qrc:/Resources/Icons/Refresh.png"
-        background: Rectangle { opacity: 0 }
 
         onClicked: txtName.text = currentName
     }

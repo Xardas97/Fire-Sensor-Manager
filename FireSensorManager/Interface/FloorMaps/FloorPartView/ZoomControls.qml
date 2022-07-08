@@ -18,7 +18,7 @@ RowLayout {
         icon.source: "qrc:/Resources/Icons/Plus.png"
         background: Rectangle {
             color: "grey"
-            opacity: 0.5
+            opacity: parent.hovered ? 0.5 : 0.25
         }
     }
     Button {
@@ -32,7 +32,7 @@ RowLayout {
         icon.source: "qrc:/Resources/Icons/Minus.png"
         background: Rectangle {
             color: "grey"
-            opacity: 0.5
+            opacity: parent.hovered ? 0.5 : 0.25
         }
     }
     Button {
@@ -45,7 +45,7 @@ RowLayout {
         icon.source: "qrc:/Resources/Icons/Reset.png"
         background: Rectangle {
             color: "grey"
-            opacity: 0.5
+            opacity: parent.hovered ? 0.5 : 0.25
         }
     }
 }

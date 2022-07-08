@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import "../../Controls"
+
 RowLayout {
     id: root
 
@@ -42,12 +44,10 @@ RowLayout {
         }
     }
 
-    Button {
+    IconButton {
         Layout.fillWidth: true
 
-        icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Remove.png"
-        background: Rectangle { opacity: 0 }
 
         onClicked: service.users.removeUser(root.username)
     }
