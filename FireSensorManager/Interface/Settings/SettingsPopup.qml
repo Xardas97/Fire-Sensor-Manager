@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import "MapSetup"
+import "Appearance"
 import "Signalization"
 import "UserManagement"
 
@@ -21,6 +22,23 @@ Popup {
         property int fontSize: 17
 
         spacing: 10
+
+        Button {
+            id: btnAppearance
+
+            Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth: true
+
+            enabled: service.users.isLoggedIn
+
+            font.pixelSize: columnSettings.fontSize
+            text: qsTr("Appearance")
+
+            onClicked: {
+                root.close()
+                apperance.open()
+            }
+        }
 
         Button {
             id: btnMapSetup
@@ -110,6 +128,15 @@ Popup {
 
     UserManagement {
         id: dialogUserManagement
+
+        modal: root.modal
+
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+    }
+
+    Appearance {
+        id: apperance
 
         modal: root.modal
 

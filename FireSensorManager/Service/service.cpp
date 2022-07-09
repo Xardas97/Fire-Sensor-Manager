@@ -226,6 +226,34 @@ QStringList Service::availableFloorParts()
     return availableFloorParts;
 }
 
+QVariant Service::uiTheme() const
+{
+    return m_uiTheme;
+}
+
+QVariant Service::uiAccent() const
+{
+    return m_uiAccent;
+}
+
+void Service::setUITheme(QVariant uiTheme)
+{
+    if (m_uiTheme != uiTheme)
+    {
+        m_uiTheme = uiTheme.toInt();
+        emit uiThemeChanged();
+    }
+}
+
+void Service::setUIAccent(QVariant uiAccent)
+{
+    if (m_uiAccent != uiAccent)
+    {
+        m_uiAccent = uiAccent.toInt();
+        emit uiAccentChanged();
+    }
+}
+
 UsersModel* Service::usersModel()
 {
     return m_usersModel.get();

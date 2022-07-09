@@ -53,5 +53,7 @@
         <file>Interface/Settings/Signalization/AlarmPicker.qml</file>
         <file>Interface/Settings/Signalization/VolumePicker.qml</file>
         <file>Interface/Controls/IconButton.qml</file>
+        <file>Interface/Settings/Appearance/Appearance.qml</file>
+        <file>Interface/Settings/Appearance/AccentColor.qml</file>
     </qresource>
 </RCC>

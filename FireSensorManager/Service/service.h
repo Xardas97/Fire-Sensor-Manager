@@ -34,6 +34,9 @@ class Service : public QObject
     Q_PROPERTY(QStringList availableFloors     READ availableFloors     NOTIFY availableFloorsChanged)
     Q_PROPERTY(QStringList availableFloorParts READ availableFloorParts NOTIFY availableFloorPartsChanged)
 
+    Q_PROPERTY(QVariant uiTheme  READ uiTheme  WRITE setUITheme  NOTIFY uiThemeChanged)
+    Q_PROPERTY(QVariant uiAccent READ uiAccent WRITE setUIAccent NOTIFY uiAccentChanged)
+
 public:
     explicit Service(QObject *parent = nullptr);
     ~Service();
@@ -41,9 +44,16 @@ public:
     QVariant selectedFloor();
     QVariant selectedFloorPart();
     QVariant selectedFloorSize();
+    void setSelectedFloor(QVariant floor);
+    void setSelectedFloorPart(QVariant floorPart);
 
     QStringList availableFloors();
     QStringList availableFloorParts();
+
+    QVariant uiTheme() const;
+    QVariant uiAccent() const;
+    void setUITheme(QVariant uiTheme);
+    void setUIAccent(QVariant uiAccent);
 
     UsersModel*              usersModel();
     AlarmManager*            alarmManager();
@@ -65,8 +75,6 @@ public slots:
     QList<Sensor*> currentMapSensors();
 
 
-    void setSelectedFloor(QVariant floor);
-    void setSelectedFloorPart(QVariant floorPart);
     bool selectFloorPartThatContains(Sensor* sensor);
 
     bool floorExists(QVariant floor);
@@ -88,6 +96,9 @@ signals:
     void availableFloorsChanged();
     void availableFloorPartsChanged();
 
+    void uiThemeChanged();
+    void uiAccentChanged();
+
 private:
     void onFloorAdded(int floor);
     void onFloorRemoved(int floor);
@@ -96,6 +107,8 @@ private:
 
     std::optional<int> m_selectedFloor;
     std::optional<short> m_selectedFloorPart;
+
+    int m_uiTheme = 1, m_uiAccent = 1;
 
     std::shared_ptr<Database>                m_database;
     std::shared_ptr<FloorMaps>               m_floorMaps;

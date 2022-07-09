@@ -17,6 +17,9 @@ ApplicationWindow {
     minimumWidth: 1056
     minimumHeight: 594
 
+    Material.theme: service.uiTheme
+    Material.accent: service.uiAccent
+
     ColumnLayout {
         id: columnWindow
         anchors.fill: parent
