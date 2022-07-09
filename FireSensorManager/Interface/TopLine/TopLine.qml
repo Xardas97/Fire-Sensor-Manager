@@ -14,8 +14,6 @@ Rectangle {
 
     property int currentFloorView
 
-    signal settingsFlowEntered
-    signal settingsFlowLeft
     signal requestShowSensor(Sensor sensor)
 
     color: "grey"
@@ -34,10 +32,8 @@ Rectangle {
 
     SettingsPopup {
         id: popupSettings
+        modal: true
         anchors.centerIn: Overlay.overlay
-
-        onSettingsFlowEntered: root.settingsFlowEntered()
-        onSettingsFlowLeft: root.settingsFlowLeft()
     }
 
     RowLayout {

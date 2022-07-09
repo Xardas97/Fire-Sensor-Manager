@@ -9,18 +9,10 @@ import "UserManagement"
 Popup {
     id: root
 
-    signal settingsFlowEntered
-    signal settingsFlowLeft
-
     width: columnSettings.width * 1.2
     height: columnSettings.height * 1.2
 
-    modal: true
-    focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-    onOpened: settingsFlowEntered()
-    onClosed: settingsFlowLeft()
 
     ColumnLayout {
         id: columnSettings
@@ -100,28 +92,28 @@ Popup {
 
     MapSetup {
         id: dialogMapSetup
-        parent: Overlay.overlay
 
+        modal: root.modal
+
+        parent: Overlay.overlay
         anchors.centerIn: parent
-        onOpened: settingsFlowEntered()
-        onClosed: settingsFlowLeft()
     }
 
     Signalization {
         id: dialogSignalization
-        parent: Overlay.overlay
 
+        modal: root.modal
+
+        parent: Overlay.overlay
         anchors.centerIn: parent
-        onOpened: settingsFlowEntered()
-        onClosed: settingsFlowLeft()
     }
 
     UserManagement {
         id: dialogUserManagement
-        parent: Overlay.overlay
 
+        modal: root.modal
+
+        parent: Overlay.overlay
         anchors.centerIn: parent
-        onOpened: settingsFlowEntered()
-        onClosed: settingsFlowLeft()
     }
 }
