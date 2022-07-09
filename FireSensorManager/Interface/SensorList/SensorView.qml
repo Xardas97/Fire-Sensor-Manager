@@ -112,20 +112,34 @@ Rectangle {
     Rectangle {
         id : rectBackground
         anchors.fill: parent
-        color: internal.getBGColor()
+        color: internal.getBackgroundFilter(root.Material.background)
         opacity: 0.25
     }
 
     QtObject {
         id: internal
-        function getBGColor() {
-            if (root.sensor.isReplaced)
-                return "red"
+        function getBackgroundFilter(backgroundColor) {
+            var inactive = root.sensor.isReplaced || !root.sensor.isActive
+            var lightBackground = isLight(backgroundColor)
 
-            if (root.sensor.isActive)
+            if (lightBackground === inactive)
                 return "grey"
 
             return "transparent"
+        }
+
+        function isLight(color) {
+            // Convert to RGB
+            color = +("0x" + color.toString().slice(1))
+            var r = color >> 16;
+            var g = color >> 8 & 255;
+            var b = color & 255;
+
+            // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+            var hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b))
+
+            // Using the HSP value, determine whether the color is light or dark
+            return hsp > 127.5
         }
     }
 }
