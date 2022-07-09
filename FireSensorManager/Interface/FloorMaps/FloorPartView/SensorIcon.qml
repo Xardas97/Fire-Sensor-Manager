@@ -25,7 +25,7 @@ Item {
             id: lblName
             width: image.width * 1.2
 
-            color: "black"
+            color: sensor.alarmOn ? "red" : (sensor.status > 0) ? "purple" : "black"
             text: sensor.name
             elide: Text.ElideRight
 
