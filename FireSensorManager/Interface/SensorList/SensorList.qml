@@ -4,8 +4,14 @@ import QtQuick.Controls
 
 import Custom.Sensors
 
+import "../Controls"
+
 Rectangle {
     id: root
+
+    property Sensor selectedSensor: null
+
+    signal requestShowSensor(Sensor sensor)
 
     color: "transparent"
     border {
@@ -13,77 +19,46 @@ Rectangle {
         width: 1
     }
 
-    property Sensor selectedSensor: null
-
-    signal requestShowSensor(Sensor sensor)
-
     ColumnLayout {
         id: column
 
-        width: parent.width - 2
-        height: parent.height - 2
-        anchors.centerIn: parent
+        spacing: 0
+        anchors.fill: parent
 
-        ColumnLayout {
-            id: layoutFilters
+        Item {
+            id: itemFilters
 
-            Label {
-                text: qsTr("Filters:")
+            Layout.alignment: Qt.AlignRight
+            width: btnOpenPopupFilters.width
+            height: btnOpenPopupFilters.height
+
+            IconButton {
+                id: btnOpenPopupFilters
+                icon.source: "qrc:/Resources/Icons/Next.png"
+                onClicked: popupFilters.open()
             }
 
-            RowLayout {
-                id: layoutPlacementFilters
-                Layout.alignment: Qt.AlignLeft
-
-                CheckBox {
-                    id: chboxPlacedFilter
-
-                    text: qsTr("Placed");
-
-                    checked: service.knownSensorsModel.placedFilterEnabled
-                    onCheckStateChanged: {
-                        service.knownSensorsModel.placedFilterEnabled = checked
-                        if (checked) chboxUnplacedFilter.checked = false
-                    }
-                }
-
-                CheckBox {
-                    id: chboxUnplacedFilter
-
-                    text: qsTr("Unplaced");
-
-                    checked: service.knownSensorsModel.unplacedFilterEnabled
-                    onCheckStateChanged: {
-                        service.knownSensorsModel.unplacedFilterEnabled = checked
-                        if (checked) chboxPlacedFilter.checked = false
-                    }
-                }
+            IconButton {
+                id: btnClosePopupFilters
+                icon.source: "qrc:/Resources/Icons/Previous.png"
+                visible: !btnOpenPopupFilters.visible
+                onClicked: popupFilters.close()
             }
 
-            CheckBox {
-                id: chboxActiveFilter
+            SensorListFiltersPopup {
+                id: popupFilters
 
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Active");
+                x: btnOpenPopupFilters.x + btnOpenPopupFilters.width + 10
+                y: btnOpenPopupFilters.y + btnOpenPopupFilters.height / 2
 
-                checked: service.knownSensorsModel.activeFilterEnabled
-                onCheckStateChanged: service.knownSensorsModel.activeFilterEnabled = checked
-            }
-
-            CheckBox {
-                id: chboxAlarmFilter
-
-                Layout.alignment: Qt.AlignLeft
-                text: qsTr("Alarmed");
-
-                checked: service.knownSensorsModel.alarmedFilterEnabled
-                onCheckStateChanged: service.knownSensorsModel.alarmedFilterEnabled = checked
+                onAboutToShow: btnOpenPopupFilters.visible = false
+                onAboutToHide: btnOpenPopupFilters.visible = true
             }
         }
 
         ScrollView {
             id: scrollSensors
-            Layout.preferredWidth: column.width
+            Layout.fillWidth: true
             Layout.fillHeight: true
 
             ScrollBar.vertical.policy: ScrollBar.AsNeeded
@@ -112,12 +87,14 @@ Rectangle {
 
         Item {
             id: itemPadding
+            Layout.fillWidth: true
             Layout.preferredHeight: column.height * 0.02
         }
 
         Button {
             id: btnDiscoverSensors
             Layout.alignment: Qt.AlignCenter
+            Layout.preferredWidth: column.width * 0.8
 
             text: qsTr("Discover sensors")
             onClicked: service.discoverSensors()
@@ -125,6 +102,7 @@ Rectangle {
 
         Item {
             id: itemPadding2
+            Layout.fillWidth: true
             Layout.preferredHeight: column.height * 0.02
         }
     }

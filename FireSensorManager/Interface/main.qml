@@ -22,6 +22,8 @@ ApplicationWindow {
 
     ColumnLayout {
         id: columnWindow
+
+        spacing: 0
         anchors.fill: parent
 
         TopLine {
@@ -37,6 +39,7 @@ ApplicationWindow {
         RowLayout {
             id: rowWindow
 
+            spacing: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
 

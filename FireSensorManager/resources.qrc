@@ -55,5 +55,8 @@
         <file>Interface/Controls/IconButton.qml</file>
         <file>Interface/Settings/Appearance/Appearance.qml</file>
         <file>Interface/Settings/Appearance/AccentColor.qml</file>
+        <file>Interface/SensorList/SensorListFiltersPopup.qml</file>
+        <file>Resources/Icons/Next.png</file>
+        <file>Resources/Icons/Previous.png</file>
     </qresource>
 </RCC>
