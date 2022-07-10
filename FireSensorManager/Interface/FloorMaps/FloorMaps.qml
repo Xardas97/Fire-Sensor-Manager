@@ -53,10 +53,7 @@ Item {
         id: buildingView
 
         visible: currentFloorView === FloorMaps.FloorView.Building
-
-        anchors.centerIn: parent
-        height: root.height
-        width: root.width / 2
+        anchors.fill: parent
 
         onShowFloorView: {
             if (service.selectedFloorSize === 1) {
