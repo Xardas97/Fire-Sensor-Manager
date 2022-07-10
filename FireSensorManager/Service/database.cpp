@@ -102,7 +102,9 @@ bool Database::createUsersTable()
                      "  passphraseHash BLOB,"
                      "  permissions    INTEGER,"
                      "  alarm          INTEGER  DEFAULT 0,"
-                     "  volume         REAL     DEFAULT 0.5"
+                     "  volume         REAL     DEFAULT 0.5,"
+                     "  uiTheme        INTEGER  DEFAULT 1,"
+                     "  uiAccent       INTEGER  DEFAULT 1"
                      ")";
 
     QSqlQuery query;
@@ -518,7 +520,7 @@ UserSettings Database::loadUserSettings(QString username)
     UserSettings settings {};
 
     QSqlQuery query;
-    query.prepare("SELECT alarm, volume FROM users WHERE username = :username");
+    query.prepare("SELECT alarm, volume, uiTheme, uiAccent FROM users WHERE username = :username");
     query.bindValue(":username", username);
 
     auto success = query.exec();
@@ -529,10 +531,16 @@ UserSettings Database::loadUserSettings(QString username)
     }
 
     if (!query.next())
+    {
+        qWarning() << "Failed to load user settings for nonexistent user" << username;
         return settings;
+    }
 
     settings.alarm = query.value("alarm").toInt();
     settings.volume = query.value("volume").toFloat();
+    settings.uiTheme = query.value("uiTheme").toInt();
+    settings.uiAccent = query.value("uiAccent").toInt();
+
     return settings;
 }
 
@@ -550,6 +558,22 @@ void Database::saveAlarmData(QString username, int alarm, float volume)
     auto success = query.exec();
     if (!success)
         qWarning() << "Failed to update the alarm data: " << query.lastError().text();
+}
+
+void Database::saveAppearanceData(QString username, int theme, int accent)
+{
+    auto queryText = "UPDATE users "
+                     "SET uiTheme = :uiTheme, uiAccent = :uiAccent "
+                     "WHERE username = :username";
+    QSqlQuery query;
+    query.prepare(queryText);
+    query.bindValue(":uiTheme", theme);
+    query.bindValue(":uiAccent", accent);
+    query.bindValue(":username", username);
+
+    auto success = query.exec();
+    if (!success)
+        qWarning() << "Failed to update the appearance data: " << query.lastError().text();
 }
 
 void Database::close()

@@ -34,8 +34,8 @@ class Service : public QObject
     Q_PROPERTY(QStringList availableFloors     READ availableFloors     NOTIFY availableFloorsChanged)
     Q_PROPERTY(QStringList availableFloorParts READ availableFloorParts NOTIFY availableFloorPartsChanged)
 
-    Q_PROPERTY(QVariant uiTheme  READ uiTheme  WRITE setUITheme  NOTIFY uiThemeChanged)
-    Q_PROPERTY(QVariant uiAccent READ uiAccent WRITE setUIAccent NOTIFY uiAccentChanged)
+    Q_PROPERTY(int uiTheme  READ uiTheme  WRITE setUITheme  NOTIFY uiThemeChanged)
+    Q_PROPERTY(int uiAccent READ uiAccent WRITE setUIAccent NOTIFY uiAccentChanged)
 
 public:
     explicit Service(QObject *parent = nullptr);
@@ -50,10 +50,10 @@ public:
     QStringList availableFloors();
     QStringList availableFloorParts();
 
-    QVariant uiTheme() const;
-    QVariant uiAccent() const;
-    void setUITheme(QVariant uiTheme);
-    void setUIAccent(QVariant uiAccent);
+    int uiTheme() const;
+    int uiAccent() const;
+    void setUITheme(int uiTheme);
+    void setUIAccent(int uiAccent);
 
     UsersModel*              usersModel();
     AlarmManager*            alarmManager();
@@ -110,7 +110,10 @@ private:
 
     void onLoggedUserChanged();
 
-    int m_uiTheme = 1, m_uiAccent = 1;
+    void loadUserProfile();
+    void saveUserProfile();
+    int m_uiTheme, m_uiAccent;
+    QString m_activeUserProfile;
 
     std::shared_ptr<Database>                m_database;
     std::shared_ptr<FloorMaps>               m_floorMaps;

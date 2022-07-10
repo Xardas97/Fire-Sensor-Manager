@@ -17,8 +17,10 @@ enum Permissions : unsigned short { None = 0, Moderator = 1, Admin = 2 };
 
 struct UserSettings
 {
-    int alarm;
-    float volume;
+    int   alarm    = 0;
+    float volume   = 0.5;
+    int   uiTheme  = 1;
+    int   uiAccent = 1;
 };
 
 struct User {
@@ -48,6 +50,7 @@ public:
 
     auto loadUserSettings(QString username) -> UserSettings;
     void saveAlarmData(QString username, int alarm, float volume);
+    void saveAppearanceData(QString username, int theme, int accent);
 
 private:
     bool open();

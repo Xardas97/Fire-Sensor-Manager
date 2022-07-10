@@ -8,7 +8,7 @@
 #include <QHostAddress>
 
 Service::Service(QObject *parent)
-    : QObject{parent},
+    : QObject{parent}, m_activeUserProfile{"admin"},
       m_database(new Database()),
       m_floorMaps(new FloorMaps(m_database)),
       m_usersModel(new UsersModel(m_database)),
@@ -24,6 +24,8 @@ Service::Service(QObject *parent)
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartRemoved, this, &Service::onFloorPartRemoved);
 
     QObject::connect(m_usersModel.get(), &UsersModel::loggedUserChanged, this, &Service::onLoggedUserChanged);
+
+    loadUserProfile();
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
@@ -228,30 +230,42 @@ QStringList Service::availableFloorParts()
     return availableFloorParts;
 }
 
-QVariant Service::uiTheme() const
+void Service::loadUserProfile()
+{
+    auto settings = m_database->loadUserSettings(m_activeUserProfile);
+    setUITheme(settings.uiTheme);
+    setUIAccent(settings.uiAccent);
+}
+
+void Service::saveUserProfile()
+{
+    m_database->saveAppearanceData(m_activeUserProfile, m_uiTheme, m_uiAccent);
+}
+
+int Service::uiTheme() const
 {
     return m_uiTheme;
 }
 
-QVariant Service::uiAccent() const
+int Service::uiAccent() const
 {
     return m_uiAccent;
 }
 
-void Service::setUITheme(QVariant uiTheme)
+void Service::setUITheme(int uiTheme)
 {
     if (m_uiTheme != uiTheme)
     {
-        m_uiTheme = uiTheme.toInt();
+        m_uiTheme = uiTheme;
         emit uiThemeChanged();
     }
 }
 
-void Service::setUIAccent(QVariant uiAccent)
+void Service::setUIAccent(int uiAccent)
 {
     if (m_uiAccent != uiAccent)
     {
-        m_uiAccent = uiAccent.toInt();
+        m_uiAccent = uiAccent;
         emit uiAccentChanged();
     }
 }
@@ -307,11 +321,18 @@ void Service::onFloorPartRemoved(int floor)
 
 void Service::onLoggedUserChanged()
 {
-    auto userProfile = m_usersModel->isLoggedIn()
-                         ? m_usersModel->loggedUsername()
-                         : "admin";
+    auto newUserProfile = m_usersModel->isLoggedIn()
+                           ? m_usersModel->loggedUsername()
+                           : "admin";
 
-    m_alarmManager->setActiveUserProfile(userProfile);
+    m_alarmManager->setActiveUserProfile(newUserProfile);
+
+    if (newUserProfile != m_activeUserProfile)
+    {
+        saveUserProfile();
+        m_activeUserProfile = newUserProfile;
+        loadUserProfile();
+    }
 }
 
 Service::~Service() = default;
