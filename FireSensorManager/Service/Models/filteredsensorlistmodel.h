@@ -34,7 +34,7 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const override;
 
 private:
-    bool m_activeFilterEnabled = false;
+    bool m_activeFilterEnabled = true;
     bool m_placedFilterEnabled = false;
     bool m_unplacedFilterEnabled = false;
     bool m_alarmedFilterEnabled = false;
