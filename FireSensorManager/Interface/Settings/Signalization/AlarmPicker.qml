@@ -20,7 +20,7 @@ Pane {
 
         onClicked: {
             service.alarmManager.play(checkedButton.alarm, 1)
-            service.alarmManager.setAlarm(checkedButton.alarm)
+            service.alarmManager.alarm = checkedButton.alarm
         }
     }
 
@@ -33,7 +33,7 @@ Pane {
             CheckBox {
                 text: getAlarmName(index);
                 property int alarm: index
-                Component.onCompleted: checked = service.alarmManager.alarm() === alarm
+                checked: service.alarmManager.alarm === alarm
             }
         }
     }

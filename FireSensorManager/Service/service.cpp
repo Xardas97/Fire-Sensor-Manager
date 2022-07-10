@@ -12,7 +12,7 @@ Service::Service(QObject *parent)
       m_database(new Database()),
       m_floorMaps(new FloorMaps(m_database)),
       m_usersModel(new UsersModel(m_database)),
-      m_alarmManager(new AlarmManager(m_database)),
+      m_alarmManager(new AlarmManager(m_database, "admin")),
       m_sensorCommunication(new SensorCommunication(m_database)),
       m_warningTracker(new WarningTracker(m_floorMaps, m_sensorCommunication->knownSensors())),
       m_knownSensorsFilterModel(new FilteredSensorListModel())
@@ -22,6 +22,8 @@ Service::Service(QObject *parent)
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorRemoved, this, &Service::onFloorRemoved);
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartAdded, this, &Service::onFloorPartAdded);
     QObject::connect(m_floorMaps.get(), &FloorMaps::floorPartRemoved, this, &Service::onFloorPartRemoved);
+
+    QObject::connect(m_usersModel.get(), &UsersModel::loggedUserChanged, this, &Service::onLoggedUserChanged);
 }
 
 void Service::discoverSensor(const QString& address, quint16 port)
@@ -301,6 +303,15 @@ void Service::onFloorPartRemoved(int floor)
 {
     emit availableFloorPartsChanged();
     emit floorPartRemoved(floor);
+}
+
+void Service::onLoggedUserChanged()
+{
+    auto userProfile = m_usersModel->isLoggedIn()
+                         ? m_usersModel->loggedUsername()
+                         : "admin";
+
+    m_alarmManager->setActiveUserProfile(userProfile);
 }
 
 Service::~Service() = default;

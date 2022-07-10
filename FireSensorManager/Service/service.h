@@ -108,6 +108,8 @@ private:
     std::optional<int> m_selectedFloor;
     std::optional<short> m_selectedFloorPart;
 
+    void onLoggedUserChanged();
+
     int m_uiTheme = 1, m_uiAccent = 1;
 
     std::shared_ptr<Database>                m_database;

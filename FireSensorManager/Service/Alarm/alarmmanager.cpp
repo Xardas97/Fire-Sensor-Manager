@@ -5,13 +5,34 @@
 #include <QFile>
 #include <QAudioOutput>
 
-AlarmManager::AlarmManager(std::shared_ptr<Database> database)
-    : m_player{new QMediaPlayer()},
+AlarmManager::AlarmManager(std::shared_ptr<Database> database, QString activeUserProfile)
+    : m_activeUserProfile{activeUserProfile},
+      m_player{new QMediaPlayer()},
       m_database{database}
 {
-    auto values = m_database->loadAlarmData();
-    m_chosenAlarm = (Alarm)std::get<0>(values);
-    m_chosenVolume = std::get<1>(values);
+    loadUserProfile();
+}
+
+void AlarmManager::loadUserProfile()
+{
+    auto settings = m_database->loadUserSettings(m_activeUserProfile);
+    setAlarm((Alarm)settings.alarm);
+    setVolume(settings.volume);
+}
+
+void AlarmManager::saveUserProfile()
+{
+    m_database->saveAlarmData(m_activeUserProfile, m_chosenAlarm, m_chosenVolume);
+}
+
+void AlarmManager::setActiveUserProfile(QString activeUserProfile)
+{
+    if (m_activeUserProfile != activeUserProfile)
+    {
+        saveUserProfile();
+        m_activeUserProfile = activeUserProfile;
+        loadUserProfile();
+    }
 }
 
 void AlarmManager::play()
@@ -108,7 +129,11 @@ Alarm AlarmManager::alarm()
 
 void AlarmManager::setAlarm(Alarm alarm)
 {
-    m_chosenAlarm = alarm;
+    if (m_chosenAlarm != alarm)
+    {
+        m_chosenAlarm = alarm;
+        emit alarmChanged();
+    }
 }
 
 float AlarmManager::volume()
@@ -118,10 +143,14 @@ float AlarmManager::volume()
 
 void AlarmManager::setVolume(float volume)
 {
-    m_chosenVolume = volume;
+    if (m_chosenVolume != volume)
+    {
+        m_chosenVolume = volume;
+        emit volumeChanged();
+    }
 }
 
 AlarmManager::~AlarmManager()
 {
-    m_database->saveAlarmData(m_chosenAlarm, m_chosenVolume);
+    saveUserProfile();
 }

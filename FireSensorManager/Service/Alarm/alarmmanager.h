@@ -14,19 +14,29 @@ enum Alarm { Classic, DigitalClock, Buzzer, Facility, Vintage };
 class AlarmManager : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(Alarm alarm  READ alarm  WRITE setAlarm  NOTIFY alarmChanged)
+    Q_PROPERTY(float volume READ volume WRITE setVolume NOTIFY volumeChanged)
 public:
-    AlarmManager(std::shared_ptr<Database> database);
+    AlarmManager(std::shared_ptr<Database> database, QString activeUserProfile);
     ~AlarmManager();
+
+public:
+    void setActiveUserProfile(QString activeUserProfile);
+
+    Alarm alarm();
+    void  setAlarm(Alarm alarm);
+    float volume();
+    void  setVolume(float volume);
 
 public slots:
     void play();
     void play(Alarm alarm, int loops);
     void stop();
 
-    Alarm alarm();
-    void  setAlarm(Alarm alarm);
-    float volume();
-    void  setVolume(float volume);
+signals:
+    void alarmChanged();
+    void volumeChanged();
 
 private:
     void repickAlarm(Alarm alarm);
@@ -35,6 +45,10 @@ private:
     QString getAlarmPath(Alarm alarm);
     QString getAlarmName(Alarm alarm);
 
+    void loadUserProfile();
+    void saveUserProfile();
+
+    QString m_activeUserProfile;
     float m_chosenVolume;
     Alarm m_chosenAlarm;
 

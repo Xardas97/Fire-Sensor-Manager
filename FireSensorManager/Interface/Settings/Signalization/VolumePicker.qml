@@ -8,6 +8,6 @@ Slider {
     from: 0
     to: 1.0
 
-    Component.onCompleted: value = service.alarmManager.volume()
-    onMoved: service.alarmManager.setVolume(value)
+    value: service.alarmManager.volume
+    onMoved: service.alarmManager.volume = value
 }

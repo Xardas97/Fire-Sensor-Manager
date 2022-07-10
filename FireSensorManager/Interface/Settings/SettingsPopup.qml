@@ -41,6 +41,23 @@ Popup {
         }
 
         Button {
+            id: btnSignalization
+
+            Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth: true
+
+            enabled: service.users.isLoggedIn
+
+            font.pixelSize: columnSettings.fontSize
+            text: qsTr("Signalization")
+
+            onClicked: {
+                root.close()
+                dialogSignalization.open()
+            }
+        }
+
+        Button {
             id: btnMapSetup
 
             Layout.alignment: Qt.AlignCenter
@@ -54,23 +71,6 @@ Popup {
             onClicked: {
                 root.close()
                 dialogMapSetup.open()
-            }
-        }
-
-        Button {
-            id: btnSignalization
-
-            Layout.alignment: Qt.AlignCenter
-            Layout.fillWidth: true
-
-            enabled: service.users.hasModPermissions
-
-            font.pixelSize: columnSettings.fontSize
-            text: qsTr("Signalization")
-
-            onClicked: {
-                root.close()
-                dialogSignalization.open()
             }
         }
 

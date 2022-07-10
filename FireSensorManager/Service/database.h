@@ -12,7 +12,14 @@ class MapEntry;
 class QSqlRecord;
 
 class FailedToUseDatabaseException : public std::exception {};
+
 enum Permissions : unsigned short { None = 0, Moderator = 1, Admin = 2 };
+
+struct UserSettings
+{
+    int alarm;
+    float volume;
+};
 
 struct User {
     User(QString username, Permissions permissions) : username(username), permissions(permissions) {}
@@ -39,8 +46,8 @@ public:
 
     void saveData();
 
-    auto loadAlarmData() -> std::tuple<int, float>;
-    void saveAlarmData(int alarm, float volume);
+    auto loadUserSettings(QString username) -> UserSettings;
+    void saveAlarmData(QString username, int alarm, float volume);
 
 private:
     bool open();
@@ -49,7 +56,6 @@ private:
     bool createTables();
     bool createMapsTable();
     bool createUsersTable();
-    bool createAlarmsTable();
     bool createSensorsTable();
 
     bool createDefaultAdminUser();

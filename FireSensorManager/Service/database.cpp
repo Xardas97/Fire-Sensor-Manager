@@ -63,7 +63,7 @@ bool Database::createTables()
 {
     qDebug() << "Creating missing database tables...";
 
-    auto success = createMapsTable() && createSensorsTable() && createUsersTable() && createAlarmsTable();
+    auto success = createMapsTable() && createSensorsTable() && createUsersTable();
     if (!success)
     {
         qWarning() << "Creating tables failed!";
@@ -100,7 +100,9 @@ bool Database::createUsersTable()
                      "("
                      "  username       TEXT PRIMARY KEY,"
                      "  passphraseHash BLOB,"
-                     "  permissions    INTEGER"
+                     "  permissions    INTEGER,"
+                     "  alarm          INTEGER  DEFAULT 0,"
+                     "  volume         REAL     DEFAULT 0.5"
                      ")";
 
     QSqlQuery query;
@@ -108,22 +110,6 @@ bool Database::createUsersTable()
     if (!res)
     {
         qWarning() << "Creating users table failed: " << query.lastError().text();
-        return false;
-    }
-
-    return true;
-}
-
-bool Database::createAlarmsTable()
-{
-    auto queryText = "CREATE TABLE IF NOT EXISTS alarms "
-                     "(alarm INTEGER, volume REAL)";
-
-    QSqlQuery query;
-    auto res = query.exec(queryText);
-    if (!res)
-    {
-        qWarning() << "Creating alarms table failed: " << query.lastError().text();
         return false;
     }
 
@@ -527,39 +513,39 @@ QByteArray Database::hashPassphrase(const QString& passphrase)
     return hasher.result();
 }
 
-std::tuple<int, float> Database::loadAlarmData()
+UserSettings Database::loadUserSettings(QString username)
 {
+    UserSettings settings {};
+
     QSqlQuery query;
-    query.prepare("SELECT * FROM alarms");
+    query.prepare("SELECT alarm, volume FROM users WHERE username = :username");
+    query.bindValue(":username", username);
 
     auto success = query.exec();
     if (!success)
     {
-        qWarning() << "Failed to load alarm data from the dabatase: " << query.lastError().text();
-        return {0, 0.5};
+        qWarning() << "Failed to load user settings for user" << username << "from the dabatase: " << query.lastError().text();
+        return settings;
     }
 
     if (!query.next())
-        return {0, 0.5};
+        return settings;
 
-    auto alarm = query.value("alarm").toInt();
-    auto volume = query.value("volume").toFloat();
-    return {alarm, volume};
+    settings.alarm = query.value("alarm").toInt();
+    settings.volume = query.value("volume").toFloat();
+    return settings;
 }
 
-void Database::saveAlarmData(int alarm, float volume)
+void Database::saveAlarmData(QString username, int alarm, float volume)
 {
-    qDebug() << "Saving alarm data!!";
-
-    QSqlQuery{}.exec("DELETE FROM alarms");
-
-    auto queryText = "INSERT INTO alarms "
-                     "(alarm, volume) "
-                     "VALUES (:alarm, :volume)";
+    auto queryText = "UPDATE users "
+                     "SET alarm = :alarm, volume = :volume "
+                     "WHERE username = :username";
     QSqlQuery query;
     query.prepare(queryText);
     query.bindValue(":alarm", alarm);
     query.bindValue(":volume", volume);
+    query.bindValue(":username", username);
 
     auto success = query.exec();
     if (!success)
