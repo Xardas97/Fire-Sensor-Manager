@@ -29,7 +29,7 @@ Menu {
         visible: sensor.isPlaced
         height: visible? implicitHeight : 0
 
-        enabled: service.users.isLoggedIn
+        enabled: service.users.hasModPermissions
         onTriggered: service.removeFromMap(sensor)
     }
     MenuItem {

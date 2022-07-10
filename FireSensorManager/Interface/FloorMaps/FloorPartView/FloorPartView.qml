@@ -52,7 +52,7 @@ Item {
                     if (selectedSensor == null)
                         return
 
-                    if (!service.users.isLoggedIn)
+                    if (!service.users.hasModPermissions)
                         return
 
                     service.removeFromMap(selectedSensor)

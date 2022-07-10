@@ -48,7 +48,7 @@ Rectangle {
         }
 
         onPressAndHold: function(mouse) {
-            if (mouse.button === Qt.LeftButton && !isSelected && service.users.isLoggedIn)
+            if (mouse.button === Qt.LeftButton && !isSelected && service.users.hasModPermissions)
                 selected()
         }
     }

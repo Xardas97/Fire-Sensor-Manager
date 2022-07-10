@@ -11,7 +11,7 @@ Item {
 
     signal pressed()
     signal released()
-    property bool draggingEnabled: service.users.isLoggedIn
+    property bool draggingEnabled: service.users.hasModPermissions
 
     width: rowContent.width
     height: rowContent.height
