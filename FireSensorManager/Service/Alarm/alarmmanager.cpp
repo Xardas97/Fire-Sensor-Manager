@@ -147,6 +147,9 @@ void AlarmManager::setVolume(float volume)
     {
         m_chosenVolume = volume;
         emit volumeChanged();
+
+        if (m_output)
+            m_output->setVolume(volume);
     }
 }
 
