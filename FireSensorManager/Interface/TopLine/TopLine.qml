@@ -9,15 +9,24 @@ import "../Settings"
 import "../FloorMaps"
 import "UserControls"
 
-Rectangle {
+import "../common.js" as Common
+
+Item {
     id: root
 
     property int currentFloorView
 
     signal requestShowSensor(Sensor sensor)
 
-    color: "grey"
     height: Math.max(btnSettingsMenu.height, rowLayout.height)
+
+    Rectangle {
+        id: rectBackground
+        anchors.fill: parent
+
+        opacity: 0.25
+        color: Common.isLight(Material.background)? "black" : "white"
+    }
 
     IconButton {
         id: btnSettingsMenu

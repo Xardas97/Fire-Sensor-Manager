@@ -58,5 +58,6 @@
         <file>Interface/SensorList/SensorListFiltersPopup.qml</file>
         <file>Resources/Icons/Next.png</file>
         <file>Resources/Icons/Previous.png</file>
+        <file>Interface/common.js</file>
     </qresource>
 </RCC>
