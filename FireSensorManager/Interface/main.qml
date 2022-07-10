@@ -28,7 +28,6 @@ ApplicationWindow {
 
         TopLine {
             Layout.fillWidth: true
-            Layout.preferredHeight: root.height / 20
 
             currentFloorView: floorMaps.currentFloorView
             onRequestShowSensor: function (sensor) {

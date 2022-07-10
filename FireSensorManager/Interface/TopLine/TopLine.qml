@@ -17,6 +17,7 @@ Rectangle {
     signal requestShowSensor(Sensor sensor)
 
     color: "grey"
+    height: Math.max(btnSettingsMenu.height, rowLayout.height)
 
     IconButton {
         id: btnSettingsMenu
@@ -37,12 +38,15 @@ Rectangle {
     }
 
     RowLayout {
+        id: rowLayout
+
         anchors.verticalCenter: root.verticalCenter
         anchors.right: root.right
         anchors.rightMargin: 10
 
         WarningIcons {
             id: warningIcons
+
             Layout.alignment: Qt.AlignVCenter
 
             onRequestShowSensor: function(sensor) {
