@@ -54,14 +54,23 @@ RowLayout {
 
     IconButton {
         Layout.fillWidth: true
-
         icon.source: "qrc:/Resources/Icons/Remove.png"
-
-        onClicked: service.users.removeUser(root.username)
+        onClicked: dialogRemoveUser.open()
     }
 
     Item {
         id: filler
         Layout.preferredWidth: root.width * 0.1
+    }
+
+    Dialog {
+        id: dialogRemoveUser
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: service.users.removeUser(root.username)
+
+        Label {
+            font.pointSize: 13
+            text: qsTr("Are you sure you want to remove user '%1'?").arg(username)
+        }
     }
 }
