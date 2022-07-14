@@ -335,4 +335,7 @@ void Service::onLoggedUserChanged()
     }
 }
 
-Service::~Service() = default;
+Service::~Service()
+{
+    saveUserProfile();
+}
