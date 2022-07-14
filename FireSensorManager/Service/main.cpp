@@ -35,6 +35,7 @@ void setupEngineWithService(QQmlApplicationEngine& engine, Service& service)
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    app.setApplicationName("FireSensorManager");
 
     qmlRegisterUncreatableType<Sensor>("Custom.Sensors", 1, 0, "Sensor", "Sensor QML object cannot be created");
 
