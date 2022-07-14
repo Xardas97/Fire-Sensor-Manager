@@ -69,6 +69,12 @@ Item {
             currentFloorView: root.currentFloorView
         }
 
+        Item {
+            id: padding
+            Layout.fillHeight: true
+            Layout.preferredWidth: 20
+        }
+
         LoggedInControls {
             Layout.alignment: Qt.AlignVCenter
             visible: service.users.isLoggedIn
