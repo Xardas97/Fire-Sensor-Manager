@@ -6,7 +6,7 @@ Dialog {
     id: root
     title: qsTr("User Management")
 
-    width: 280
+    width: 450
     height: 450
 
     standardButtons: Dialog.Close
@@ -20,15 +20,23 @@ Dialog {
 
             Label {
                 text: qsTr("Username")
+                font.pointSize: 13
                 horizontalAlignment: Text.AlignHCenter
                 Layout.preferredWidth: layout.width * 0.5
             }
 
             Label {
                 text: qsTr("Moderator")
+                font.pointSize: 13
                 horizontalAlignment: Text.AlignHCenter
                 Layout.preferredWidth: layout.width * 0.2
             }
+        }
+
+        Item {
+            id: padding
+            Layout.fillWidth: true
+            Layout.preferredHeight: layout.spacing
         }
 
         ScrollView {

@@ -11,17 +11,25 @@ RowLayout {
     property bool modPermissions
 
     Label {
+        id: lblUsername
+
+        font.pointSize: 13
         text: root.username
         elide: Text.ElideRight
 
         anchors.margins: 5
 
-        ToolTip.text: root.username
-        ToolTip.visible: mouseAreaHover.containsMouse
         MouseArea {
-            id: mouseAreaHover
-            anchors.fill: parent
+            id: mouseAreaTooltip
             hoverEnabled: true
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+
+            ToolTip {
+                font.pointSize: 13
+                text: lblUsername.text
+                visible: mouseAreaTooltip.containsMouse && lblUsername.truncated
+            }
         }
 
         horizontalAlignment: Text.AlignHCenter
