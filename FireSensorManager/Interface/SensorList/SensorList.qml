@@ -89,6 +89,47 @@ Rectangle {
             id: itemPadding
             Layout.fillWidth: true
             Layout.preferredHeight: column.height * 0.02
+            visible: !progressBar.visible
+        }
+
+        ProgressBar
+        {
+            id: progressBar
+
+            Layout.alignment: Qt.AlignCenter
+            Layout.preferredWidth: btnDiscoverSensors.width
+            Layout.preferredHeight: column.height * 0.02
+
+            visible: false
+
+            Timer
+            {
+                id: timerProgressBar
+
+                interval: 200; repeat:true
+                running: false
+
+                onTriggered:
+                {
+                    progressBar.value = progressBar.value + 0.1
+                    if (progressBar.value >= 0.99) {
+                        progressBar.stopDiscoverProgress()
+                    }
+                }
+            }
+
+            function startDiscoverProgress() {
+                progressBar.value = 0.1
+                progressBar.visible = true
+                timerProgressBar.running = true
+                btnDiscoverSensors.enabled = false
+            }
+
+            function stopDiscoverProgress() {
+                progressBar.visible = false
+                timerProgressBar.running = false
+                btnDiscoverSensors.enabled = true
+            }
         }
 
         Button {
@@ -97,7 +138,10 @@ Rectangle {
             Layout.preferredWidth: column.width * 0.8
 
             text: qsTr("Discover sensors")
-            onClicked: service.discoverSensors()
+            onClicked: {
+                progressBar.startDiscoverProgress()
+                service.discoverSensors()
+            }
         }
 
         Item {
