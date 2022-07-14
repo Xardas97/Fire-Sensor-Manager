@@ -63,6 +63,9 @@ Item {
         }
 
         function getColumnNumber(itemCount) {
+            if (itemCount === undefined)
+                return 1
+
             if (itemCount > 2)
                 return Math.round(Math.sqrt(itemCount))
 
