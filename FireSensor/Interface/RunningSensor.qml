@@ -48,6 +48,8 @@ Column {
         Button {
             id: btnSave
 
+            visible: Qt.platform.os !== "android"
+
             Layout.preferredHeight: controlButtons.height
             Layout.preferredWidth: controlButtons.width * 0.3
             Layout.alignment: Qt.AlignCenter

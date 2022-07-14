@@ -85,6 +85,8 @@ ColumnLayout {
         Button {
             id: btnLoadSensor
 
+            visible: Qt.platform.os !== "android"
+
             width: parent.width
 
             text: qsTr("Load Sensor")
