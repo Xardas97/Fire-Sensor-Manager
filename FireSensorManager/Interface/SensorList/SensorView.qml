@@ -94,7 +94,11 @@ Rectangle {
 
     SensorMenu {
         id: contextMenu
+
         sensor: root.sensor
+        selectOptionVisible: true
+
+        onSelectRequested: root.selected()
         onSettingsRequested: sensorSettingsDialog.open()
     }
 

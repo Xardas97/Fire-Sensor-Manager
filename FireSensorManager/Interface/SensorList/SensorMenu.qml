@@ -8,6 +8,9 @@ Menu {
 
     property Sensor sensor
     signal settingsRequested()
+    signal selectRequested()
+
+    property bool selectOptionVisible: false
 
     MenuItem {
         text: qsTr("Try to Reactivate")
@@ -17,6 +20,15 @@ Menu {
 
         enabled: !sensor.isReplaced
         onTriggered: service.reactivateSensor(sensor)
+    }
+    MenuItem {
+        text: qsTr("Select")
+
+        visible: root.selectOptionVisible
+        height: visible? implicitHeight : 0
+
+        enabled: service.users.hasModPermissions
+        onTriggered: selectRequested()
     }
     MenuItem {
         text: qsTr("Settings")
