@@ -17,7 +17,7 @@ Item {
         clip: true
         boundsMovement: Flickable.StopAtBounds
 
-        property int floorHeight: height / 7
+        property int floorHeight: root.height / 7
 
         contentWidth: contentWrapper.width
         contentHeight: contentWrapper.height
