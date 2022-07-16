@@ -9,6 +9,9 @@ RowLayout {
 
     Button {
         id: btnLogIn
+
+        Layout.preferredHeight: root.height
+
         text: qsTr("Log in")
         onClicked: popupLogin.open()
     }

@@ -9,10 +9,14 @@ RowLayout {
 
     RowLayout {
         id: layoutFloors
+        height: root.height
         visible: currentFloorView === FloorMaps.FloorView.Floor || currentFloorView === FloorMaps.FloorView.FloorPart
 
         Label {
             id: lblFloors
+
+            verticalAlignment: Text.AlignVCenter
+            Layout.preferredHeight: layoutFloors.height
 
             text: qsTr("Floor:")
             font.pointSize: 13
@@ -21,6 +25,8 @@ RowLayout {
         ComboBox {
             id: comboBoxFloors
             model: service.availableFloors
+
+            Layout.preferredHeight: layoutFloors.height
 
             font.pointSize: 13
 
@@ -31,12 +37,21 @@ RowLayout {
         }
     }
 
+    Item {
+        Layout.fillHeight: true
+        Layout.preferredWidth: spacing * 2
+    }
+
     RowLayout {
         id: layoutFloorParts
+        height: root.height
         visible: currentFloorView === FloorMaps.FloorView.FloorPart
 
         Label {
             id: lblFloorParts
+
+            verticalAlignment: Text.AlignVCenter
+            Layout.preferredHeight: layoutFloorParts.height
 
             text: qsTr("Floor part:")
             font.pointSize: 13
@@ -46,6 +61,8 @@ RowLayout {
             id: comboBoxFloorParts
             model: service.availableFloorParts
             font.pointSize: 13
+
+            Layout.preferredHeight: layoutFloorParts.height
 
             onCurrentValueChanged: {
                 service.selectedFloorPart = currentValue !== undefined ? currentValue : null

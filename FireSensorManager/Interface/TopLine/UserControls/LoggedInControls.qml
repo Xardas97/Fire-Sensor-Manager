@@ -11,13 +11,20 @@ RowLayout {
 
     Label {
         id: txtUsername
+        verticalAlignment: Text.AlignVCenter
+        Layout.preferredHeight: root.height
         text: service.users.loggedUsername
     }
 
     IconButton {
         id: btnUserIcon
+
+        padding: 0
+        Layout.preferredHeight: root.height
+
         icon.color: "transparent"
         icon.source: getUserIcon()
+
         onClicked: menuUser.open()
     }
 

@@ -16,6 +16,8 @@ RowLayout {
 
         visible: service.warningTracker.alarmedSensors.length > 0
 
+        height: root.height
+
         icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Alarm.png"
 
@@ -50,6 +52,8 @@ RowLayout {
         id: btnWarningStatus
 
         visible: service.warningTracker.warningSensors.length > 0
+
+        height: root.height
 
         icon.color: "transparent"
         icon.source: "qrc:/Resources/Icons/Error.png"

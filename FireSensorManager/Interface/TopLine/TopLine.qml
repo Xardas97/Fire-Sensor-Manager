@@ -18,8 +18,6 @@ Item {
 
     signal requestShowSensor(Sensor sensor)
 
-    height: Math.max(btnSettingsMenu.height, rowLayout.height)
-
     Rectangle {
         id: rectBackground
         anchors.fill: parent
@@ -30,6 +28,9 @@ Item {
 
     IconButton {
         id: btnSettingsMenu
+
+        padding: 0
+        height: root.height
 
         anchors.verticalCenter: root.verticalCenter
         anchors.left: root.left
@@ -49,6 +50,8 @@ Item {
     RowLayout {
         id: rowLayout
 
+        height: root.height
+
         anchors.verticalCenter: root.verticalCenter
         anchors.right: root.right
         anchors.rightMargin: 10
@@ -57,6 +60,7 @@ Item {
             id: warningIcons
 
             Layout.alignment: Qt.AlignVCenter
+            Layout.preferredHeight: rowLayout.height
 
             onRequestShowSensor: function(sensor) {
                 root.requestShowSensor(sensor)
@@ -65,7 +69,10 @@ Item {
 
         FloorMapControls {
             id: floorMapControls
+
             Layout.alignment: Qt.AlignVCenter
+            Layout.preferredHeight: rowLayout.height
+
             currentFloorView: root.currentFloorView
         }
 
@@ -77,11 +84,15 @@ Item {
 
         LoggedInControls {
             Layout.alignment: Qt.AlignVCenter
+            Layout.preferredHeight: rowLayout.height
+
             visible: service.users.isLoggedIn
         }
 
         LoggedOutControls {
             Layout.alignment: Qt.AlignVCenter
+            Layout.preferredHeight: rowLayout.height
+
             visible: !service.users.isLoggedIn
         }
     }
