@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>FireSensorManager</DisplayName>
+    <Description>Application for managing smart fire sensors</Description>
+    <Version>0.1.0-1</Version>
+    <ReleaseDate>2022-07-16</ReleaseDate>
+    <ForcedInstallation>true</ForcedInstallation>
+    <Script>installscript.qs</Script>
+</Package>

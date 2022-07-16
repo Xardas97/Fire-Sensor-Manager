@@ -1,3 +1,5 @@
+Installer/Windows/FireSensorManager.exe
+Installer/Windows/installer_data/packages/*/data/*
 
 # Created by https://www.toptal.com/developers/gitignore/api/linux,qtcreator,qt
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,qtcreator,qt

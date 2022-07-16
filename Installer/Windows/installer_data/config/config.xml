@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+	<Name>FireSensorManager</Name>
+	<Version>1.0.0</Version>
+	<Title>FireSensorManager Installer</Title>
+	<Publisher>PAT</Publisher>
+	<StartMenuDir>FireSensorManager</StartMenuDir>
+	<TargetDir>@ApplicationsDirX64@/FireSensorManager</TargetDir>
+</Installer>
