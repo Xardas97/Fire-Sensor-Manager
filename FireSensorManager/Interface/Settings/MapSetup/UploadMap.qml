@@ -44,6 +44,7 @@ ColumnLayout {
                 var uploaded = service.uploadMap(spinFloor.value, fileDialogUploadMap.selectedFile)
                 if (uploaded) {
                     errorLabelVisibility = false
+                    currentFolder = currentFolder
                 }
                 else {
                     errorLabelVisibility = true
