@@ -2,5 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     Common \
-    FireSensor \
+    SensorSim \
     FireSensorManager

@@ -6,7 +6,7 @@ import "Values"
 
 Window {
     id: root
-    title: qsTr("FireSensor")
+    title: qsTr("SensorSim")
 
     minimumWidth: 400
     minimumHeight: 300

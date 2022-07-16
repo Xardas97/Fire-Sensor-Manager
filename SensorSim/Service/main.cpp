@@ -20,7 +20,7 @@ void setupUi(const QGuiApplication& app, QQmlApplicationEngine& engine, QString 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    app.setApplicationName("FireSensor");
+    app.setApplicationName("SensorSim");
 
     Sensor sensor;
 
