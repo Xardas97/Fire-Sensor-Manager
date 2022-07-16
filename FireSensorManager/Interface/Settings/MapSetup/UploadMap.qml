@@ -22,6 +22,8 @@ ColumnLayout {
         SpinBox {
             id: spinFloor
 
+            Layout.preferredWidth: 130
+
             from: -99
             to: 999
 

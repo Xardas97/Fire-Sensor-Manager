@@ -13,10 +13,12 @@ Dialog {
 
         UploadMap {
             id: uploadMap
+            Layout.fillWidth: true
         }
 
         RemoveFloor {
             id: removeFloor
+            Layout.fillWidth: true
         }
     }
 

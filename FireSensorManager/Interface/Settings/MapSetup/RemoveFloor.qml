@@ -16,9 +16,16 @@ ColumnLayout {
             text: qsTr("Floor:")
         }
 
-        ComboBox {
-            id: comboBoxFloors
-            model: service.availableFloors
+        Item {
+            Layout.fillWidth: true
+            implicitWidth: comboBoxFloors.implicitWidth
+            implicitHeight: comboBoxFloors.implicitHeight
+
+            ComboBox {
+                id: comboBoxFloors
+                anchors.centerIn: parent
+                model: service.availableFloors
+            }
         }
 
         Button {
