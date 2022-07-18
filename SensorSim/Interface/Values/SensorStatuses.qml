@@ -19,7 +19,6 @@ Row {
         font.pixelSize: fontSize
 
         text: qsTr("Statuses:")
-        color: "black"
     }
 
     Item {

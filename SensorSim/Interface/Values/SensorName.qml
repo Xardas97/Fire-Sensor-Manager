@@ -18,7 +18,6 @@ Item {
         font.pixelSize: fontSize
 
         text: qsTr("Sensor Name:")
-        color: "black"
     }
 
     TextField {

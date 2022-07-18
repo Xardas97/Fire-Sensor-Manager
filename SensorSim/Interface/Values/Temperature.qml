@@ -18,7 +18,6 @@ Item {
         font.pixelSize: fontSize
 
         text: qsTr("Temperature (°C):")
-        color: "black"
     }
 
     SpinBox {

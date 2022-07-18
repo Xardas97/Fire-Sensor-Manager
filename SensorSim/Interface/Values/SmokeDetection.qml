@@ -18,7 +18,6 @@ Row {
         font.pixelSize: fontSize
 
         text: qsTr("Smoke detected:")
-        color: "black"
     }
 
     Item {

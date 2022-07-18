@@ -18,7 +18,6 @@ Item {
         font.pixelSize: fontSize
 
         text: qsTr("CO2 Concentration (ppm):")
-        color: "black"
     }
 
     SpinBox {

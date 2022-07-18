@@ -4,7 +4,7 @@ import QtQuick.Controls
 
 import "Values"
 
-Window {
+ApplicationWindow {
     id: root
     title: qsTr("SensorSim")
 

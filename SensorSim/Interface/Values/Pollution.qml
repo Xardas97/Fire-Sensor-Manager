@@ -18,7 +18,6 @@ Item {
         font.pixelSize: fontSize
 
         text: qsTr("Pollution (AQI):")
-        color: "black"
     }
 
     SpinBox {
