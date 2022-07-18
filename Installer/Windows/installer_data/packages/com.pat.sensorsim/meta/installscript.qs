@@ -9,6 +9,6 @@ Component.prototype.createOperations = function()
 
     if (systemInfo.productType === "windows") {
         component.addOperation("CreateShortcut", "@TargetDir@/SensorSim.exe", "@StartMenuDir@/SensorSim.lnk");
-        component.addOperation("CreateShortcut", "@TargetDir@/SensorSim.exe", "@HomeDir@/Desktop/SensorSim.lnk");
+        component.addOperation("CreateShortcut", "@TargetDir@/SensorSim.exe", "@DesktopDir@/SensorSim.lnk");
     }
 }

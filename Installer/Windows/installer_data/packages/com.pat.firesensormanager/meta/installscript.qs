@@ -9,6 +9,6 @@ Component.prototype.createOperations = function()
 
     if (systemInfo.productType === "windows") {
         component.addOperation("CreateShortcut", "@TargetDir@/FireSensorManager.exe", "@StartMenuDir@/Fire Sensor Manager.lnk");
-        component.addOperation("CreateShortcut", "@TargetDir@/FireSensorManager.exe", "@HomeDir@/Desktop/Fire Sensor Manager.lnk");
+        component.addOperation("CreateShortcut", "@TargetDir@/FireSensorManager.exe", "@DesktopDir@/Fire Sensor Manager.lnk");
     }
 }
