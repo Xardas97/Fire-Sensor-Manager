@@ -61,5 +61,6 @@
         <file>Interface/common.js</file>
         <file>Resources/Icons/DownArrow.png</file>
         <file>Resources/Icons/UpArrow.png</file>
+        <file>Resources/Icons/FireSensorManager.ico</file>
     </qresource>
 </RCC>

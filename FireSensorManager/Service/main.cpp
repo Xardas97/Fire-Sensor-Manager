@@ -1,3 +1,4 @@
+#include <QIcon>
 #include <QQmlContext>
 #include <QGuiApplication>
 #include <QQuickImageProvider>
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     app.setApplicationName("FireSensorManager");
+    app.setWindowIcon(QIcon("qrc:/Resources/Icons/FireSensorManager.ico"));
 
     qmlRegisterUncreatableType<Sensor>("Custom.Sensors", 1, 0, "Sensor", "Sensor QML object cannot be created");
 

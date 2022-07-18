@@ -6,4 +6,6 @@
 	<Publisher>PAT</Publisher>
 	<StartMenuDir>FireSensorManager</StartMenuDir>
 	<TargetDir>@ApplicationsDirX64@/FireSensorManager</TargetDir>
+	<InstallerWindowIcon>FireSensorManager</InstallerWindowIcon>
+	<InstallerApplicationIcon>FireSensorManager</InstallerApplicationIcon>
 </Installer>

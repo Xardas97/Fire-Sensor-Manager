@@ -4,6 +4,8 @@ QT += quick \
       sql \
       multimedia
 
+RC_ICONS = Resources/Icons/FireSensorManager.ico
+
 SOURCES += \
         Service/Communication/sensor.cpp \
         Service/Communication/sensorcommunication.cpp \

@@ -1,6 +1,7 @@
 #include "sensor.h"
 #include "detectionservice.h"
 
+#include <QIcon>
 #include <memory>
 #include <QQmlContext>
 #include <QGuiApplication>
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     app.setApplicationName("SensorSim");
+    app.setWindowIcon(QIcon("qrc:/Resources/Icons/SensorSim.ico"));
 
     Sensor sensor;
 

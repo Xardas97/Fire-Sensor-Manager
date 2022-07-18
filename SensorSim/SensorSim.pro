@@ -1,6 +1,8 @@
 QT += quick \
       network
 
+RC_ICONS = Resources/Icons/SensorSim.ico
+
 SOURCES += \
         Service/detectionservice.cpp \
         Service/main.cpp \
