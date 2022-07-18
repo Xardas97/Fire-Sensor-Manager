@@ -31,7 +31,7 @@ Popup {
         TextField {
             id: txtPassphrase
             echoMode: TextInput.Password
-            placeholderText: qsTr("Passhrase")
+            placeholderText: qsTr("Passphrase")
             Layout.preferredWidth: txtPassphrasesDifferentError.width
         }
 
