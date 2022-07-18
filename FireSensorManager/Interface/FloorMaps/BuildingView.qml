@@ -75,6 +75,12 @@ Item {
                             target: service.warningTracker
                             function onAlarmedSensorsChanged() { isAlarmed = service.warningTracker.isAlarmed(floor) }
                         }
+
+                        Connections {
+                            target: service
+                            function onFloorAdded(floor) { if (floor === btn.floor) btn.enabled = true }
+                            function onFloorRemoved(floor) { if (floor === btn.floor) btn.enabled = false }
+                        }
                     }
 
                     function numberOfFloors(availableFloors) {
