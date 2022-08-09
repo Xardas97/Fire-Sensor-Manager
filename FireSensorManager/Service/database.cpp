@@ -13,6 +13,7 @@
 #include <QSqlRecord>
 #include <QSqlDatabase>
 #include <QStandardPaths>
+#include <QRandomGenerator>
 #include <QCryptographicHash>
 
 Database::Database(QObject *parent)
@@ -100,6 +101,7 @@ bool Database::createUsersTable()
                      "("
                      "  username       TEXT PRIMARY KEY,"
                      "  passphraseHash BLOB,"
+                     "  passphraseSalt TEXT,"
                      "  permissions    INTEGER,"
                      "  alarm          INTEGER  DEFAULT 0,"
                      "  volume         REAL     DEFAULT 0.5,"
@@ -295,7 +297,10 @@ bool Database::authenticateUser(QString username, QString passphrase, Permission
 
     if (query.next())
     {
-        auto passphraseHash = hashPassphrase(passphrase);
+        auto passphraseSalt = query.value("passphraseSalt").toString();
+        auto saltedPassphrase = passphraseSalt + passphrase;
+
+        auto passphraseHash = hashPassphrase(saltedPassphrase);
         auto realPassphraseHash = query.value("passphraseHash").toByteArray();
 
         if (passphraseHash != realPassphraseHash) {
@@ -314,16 +319,19 @@ bool Database::authenticateUser(QString username, QString passphrase, Permission
 
 bool Database::addUser(QString username, QString passphrase, Permissions permissions)
 {
-    auto passphraseHash = hashPassphrase(passphrase);
+    auto passphraseSalt = generatePassphraseSalt();
+    auto saltedPassphrase = passphraseSalt + passphrase;
+    auto passphraseHash = hashPassphrase(saltedPassphrase);
 
     auto queryText = "INSERT INTO users "
-                     "(username, passphraseHash, permissions) "
-                     "VALUES (:username, :passphraseHash, :permissions)";
+                     "(username, passphraseHash, passphraseSalt, permissions) "
+                     "VALUES (:username, :passphraseHash, :passphraseSalt, :permissions)";
 
     QSqlQuery query;
     query.prepare(queryText);
     query.bindValue(":username", username);
     query.bindValue(":passphraseHash", passphraseHash);
+    query.bindValue(":passphraseSalt", passphraseSalt);
     query.bindValue(":permissions", permissions);
 
     auto success = query.exec();
@@ -357,16 +365,19 @@ bool Database::updateUserPermissions(QString username, Permissions permissions)
 
 bool Database::updateUserPassphrase(QString username, QString passphrase)
 {
-    auto passphraseHash = hashPassphrase(passphrase);
+    auto passphraseSalt = generatePassphraseSalt();
+    auto saltedPassphrase = passphraseSalt + passphrase;
+    auto passphraseHash = hashPassphrase(saltedPassphrase);
 
     auto queryText = "UPDATE users "
-                     "set passphraseHash = :passphraseHash "
+                     "set passphraseHash = :passphraseHash, passphraseSalt = :passphraseSalt "
                      "WHERE username = :username";
 
     QSqlQuery query;
     query.prepare(queryText);
     query.bindValue(":username", username);
     query.bindValue(":passphraseHash", passphraseHash);
+    query.bindValue(":passphraseSalt", passphraseSalt);
 
     auto success = query.exec();
     if (!success) {
@@ -513,6 +524,18 @@ QByteArray Database::hashPassphrase(const QString& passphrase)
     QCryptographicHash hasher {QCryptographicHash::Sha3_224};
     hasher.addData(passphrase.toLocal8Bit());
     return hasher.result();
+}
+
+QString Database::generatePassphraseSalt()
+{
+    QString salt = "";
+    for (int i = 0; i < 5; ++i)
+    {
+        auto randomChar = (char)(' ' + QRandomGenerator::global()->bounded(0, 95));
+        salt += randomChar;
+    }
+
+    return salt;
 }
 
 UserSettings Database::loadUserSettings(QString username)

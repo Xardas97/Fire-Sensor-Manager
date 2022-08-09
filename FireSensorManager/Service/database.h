@@ -75,6 +75,7 @@ private:
     void saveSensor(Sensor& sensor);
 
     QByteArray hashPassphrase(const QString& passphrase);
+    QString    generatePassphraseSalt();
 
     std::vector<std::shared_ptr<Sensor>> m_sensors;
     std::unordered_map<int, std::vector<std::shared_ptr<MapEntry>>> m_maps;
